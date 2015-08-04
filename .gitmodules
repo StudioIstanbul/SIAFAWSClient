@@ -1,0 +1,12 @@
+[submodule "XMLDictionary"]
+	path = XMLDictionary
+	url = https://github.com/nicklockwood/XMLDictionary.git
+[submodule "AFNetworking"]
+	path = AFNetworking
+	url = git@github.com:AFNetworking/AFNetworking.git
+[submodule "HelperCategories"]
+	path = HelperCategories
+	url = git@github.com:azplanlos/HelperCategories.git
+[submodule "sskeychain"]
+	path = sskeychain
+	url = git@github.com:samsoffes/sskeychain.git

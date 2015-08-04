@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'SIAFAWSClient' target in the 'SIAFAWSClient' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif
