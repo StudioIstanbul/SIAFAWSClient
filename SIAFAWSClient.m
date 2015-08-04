@@ -67,28 +67,20 @@
             NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion];
             if ([recoverDict valueForKey:@"Endpoint"]) {
                 NSLog(@"redirect to endpoint %@", [recoverDict valueForKey:@"Endpoint"]);
+                self.baseURL = [NSURL URLWithString:[recoverDict valueForKey:@"Endpoint"]];
             }
         } else {
         }
-        //NSLog(@"%@", error.userInfo.allKeys.commaSeparatedList);
-        //NSString *failureResponse = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        //NSLog(@"Failure response: %@", failureResponse);
     }];
     __weak AFHTTPRequestOperation *weakOp = listOperation;
-    /*[listOperation setRedirectResponseBlock:^NSURLRequest *(NSURLConnection *connection, NSURLRequest *request, NSURLResponse *redirectResponse) {
-        NSLog(@"redirect to %@", request.URL);
-        NSLog(@"Response: %@", redirectResponse.debugDescription);
-        NSLog(@"Request: %@", request.debugDescription);
+    [listOperation setRedirectResponseBlock:^NSURLRequest *(NSURLConnection *connection, NSURLRequest *request, NSURLResponse *redirectResponse) {
         if (nil == redirectResponse) {
             return request;
-        }
-        if ([@"http" isEqualToString:weakOp.request.URL.scheme] && [@"https" isEqualToString:request.URL.scheme]) {
-            self.shouldUseSSL = YES;
         }
         NSMutableURLRequest *r = [weakOp.request mutableCopy];
         [r setURL:request.URL];
         return r;
-    }];*/
+    }];
     [self enqueueHTTPRequestOperation:listOperation];
 }
 
@@ -118,10 +110,8 @@
     NSData* sha = [CryptoHelper sha256:request.HTTPBody];
     NSString* shaHex = [sha hexadecimalString];
     NSString* canonicalRequestString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n\n%@\n%@", request.HTTPMethod, [resourceString urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]], paramsString, headerString, [[request.allHTTPHeaderFields.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], shaHex];
-    NSLog(@"canonical Request: '%@'", canonicalRequestString);
     NSString* scope = [NSString stringWithFormat:@"%@/%@/s3/aws4_request", [dateFormatter stringFromDate:date], SIAFAWSRegion(self.region)];
     NSString* stringToSign = [NSString stringWithFormat:@"AWS4-HMAC-SHA256\n%@\n%@\n%@", [dateFormatter2 stringFromDate:date], scope, [[CryptoHelper sha256:[canonicalRequestString dataUsingEncoding:NSASCIIStringEncoding]] hexadecimalString]];
-    NSLog(@"string to sign: %@", stringToSign);
     
     if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60)) {
         NSString* secStr = [NSString stringWithFormat:@"AWS4%@", self.secretKey];
@@ -129,8 +119,6 @@
         NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(self.region) withDataKey:dateKey];
         NSData* dateRegionServiceKey = [CryptoHelper hmac:@"s3" withDataKey:dateRegionKey];
         NSData* signingKey = [CryptoHelper hmac:@"aws4_request" withDataKey:dateRegionServiceKey];
-        NSString* signingKeyHex = [signingKey hexadecimalString];
-        NSLog(@"signing key: %@", signingKeyHex);
         AWSSigningKey* newSigningKey = [[AWSSigningKey alloc] initWithKey:signingKey andDate:date];
         self.signingKey = newSigningKey;
         if (self.syncWithKeychain) [newSigningKey saveToKeychain];
@@ -146,7 +134,6 @@
     NSMutableURLRequest* request = [operation.request mutableCopy];
     [request setValue:SIAFAWSemptyHash forHTTPHeaderField:@"x-amz-content-sha256"];
     NSString* authHeader = [self AuthorizationHeaderStringForRequest:request];
-    NSLog(@"auth header: %@", authHeader);
     [request setValue:authHeader forHTTPHeaderField:@"Authorization"];
     operation.request = request;
     [super enqueueHTTPRequestOperation:operation];

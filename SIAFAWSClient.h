@@ -42,6 +42,7 @@ typedef enum {
 
 @interface SIAFAWSClient : AFHTTPClient
 
+@property (nonatomic, readwrite, retain) NSURL* baseURL;
 @property (nonatomic, retain) NSString* accessKey;
 @property (nonatomic, retain) NSString* secretKey;
 @property (nonatomic) SIAFAWSRegion region;
