@@ -114,7 +114,7 @@
     NSString* scope = [NSString stringWithFormat:@"%@/%@/s3/aws4_request", [dateFormatter stringFromDate:date], SIAFAWSRegion(self.region)];
     NSString* stringToSign = [NSString stringWithFormat:@"AWS4-HMAC-SHA256\n%@\n%@\n%@", [dateFormatter2 stringFromDate:date], scope, [[CryptoHelper sha256:[canonicalRequestString dataUsingEncoding:NSASCIIStringEncoding]] hexadecimalString]];
     
-    if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60)) {
+    if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60) || self.signingKey.region != self.region) {
         NSString* secStr = [NSString stringWithFormat:@"AWS4%@", self.secretKey];
         NSData* dateKey = [CryptoHelper hmac:[dateFormatter stringFromDate:date] withDataKey:[NSData dataWithBytes:[secStr cStringUsingEncoding:NSASCIIStringEncoding] length:secStr.length]];
         NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(self.region) withDataKey:dateKey];
@@ -122,6 +122,7 @@
         NSData* signingKey = [CryptoHelper hmac:@"aws4_request" withDataKey:dateRegionServiceKey];
         AWSSigningKey* newSigningKey = [[AWSSigningKey alloc] initWithKey:signingKey andDate:date];
         self.signingKey = newSigningKey;
+        newSigningKey.region = self.region;
         if (self.syncWithKeychain) [newSigningKey saveToKeychain];
     }
     
@@ -161,6 +162,7 @@
 -(void)encodeWithCoder:(NSCoder *)aCoder {
     [aCoder encodeObject:self.key forKey:@"key"];
     [aCoder encodeObject:self.keyDate forKey:@"keyDate"];
+    [aCoder encodeInt:self.region forKey:@"region"];
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
@@ -168,6 +170,7 @@
     if (self) {
         self.key = [aDecoder decodeObjectForKey:@"key"];
         self.keyDate = [aDecoder decodeObjectForKey:@"keyDate"];
+        self.region = [aDecoder decodeIntForKey:@"region"];
     }
     return self;
 }
