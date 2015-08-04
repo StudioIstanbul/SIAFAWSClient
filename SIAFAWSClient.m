@@ -95,6 +95,7 @@
     NSDate* date = [NSDate date];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyyMMdd"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     NSDateFormatter* dateFormatter2 = [[NSDateFormatter alloc] init];
     [dateFormatter2 setDateFormat:@"yyyyMMdd'T'HHmmss'Z'"];
     [dateFormatter2 setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
