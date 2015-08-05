@@ -79,6 +79,55 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
     [self enqueueHTTPRequestOperation:listOperation];
 }
 
+-(void)listBucketsWithAccessPermissionCheck:(BOOL)checkPermission {
+    self.bucket = nil;
+    AWSOperation* bucketListOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
+    [bucketListOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary* responseDict = [NSDictionary dictionaryWithXMLData:responseObject];
+        NSMutableArray* bucketList = [NSMutableArray new];
+        NSDateFormatter* dateFormat = [NSDateFormatter new];
+        dateFormat.dateFormat = @"yyyy-mm-dd'T'hh:MM:ss'Z'";
+        for (NSDictionary* bucketDict in [[responseDict valueForKey:@"Buckets"] valueForKey:@"Bucket"]) {
+            AWSBucket* myBucket = [[AWSBucket alloc] initWithName:[bucketDict valueForKey:@"Name"] andCreationDate:[dateFormat dateFromString:[bucketDict valueForKey:@"CreationDate"]]];
+            if (checkPermission) {
+                [self checkBucket:myBucket forPermissionWithBlock:^(SIAFAWSAccessRight accessRight) {
+                    if (accessRight == SIAFAWSFullControl || accessRight == SIAFAWSRead || accessRight == SIAFAWSWrite) [bucketList addObject:myBucket];
+                    if ([self.delegate respondsToSelector:@selector(awsclient:receivedBucketList:)]) {
+                        [self.delegate awsclient:self receivedBucketList:[NSArray arrayWithArray:bucketList]];
+                    }
+                }];
+            } else {
+                [bucketList addObject:myBucket];
+            }
+        }
+        if ([self.delegate respondsToSelector:@selector(awsclient:receivedBucketList:)]) {
+            [self.delegate awsclient:self receivedBucketList:[NSArray arrayWithArray:bucketList]];
+        }
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:bucketListOperation];
+}
+
+-(void)listBuckets {
+    [self listBucketsWithAccessPermissionCheck:NO];
+}
+
+-(void)checkBucket:(AWSBucket*)checkBucket forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block {
+    self.bucket = checkBucket.name;
+    AWSOperation* aclOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:@{@"acl":[NSNull null]}];
+    [aclOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary* respDic = [NSDictionary dictionaryWithXMLData:responseObject];
+        NSString* responseString = [[[respDic valueForKey:@"AccessControlList"] valueForKey:@"Grant"] valueForKey:@"Permission"];
+        SIAFAWSAccessRight access = 0;
+        if ([responseString isEqualToString:@"FULL_CONTROL"]) access = SIAFAWSFullControl;
+        else if ([responseString isEqualToString:@"WRITE"]) access = SIAFAWSWrite;
+        else if ([responseString isEqualToString:@"WRITE_ACP"]) access = SIAFAWSWriteACP;
+        else if ([responseString isEqualToString:@"READ"]) access = SIAFAWSRead;
+        else if ([responseString isEqualToString:@"READ_ACP"]) access = SIAFAWSReadACP;
+        block(access);
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:aclOperation];
+}
+
 #pragma mark Methods for signing according to AWS4
 
 -(AWSOperation*)requestOperationWithMethod:(NSString*)method path:(NSString*)path parameters:(NSDictionary*)params {
@@ -205,6 +254,34 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
 -(void)saveToKeychain {
     NSData* objectData = [NSKeyedArchiver archivedDataWithRootObject:self];
     [SSKeychain setPasswordData:objectData forService:@"Amazon Webservices S3 - SIAFAWS" account:@"Signing Key"];
+}
+
+@end
+
+@implementation AWSBucket
+@synthesize accessRight = _accessRight, name = _name, creationDate = _creationDate;
+
+-(id)init {
+    self = [super init];
+    if (self) {
+        _accessRight = SIAFAWSAccessUndefined;
+        _creationDate = [NSDate date];
+    }
+    return self;
+}
+
+-(id)initWithName:(NSString*)name andCreationDate:(NSDate*)date {
+    self = [super init];
+    _creationDate = date;
+    _name = name;
+    return self;
+}
+
+-(SIAFAWSAccessRight)accessRight {
+    if (_accessRight == SIAFAWSAccessUndefined) {
+        
+    }
+    return _accessRight;
 }
 
 @end

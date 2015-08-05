@@ -21,6 +21,16 @@ typedef enum {
     SIAFAWSRegionAPTokyo = 7,
     SIAFAWSRegionAPSaoPaulo = 8
 } SIAFAWSRegion;
+
+typedef enum {
+    SIAFAWSAccessUndefined,
+    SIAFAWSFullControl,
+    SIAFAWSWrite,
+    SIAFAWSWriteACP,
+    SIAFAWSRead,
+    SIAFAWSReadACP
+} SIAFAWSAccessRight;
+
 #define SIAFAWSRegion(enum) [@[@"us-east-1", @"us-west-2", @"us-west-1", @"eu-west-1", @"eu-central-1", @"ap-southeast-1", @"ap-southeast-2", @"ap-northeast-1", @"sa-east-1"] objectAtIndex:enum]
 #define SIAFAWSRegionalBaseURL(enum) [@[@"s3.amazonaws.com", @"s3-us-west-2.amazonaws.com", @"s3-us-west-1.amazonaws.com", @"s3-eu-west-1.amazonaws.com", @"s3-eu-central-1.amazonaws.com", @"s3-ap-southeast-1.amazonaws.com", @"s3-ap-southeast-2.amazonaws.com", @"s3-ap-northeast-1.amazonaws.com", @"s3-sa-east-1.amazonaws.com"] objectAtIndex:enum]
 #define SIAFAWSReginCount 9
@@ -31,6 +41,7 @@ typedef enum {
 
 @optional
 -(void)awsclient:(SIAFAWSClient*)client receivedBucketContentList:(NSArray*)bucketContents forBucket:(NSString*)bucketName;
+-(void)awsclient:(SIAFAWSClient *)client receivedBucketList:(NSArray *)buckets;
 @end
 
 @interface AWSSigningKey : NSObject <NSCoding>
@@ -41,6 +52,8 @@ typedef enum {
 -(id)initWithKey:(NSData*)keyContent andDate:(NSDate*)creationDate;
 -(void)saveToKeychain;
 @end
+
+@class AWSBucket;
 
 @interface SIAFAWSClient : AFHTTPClient
 
@@ -55,12 +68,25 @@ typedef enum {
 
 -(NSString*)host;
 
+-(void)listBuckets;
+-(void)listBucketsWithAccessPermissionCheck:(BOOL)checkPermission;
 -(void)listBucket:(NSString*)bucketName;
 
+-(void)checkBucket:(AWSBucket*)checkBucket forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation
 
 @property (nonatomic, strong) NSURLRequest *request;
+
+@end
+
+@interface AWSBucket : NSObject
+
+@property (nonatomic, assign) SIAFAWSAccessRight accessRight;
+@property (nonatomic, strong) NSString* name;
+@property (nonatomic, readonly) NSDate* creationDate;
+
+-(id)initWithName:(NSString*)name andCreationDate:(NSDate*)date;
 
 @end
