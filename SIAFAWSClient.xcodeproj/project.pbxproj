@@ -50,6 +50,8 @@
 		A9CB074E1B70BB4900331A38 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB073B1B70BB4900331A38 /* AFXMLRequestOperation.m */; };
 		A9CB074F1B70BB4900331A38 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB073C1B70BB4900331A38 /* UIImageView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A9CB07501B70BB4900331A38 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB073D1B70BB4900331A38 /* UIImageView+AFNetworking.m */; };
+		A9D970531B72A24A00ECAFAE /* XQueryComponents.h in Headers */ = {isa = PBXBuildFile; fileRef = A9D970511B72A24A00ECAFAE /* XQueryComponents.h */; };
+		A9D970541B72A24A00ECAFAE /* XQueryComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D970521B72A24A00ECAFAE /* XQueryComponents.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -102,6 +104,8 @@
 		A9CB073B1B70BB4900331A38 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		A9CB073C1B70BB4900331A38 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		A9CB073D1B70BB4900331A38 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		A9D970511B72A24A00ECAFAE /* XQueryComponents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XQueryComponents.h; path = HelperCategories/XQueryComponents.h; sourceTree = SOURCE_ROOT; };
+		A9D970521B72A24A00ECAFAE /* XQueryComponents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = XQueryComponents.m; path = HelperCategories/XQueryComponents.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -197,6 +201,8 @@
 				A9CB06C51B70B6CD00331A38 /* NSDictionary+caseInsensitiveKey.m */,
 				A9CB06D81B70B6CD00331A38 /* NSString+urlencode.h */,
 				A9CB06D91B70B6CD00331A38 /* NSString+urlencode.m */,
+				A9D970511B72A24A00ECAFAE /* XQueryComponents.h */,
+				A9D970521B72A24A00ECAFAE /* XQueryComponents.m */,
 			);
 			name = HelperCategories;
 			path = ../../HelperCategories;
@@ -275,6 +281,7 @@
 				A9CB074B1B70BB4900331A38 /* AFURLConnectionOperation.h in Headers */,
 				A9CB074D1B70BB4900331A38 /* AFXMLRequestOperation.h in Headers */,
 				A9CB074F1B70BB4900331A38 /* UIImageView+AFNetworking.h in Headers */,
+				A9D970531B72A24A00ECAFAE /* XQueryComponents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,6 +367,7 @@
 				A9CB074C1B70BB4900331A38 /* AFURLConnectionOperation.m in Sources */,
 				A9CB074E1B70BB4900331A38 /* AFXMLRequestOperation.m in Sources */,
 				A9CB07501B70BB4900331A38 /* UIImageView+AFNetworking.m in Sources */,
+				A9D970541B72A24A00ECAFAE /* XQueryComponents.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

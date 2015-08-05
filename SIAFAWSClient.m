@@ -14,8 +14,11 @@
 #import "NSData+hexConv.h"
 #import "XMLDictionary.h"
 #import "SSKeychain.h"
+#import "XQueryComponents.h"
 
 #define SIAFAWSemptyHash @"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error);
 
 @interface SIAFAWSClient () {
     BOOL keysFromKeychain;
@@ -47,6 +50,8 @@
     return self;
 }
 
+#pragma mark methods for S3 buckets
+
 -(void)listBucket:(NSString *)bucketName {
     self.bucket = bucketName;
     AWSOperation* listOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
@@ -61,17 +66,7 @@
         if ([delegate respondsToSelector:@selector(awsclient:receivedBucketContentList:forBucket:)]) {
             [delegate awsclient:self receivedBucketContentList:contents forBucket:self.bucket];
         }
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"error code: %li - %@ (%@)", error.code, error.localizedDescription, error.localizedRecoverySuggestion);
-        if (error.code == -1011) {
-            NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion];
-            if ([recoverDict valueForKey:@"Endpoint"]) {
-                NSLog(@"redirect to endpoint %@", [recoverDict valueForKey:@"Endpoint"]);
-                self.baseURL = [NSURL URLWithString:[recoverDict valueForKey:@"Endpoint"]];
-            }
-        } else {
-        }
-    }];
+    } failure:[self failureBlock]];
     __weak AFHTTPRequestOperation *weakOp = listOperation;
     [listOperation setRedirectResponseBlock:^NSURLRequest *(NSURLConnection *connection, NSURLRequest *request, NSURLResponse *redirectResponse) {
         if (nil == redirectResponse) {
@@ -84,10 +79,22 @@
     [self enqueueHTTPRequestOperation:listOperation];
 }
 
+#pragma mark Methods for signing according to AWS4
+
 -(AWSOperation*)requestOperationWithMethod:(NSString*)method path:(NSString*)path parameters:(NSDictionary*)params {
-    [self setDefaultHeader:@"host" value:[NSString stringWithFormat:@"%@.%@", self.bucket, SIAFAWSRegionalBaseURL(self.region)]];
+    NSString* endpoint = @"";
+    if (self.bucket) endpoint = [NSString stringWithFormat:@"%@.%@", self.bucket, SIAFAWSRegionalBaseURL(self.region)]; else endpoint = SIAFAWSRegionalBaseURL(self.region);
+    return [self requestOperationWithMethod:method path:path parameters:params withEndpoint:endpoint];
+}
+
+-(AWSOperation*)requestOperationWithMethod:(NSString*)method path:(NSString*)path parameters:(NSDictionary*)params withEndpoint:(NSString*)endpoint {
+    [self setDefaultHeader:@"host" value:endpoint];
     NSMutableURLRequest* request = [self requestWithMethod:method path:path parameters:params];
-    request.URL = [NSURL URLWithString:[NSString stringWithFormat:@"https://%@.%@%@", self.bucket, SIAFAWSRegionalBaseURL(self.region), path]];
+    NSString* pathString = [NSString stringWithFormat:@"https://%@%@", endpoint, path];
+    if (request.URL.query) {
+        pathString = [pathString stringByAppendingFormat:@"?%@", request.URL.query];
+    }
+    request.URL = [NSURL URLWithString:pathString];
     return [[AWSOperation alloc] initWithRequest:request];
 }
 
@@ -103,9 +110,11 @@
     NSString* signature;
     NSString* resourceString = [[request URL] path];
     NSString* paramsString;
-    if ([[[request URL] absoluteString] rangeOfString:@"?"].location != NSNotFound) paramsString = [[[request URL] absoluteString] substringFromIndex:[[[request URL] absoluteString] rangeOfString:@"?"].location+1]; else paramsString = @"";
-    NSArray* params = [paramsString componentsSeparatedByString:@"&"];
-    params = [params sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    NSDictionary* paramsDict = [request.URL queryComponents];
+    NSMutableArray* params = [NSMutableArray new];
+    for (NSString* key in [paramsDict.allKeys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
+        [params addObject:[NSString stringWithFormat:@"%@=%@", key, [paramsDict valueForKey:key]]];
+    }
     paramsString = [params commaSeparatedURIEncodedListWithSeparatorString:@"&" andQuoteString:@"" andUnencodedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"="]];
     NSString* headerString = [request.allHTTPHeaderFields sortedCommaSeparatedLowerCaseListWithSeparatorString:@"\n" andQuoteString:@"" andValueAssignmentString:@":"];
     NSData* sha = [CryptoHelper sha256:request.HTTPBody];
@@ -139,6 +148,24 @@
     [request setValue:authHeader forHTTPHeaderField:@"Authorization"];
     operation.request = request;
     [super enqueueHTTPRequestOperation:operation];
+}
+
+#pragma mark error handler methods
+
+-(AWSFailureBlock)failureBlock {
+    AWSFailureBlock block = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (error.code == -1011 && operation.response.statusCode == 301) {
+            NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion];
+            if ([recoverDict valueForKey:@"Endpoint"]) {
+                AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:[recoverDict valueForKey:@"Endpoint"]];
+                [redirOp setCompletionBlock:[operation completionBlock]];
+                [self enqueueHTTPRequestOperation:redirOp];
+            }
+        } else {
+            NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
+        }
+    };
+    return block;
 }
 
 @end
