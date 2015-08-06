@@ -100,3 +100,13 @@ typedef enum {
 -(id)initWithName:(NSString*)name andCreationDate:(NSDate*)date;
 
 @end
+
+@interface AWSFile : NSObject
+
+@property (nonatomic, strong) NSString* key;
+@property (nonatomic, strong) NSDate* lastModified;
+@property (nonatomic, assign) NSInteger fileSize;
+@property (nonatomic, strong) NSString* etag;
+@property (nonatomic, strong) NSString* bucket;
+
+@end

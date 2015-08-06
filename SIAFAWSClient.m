@@ -64,8 +64,25 @@ typedef void(^AWSCompBlock)(void);
         } else {
             contents = [NSArray arrayWithObject:[responseDict valueForKey:@"Contents"]];
         }
-        if ([delegate respondsToSelector:@selector(awsclient:receivedBucketContentList:forBucket:)]) {
-            [delegate awsclient:self receivedBucketContentList:contents forBucket:self.bucket];
+        if (contents) {
+            NSDateFormatter *rfc3339DateFormatter = [[NSDateFormatter alloc] init];
+            NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            [rfc3339DateFormatter setLocale:enUSPOSIXLocale];
+            [rfc3339DateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.000Z'"];
+            [rfc3339DateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+            NSMutableArray* fileContents = [NSMutableArray new];
+            for (NSDictionary* fileDict in contents) {
+                AWSFile* newFile = [AWSFile new];
+                newFile.bucket = [responseDict valueForKey:@"Name"];
+                newFile.key = [fileDict valueForKey:@"Key"];
+                newFile.etag = [fileDict valueForKey:@"ETag"];
+                newFile.fileSize = [[fileDict valueForKey:@"Size"] integerValue];
+                newFile.lastModified = [rfc3339DateFormatter dateFromString:[fileDict valueForKey:@"LastModified"]];
+                [fileContents addObject:newFile];
+            }
+            if ([delegate respondsToSelector:@selector(awsclient:receivedBucketContentList:forBucket:)]) {
+                [delegate awsclient:self receivedBucketContentList:[fileContents sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"key" ascending:YES]]] forBucket:bucketName];
+            }
         }
     } failure:[self failureBlock]];
     __weak AFHTTPRequestOperation *weakOp = listOperation;
@@ -86,10 +103,13 @@ typedef void(^AWSCompBlock)(void);
     [bucketListOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary* responseDict = [NSDictionary dictionaryWithXMLData:responseObject];
         NSMutableArray* bucketList = [NSMutableArray new];
-        NSDateFormatter* dateFormat = [NSDateFormatter new];
-        dateFormat.dateFormat = @"yyyy-mm-dd'T'hh:MM:ss'Z'";
+        NSDateFormatter *rfc3339DateFormatter = [[NSDateFormatter alloc] init];
+        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [rfc3339DateFormatter setLocale:enUSPOSIXLocale];
+        [rfc3339DateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.000Z'"];
+        [rfc3339DateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
         for (NSDictionary* bucketDict in [[responseDict valueForKey:@"Buckets"] valueForKey:@"Bucket"]) {
-            AWSBucket* myBucket = [[AWSBucket alloc] initWithName:[bucketDict valueForKey:@"Name"] andCreationDate:[dateFormat dateFromString:[bucketDict valueForKey:@"CreationDate"]]];
+            AWSBucket* myBucket = [[AWSBucket alloc] initWithName:[bucketDict valueForKey:@"Name"] andCreationDate:[rfc3339DateFormatter dateFromString:[bucketDict valueForKey:@"CreationDate"]]];
             NSString* baseUrl = operation.request.URL.host;
             if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
                 baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
@@ -365,5 +385,10 @@ typedef void(^AWSCompBlock)(void);
 -(NSString*)regionName {
     return SIAFAWSRegionName(self.region);
 }
+
+@end
+
+@implementation AWSFile
+@synthesize etag, key, fileSize, lastModified, bucket;
 
 @end
