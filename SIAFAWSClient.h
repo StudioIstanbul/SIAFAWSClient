@@ -47,6 +47,7 @@ typedef enum {
 -(void)awsclient:(SIAFAWSClient *)client receivedBucketList:(NSArray *)buckets;
 -(NSString*)awsclientRequiresAccessKey:(SIAFAWSClient *)client;
 -(NSString*)awsclientRequiresSecretKey:(SIAFAWSClient *)client;
+-(void)uploadProgress:(double)progress forURL:(NSURL*)localFileUrl;
 @end
 
 @interface AWSSigningKey : NSObject <NSCoding>
@@ -79,12 +80,14 @@ typedef enum {
 -(void)listBucketsWithAccessPermissionCheck:(BOOL)checkPermission;
 -(void)listBucket:(NSString*)bucketName;
 
+-(void)uploadFileFromURL:(NSURL*)url toKey:(NSString*)key onBucket:(NSString*)bucketName;
+
 -(void)checkBucket:(AWSBucket*)checkBucket forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation
 
-@property (nonatomic, strong) NSURLRequest *request;
+@property (nonatomic, strong) NSMutableURLRequest *request;
 
 @end
 

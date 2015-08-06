@@ -156,6 +156,22 @@ typedef void(^AWSCompBlock)(void);
     [self enqueueHTTPRequestOperation:aclOperation];
 }
 
+-(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName {
+    self.bucket = bucketName;
+    AWSOperation* uploadOperation = [self requestOperationWithMethod:@"PUT" path:key parameters:nil];
+    [uploadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"upload completed");
+    } failure:[self failureBlock]];
+    NSData* data = [NSData dataWithContentsOfURL:url];
+    NSLog(@"uploading %li bytes", data.length);
+    uploadOperation.request.HTTPBody = data;
+    [uploadOperation.request setValue:[NSString stringWithFormat:@"%li", data.length] forHTTPHeaderField:@"Content-Length"];
+    [uploadOperation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
+        if ([self.delegate respondsToSelector:@selector(uploadProgress:forURL:)]) [self.delegate uploadProgress:(double)totalBytesWritten/(double)totalBytesExpectedToWrite forURL:url];
+    }];
+    [self enqueueHTTPRequestOperation:uploadOperation];
+}
+
 #pragma mark setter methods for credentials
 -(void)setAccessKey:(NSString *)accessKey {
     if (self.signingKey) {
@@ -194,11 +210,28 @@ typedef void(^AWSCompBlock)(void);
     return [[AWSOperation alloc] initWithRequest:request];
 }
 
+-(AWSOperation*)requestMultipartOperationWithMethod:(NSString*)method path:(NSString*)path parameters:(NSDictionary*)params andConstructingBlock:(void(^)(id<AFMultipartFormData>formData))block {
+    NSString* endpoint = @"";
+    if (self.bucket) endpoint = [NSString stringWithFormat:@"%@.%@", self.bucket, SIAFAWSRegionalBaseURL(self.region)]; else endpoint = SIAFAWSRegionalBaseURL(self.region);
+    return [self requestMultipartOperationWithMethod:method path:path parameters:params withEndpoint:endpoint andConstructingBlock:block];
+}
+
+-(AWSOperation*)requestMultipartOperationWithMethod:(NSString*)method path:(NSString*)path parameters:(NSDictionary*)params withEndpoint:(NSString*)endpoint andConstructingBlock:(void(^)(id<AFMultipartFormData>formData))block {
+    NSMutableURLRequest* request = [self multipartFormRequestWithMethod:method path:path parameters:params constructingBodyWithBlock:block];
+    NSString* pathString = [NSString stringWithFormat:@"https://%@%@", endpoint, path];
+    if (request.URL.query) {
+        pathString = [pathString stringByAppendingFormat:@"?%@", request.URL.query];
+    }
+    request.URL = [NSURL URLWithString:pathString];
+    return [[AWSOperation alloc] initWithRequest:request];
+}
+
 -(NSString*)AuthorizationHeaderStringForRequest:(NSMutableURLRequest*)request {
     NSString* baseUrl = request.URL.host;
     if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
         baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
     }
+    NSLog(@"baseURL: %@", baseUrl);
     SIAFAWSRegion requestRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
     NSDate* date = [NSDate date];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
@@ -265,8 +298,8 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(void)enqueueHTTPRequestOperation:(AWSOperation *)operation {
-    NSMutableURLRequest* request = [operation.request mutableCopy];
-    [request setValue:SIAFAWSemptyHash forHTTPHeaderField:@"x-amz-content-sha256"];
+    NSMutableURLRequest* request = operation.request;
+    [request setValue:[CryptoHelper sha256HexString:request.HTTPBody] forHTTPHeaderField:@"x-amz-content-sha256"];
     NSString* authHeader = [self AuthorizationHeaderStringForRequest:request];
     [request setValue:authHeader forHTTPHeaderField:@"Authorization"];
     operation.request = request;
