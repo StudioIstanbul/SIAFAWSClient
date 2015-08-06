@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "AFHTTPClient.h"
 #import "AFHTTPRequestOperation.h"
+#import "NSArray+containsString.h"
 
 typedef enum {
     SIAFAWSRegionUSStandard = 0,
@@ -32,8 +33,10 @@ typedef enum {
 } SIAFAWSAccessRight;
 
 #define SIAFAWSRegion(enum) [@[@"us-east-1", @"us-west-2", @"us-west-1", @"eu-west-1", @"eu-central-1", @"ap-southeast-1", @"ap-southeast-2", @"ap-northeast-1", @"sa-east-1"] objectAtIndex:enum]
+#define SIAFAWSRegionName(enum) [@[@"US Standard", @"US West Oregon", @"US West North California", @"EU Ireland", @"EU Frankfurt", @"AP Singapore", @"AP Sydney", @"AP Tokyo", @"AP Sao Paulo"] objectAtIndex:enum]
 #define SIAFAWSRegionalBaseURL(enum) [@[@"s3.amazonaws.com", @"s3-us-west-2.amazonaws.com", @"s3-us-west-1.amazonaws.com", @"s3-eu-west-1.amazonaws.com", @"s3-eu-central-1.amazonaws.com", @"s3-ap-southeast-1.amazonaws.com", @"s3-ap-southeast-2.amazonaws.com", @"s3-ap-northeast-1.amazonaws.com", @"s3-sa-east-1.amazonaws.com"] objectAtIndex:enum]
 #define SIAFAWSReginCount 9
+#define SIAFAWSRegionForBaseURL(url) [@[@"s3.amazonaws.com", @"s3-us-west-2.amazonaws.com", @"s3-us-west-1.amazonaws.com", @"s3-eu-west-1.amazonaws.com", @"s3-eu-central-1.amazonaws.com", @"s3-ap-southeast-1.amazonaws.com", @"s3-ap-southeast-2.amazonaws.com", @"s3-ap-northeast-1.amazonaws.com", @"s3-sa-east-1.amazonaws.com"] indexOfString:url]
 
 @class SIAFAWSClient;
 
@@ -42,12 +45,15 @@ typedef enum {
 @optional
 -(void)awsclient:(SIAFAWSClient*)client receivedBucketContentList:(NSArray*)bucketContents forBucket:(NSString*)bucketName;
 -(void)awsclient:(SIAFAWSClient *)client receivedBucketList:(NSArray *)buckets;
+-(NSString*)awsclientRequiresAccessKey:(SIAFAWSClient *)client;
+-(NSString*)awsclientRequiresSecretKey:(SIAFAWSClient *)client;
 @end
 
 @interface AWSSigningKey : NSObject <NSCoding>
 @property (nonatomic, strong) NSData* key;
 @property (nonatomic, strong) NSDate* keyDate;
 @property (nonatomic) SIAFAWSRegion region;
+@property (nonatomic, strong) NSString* accessKey;
 
 -(id)initWithKey:(NSData*)keyContent andDate:(NSDate*)creationDate;
 -(void)saveToKeychain;
@@ -65,6 +71,7 @@ typedef enum {
 @property (nonatomic, weak) NSObject<SIAFAWSClientProtocol> *delegate;
 @property (nonatomic, retain) AWSSigningKey* signingKey;
 @property (nonatomic) BOOL syncWithKeychain;
+@property (nonatomic, readonly) BOOL isBusy;
 
 -(NSString*)host;
 
@@ -86,6 +93,9 @@ typedef enum {
 @property (nonatomic, assign) SIAFAWSAccessRight accessRight;
 @property (nonatomic, strong) NSString* name;
 @property (nonatomic, readonly) NSDate* creationDate;
+@property (nonatomic, assign) SIAFAWSRegion region;
+@property (nonatomic, readonly) NSString* regionName;
+@property (nonatomic, strong) SIAFAWSClient* awsClient;
 
 -(id)initWithName:(NSString*)name andCreationDate:(NSDate*)date;
 

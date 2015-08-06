@@ -19,6 +19,7 @@
 #define SIAFAWSemptyHash @"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error);
+typedef void(^AWSCompBlock)(void);
 
 @interface SIAFAWSClient () {
     BOOL keysFromKeychain;
@@ -27,7 +28,7 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
 @end
 
 @implementation SIAFAWSClient
-@synthesize secretKey, accessKey, bucket, delegate, syncWithKeychain;
+@synthesize secretKey = _secretKey, accessKey = _accessKey, bucket, delegate, syncWithKeychain, isBusy = _isBusy;
 
 -(NSString*)host {
     return SIAFAWSRegionalBaseURL(self.region);
@@ -41,11 +42,11 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
     for (NSDictionary* account in [SSKeychain accountsForService:@"Amazon Webservices S3 - SIAFAWS"]) {
         if ([[account valueForKey:kSSKeychainAccountKey] isEqualToString:@"Signing Key"]) {
             self.signingKey = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:@"Amazon Webservices S3 - SIAFAWS" account:[account valueForKey:kSSKeychainAccountKey]]];
-            NSLog(@"imported signing key");
         } else {
             self.accessKey = [account valueForKey:kSSKeychainAccountKey];
             self.secretKey = [SSKeychain passwordForService:@"Amazon Webservices S3 - SIAFAWS" account:[account valueForKey:kSSKeychainAccountKey]];
         }
+        keysFromKeychain = YES;
     }
     return self;
 }
@@ -89,6 +90,11 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
         dateFormat.dateFormat = @"yyyy-mm-dd'T'hh:MM:ss'Z'";
         for (NSDictionary* bucketDict in [[responseDict valueForKey:@"Buckets"] valueForKey:@"Bucket"]) {
             AWSBucket* myBucket = [[AWSBucket alloc] initWithName:[bucketDict valueForKey:@"Name"] andCreationDate:[dateFormat dateFromString:[bucketDict valueForKey:@"CreationDate"]]];
+            NSString* baseUrl = operation.request.URL.host;
+            if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
+                baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+            }
+            myBucket.region = SIAFAWSRegionForBaseURL(baseUrl);
             if (checkPermission) {
                 [self checkBucket:myBucket forPermissionWithBlock:^(SIAFAWSAccessRight accessRight) {
                     if (accessRight == SIAFAWSFullControl || accessRight == SIAFAWSRead || accessRight == SIAFAWSWrite) [bucketList addObject:myBucket];
@@ -123,9 +129,30 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
         else if ([responseString isEqualToString:@"WRITE_ACP"]) access = SIAFAWSWriteACP;
         else if ([responseString isEqualToString:@"READ"]) access = SIAFAWSRead;
         else if ([responseString isEqualToString:@"READ_ACP"]) access = SIAFAWSReadACP;
+        else access = SIAFAWSAccessUndefined;
+        checkBucket.accessRight = access;
         block(access);
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:aclOperation];
+}
+
+#pragma mark setter methods for credentials
+-(void)setAccessKey:(NSString *)accessKey {
+    if (self.signingKey) {
+        if (![accessKey isEqualToString:self.signingKey.accessKey]) {
+            self.signingKey.keyDate = [NSDate distantPast];
+        }
+    }
+    _accessKey = accessKey;
+}
+
+-(void)setRegion:(SIAFAWSRegion)region {
+    if (self.signingKey) {
+        if (region != self.signingKey.region) {
+            self.signingKey.keyDate = [NSDate distantPast];
+        }
+    }
+    _region = region;
 }
 
 #pragma mark Methods for signing according to AWS4
@@ -147,7 +174,12 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
     return [[AWSOperation alloc] initWithRequest:request];
 }
 
--(NSString*)AuthorizationHeaderStringForRequest:(NSMutableURLRequest*)request {;
+-(NSString*)AuthorizationHeaderStringForRequest:(NSMutableURLRequest*)request {
+    NSString* baseUrl = request.URL.host;
+    if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
+        baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+    }
+    SIAFAWSRegion requestRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
     NSDate* date = [NSDate date];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyyMMdd"];
@@ -169,24 +201,46 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
     NSData* sha = [CryptoHelper sha256:request.HTTPBody];
     NSString* shaHex = [sha hexadecimalString];
     NSString* canonicalRequestString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n\n%@\n%@", request.HTTPMethod, [resourceString urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]], paramsString, headerString, [[request.allHTTPHeaderFields.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], shaHex];
-    NSString* scope = [NSString stringWithFormat:@"%@/%@/s3/aws4_request", [dateFormatter stringFromDate:date], SIAFAWSRegion(self.region)];
+    NSString* scope = [NSString stringWithFormat:@"%@/%@/s3/aws4_request", [dateFormatter stringFromDate:date], SIAFAWSRegion(requestRegion)];
     NSString* stringToSign = [NSString stringWithFormat:@"AWS4-HMAC-SHA256\n%@\n%@\n%@", [dateFormatter2 stringFromDate:date], scope, [[CryptoHelper sha256:[canonicalRequestString dataUsingEncoding:NSASCIIStringEncoding]] hexadecimalString]];
     
-    if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60) || self.signingKey.region != self.region) {
+    if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60) || self.signingKey.region != requestRegion) {
+        NSLog(@"create new signing key");
+        if (!self.accessKey && !self.signingKey.accessKey) {
+            if ([self.delegate respondsToSelector:@selector(awsclientRequiresAccessKey:)]) {
+                self.accessKey = [self.delegate awsclientRequiresAccessKey:self];
+            } else {
+                NSError* accessKeyError = [NSError errorWithDomain:@"SIAFAWSClient" code:100 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"No access key provided for Amazon S3", @"SIAFAWSError no access key")}];
+                NSAlert* alert = [NSAlert alertWithError:accessKeyError];
+                [alert runModal];
+                return nil;
+            }
+        }
+        if (!self.secretKey) {
+            if ([self.delegate respondsToSelector:@selector(awsclientRequiresSecretKey:)]) {
+                self.accessKey = [self.delegate awsclientRequiresSecretKey:self];
+            } else {
+                NSError* secretKeyError = [NSError errorWithDomain:@"SIAFAWSClient" code:101 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"No secret key provided for Amazon S3", @"SIAFAWSError no secret key")}];
+                NSAlert* alert = [NSAlert alertWithError:secretKeyError];
+                [alert runModal];
+                return nil;
+            }
+        }
         NSString* secStr = [NSString stringWithFormat:@"AWS4%@", self.secretKey];
         NSData* dateKey = [CryptoHelper hmac:[dateFormatter stringFromDate:date] withDataKey:[NSData dataWithBytes:[secStr cStringUsingEncoding:NSASCIIStringEncoding] length:secStr.length]];
-        NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(self.region) withDataKey:dateKey];
+        NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(requestRegion) withDataKey:dateKey];
         NSData* dateRegionServiceKey = [CryptoHelper hmac:@"s3" withDataKey:dateRegionKey];
         NSData* signingKey = [CryptoHelper hmac:@"aws4_request" withDataKey:dateRegionServiceKey];
         AWSSigningKey* newSigningKey = [[AWSSigningKey alloc] initWithKey:signingKey andDate:date];
         self.signingKey = newSigningKey;
         newSigningKey.region = self.region;
+        newSigningKey.accessKey = self.accessKey;
         if (self.syncWithKeychain) [newSigningKey saveToKeychain];
     }
     
     NSData* signatureData = [CryptoHelper hmac:stringToSign withDataKey:self.signingKey.key];
     signature = [signatureData hexadecimalString];
-    NSString* sigString = [NSString stringWithFormat:@"AWS4-HMAC-SHA256 Credential=%@/%@/%@/s3/aws4_request,SignedHeaders=%@,Signature=%@", self.accessKey, [dateFormatter stringFromDate:self.signingKey.keyDate], SIAFAWSRegion(self.region), [request.allHTTPHeaderFields.allKeys commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], signature];
+    NSString* sigString = [NSString stringWithFormat:@"AWS4-HMAC-SHA256 Credential=%@/%@/%@/s3/aws4_request,SignedHeaders=%@,Signature=%@", self.accessKey, [dateFormatter stringFromDate:self.signingKey.keyDate], SIAFAWSRegion(requestRegion), [request.allHTTPHeaderFields.allKeys commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], signature];
     return sigString;
 }
 
@@ -196,6 +250,20 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
     NSString* authHeader = [self AuthorizationHeaderStringForRequest:request];
     [request setValue:authHeader forHTTPHeaderField:@"Authorization"];
     operation.request = request;
+    if (!_isBusy) {
+        [self willChangeValueForKey:@"isBusy"];
+        _isBusy = YES;
+        [self didChangeValueForKey:@"isBusy"];
+    }
+    __block AWSCompBlock compBlock = [operation.completionBlock copy];
+    [operation setCompletionBlock:^{
+        if (compBlock) compBlock();
+        if (self.operationQueue.operationCount <= 0) {
+            [self willChangeValueForKey:@"isBusy"];
+            _isBusy = NO;
+            [self didChangeValueForKey:@"isBusy"];
+        }
+    }];
     [super enqueueHTTPRequestOperation:operation];
 }
 
@@ -208,6 +276,14 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
             if ([recoverDict valueForKey:@"Endpoint"]) {
                 AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:[recoverDict valueForKey:@"Endpoint"]];
                 [redirOp setCompletionBlock:[operation completionBlock]];
+                NSString* baseUrl = [recoverDict valueForKey:@"Endpoint"];
+                if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
+                    baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+                }
+                SIAFAWSRegion newRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
+                if (newRegion != self.region)  {
+                    self.region = newRegion;
+                }
                 [self enqueueHTTPRequestOperation:redirOp];
             }
         } else {
@@ -226,7 +302,7 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
 @end
 
 @implementation AWSSigningKey
-@synthesize key, keyDate;
+@synthesize key, keyDate, accessKey, region;
 
 -(id)initWithKey:(NSData *)keyContent andDate:(NSDate *)creationDate {
     self = [self init];
@@ -239,6 +315,7 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
     [aCoder encodeObject:self.key forKey:@"key"];
     [aCoder encodeObject:self.keyDate forKey:@"keyDate"];
     [aCoder encodeInt:self.region forKey:@"region"];
+    [aCoder encodeObject:self.accessKey forKey:@"accessKey"];
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
@@ -247,6 +324,7 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
         self.key = [aDecoder decodeObjectForKey:@"key"];
         self.keyDate = [aDecoder decodeObjectForKey:@"keyDate"];
         self.region = [aDecoder decodeIntForKey:@"region"];
+        self.accessKey = [aDecoder decodeObjectForKey:@"accessKey"];
     }
     return self;
 }
@@ -259,7 +337,7 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
 @end
 
 @implementation AWSBucket
-@synthesize accessRight = _accessRight, name = _name, creationDate = _creationDate;
+@synthesize accessRight = _accessRight, name = _name, creationDate = _creationDate, region = _region, awsClient;
 
 -(id)init {
     self = [super init];
@@ -278,10 +356,14 @@ typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error
 }
 
 -(SIAFAWSAccessRight)accessRight {
-    if (_accessRight == SIAFAWSAccessUndefined) {
-        
+    if (_accessRight == SIAFAWSAccessUndefined && self.awsClient) {
+        [self.awsClient checkBucket:self forPermissionWithBlock:nil];
     }
     return _accessRight;
+}
+
+-(NSString*)regionName {
+    return SIAFAWSRegionName(self.region);
 }
 
 @end
