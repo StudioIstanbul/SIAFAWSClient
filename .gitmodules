@@ -10,3 +10,6 @@
 [submodule "sskeychain"]
 	path = sskeychain
 	url = git@github.com:samsoffes/sskeychain.git
+[submodule "Base64"]
+	path = Base64
+	url = git@github.com:ekscrypto/Base64.git

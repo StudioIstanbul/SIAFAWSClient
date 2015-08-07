@@ -15,6 +15,7 @@
 #import "XMLDictionary.h"
 #import "SSKeychain.h"
 #import "XQueryComponents.h"
+#import "../Base64/Base64/MF_Base64Additions.h"
 
 #define SIAFAWSemptyHash @"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
@@ -43,11 +44,12 @@ typedef void(^AWSCompBlock)(void);
         if ([[account valueForKey:kSSKeychainAccountKey] isEqualToString:@"Signing Key"]) {
             self.signingKey = [NSKeyedUnarchiver unarchiveObjectWithData:[SSKeychain passwordDataForService:@"Amazon Webservices S3 - SIAFAWS" account:[account valueForKey:kSSKeychainAccountKey]]];
         } else {
-            self.accessKey = [account valueForKey:kSSKeychainAccountKey];
-            self.secretKey = [SSKeychain passwordForService:@"Amazon Webservices S3 - SIAFAWS" account:[account valueForKey:kSSKeychainAccountKey]];
+            //self.accessKey = [account valueForKey:kSSKeychainAccountKey];
+            //self.secretKey = [SSKeychain passwordForService:@"Amazon Webservices S3 - SIAFAWS" account:[account valueForKey:kSSKeychainAccountKey]];
         }
         keysFromKeychain = YES;
     }
+    [self.operationQueue setMaxConcurrentOperationCount:3];
     return self;
 }
 
@@ -157,6 +159,10 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName {
+    [self uploadFileFromURL:url toKey:key onBucket:bucketName withSSECKey:nil];
+}
+
+-(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey {
     self.bucket = bucketName;
     AWSOperation* uploadOperation = [self requestOperationWithMethod:@"PUT" path:key parameters:nil];
     [uploadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -166,6 +172,12 @@ typedef void(^AWSCompBlock)(void);
     NSLog(@"uploading %li bytes", data.length);
     uploadOperation.request.HTTPBody = data;
     [uploadOperation.request setValue:[NSString stringWithFormat:@"%li", data.length] forHTTPHeaderField:@"Content-Length"];
+    if (ssecKey) {
+        NSLog(@"uploading encrypted!");
+        [uploadOperation.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
+        [uploadOperation.request setValue:[ssecKey base64String] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]; //x-amz-server-side​-encryption​-customer-key
+        [uploadOperation.request setValue:[CryptoHelper md5Base64StringFromData:ssecKey] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key-MD5"]; //x-amz-server-side​-encryption​-customer-key-MD5
+    }
     [uploadOperation setUploadProgressBlock:^(NSUInteger bytesWritten, long long totalBytesWritten, long long totalBytesExpectedToWrite) {
         if ([self.delegate respondsToSelector:@selector(uploadProgress:forURL:)]) [self.delegate uploadProgress:(double)totalBytesWritten/(double)totalBytesExpectedToWrite forURL:url];
     }];
@@ -317,6 +329,7 @@ typedef void(^AWSCompBlock)(void);
             [self didChangeValueForKey:@"isBusy"];
         }
     }];
+    NSLog(@"auth header for %@: %@", operation.request.debugDescription, authHeader);
     [super enqueueHTTPRequestOperation:operation];
 }
 

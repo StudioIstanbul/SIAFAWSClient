@@ -81,6 +81,7 @@ typedef enum {
 -(void)listBucket:(NSString*)bucketName;
 
 -(void)uploadFileFromURL:(NSURL*)url toKey:(NSString*)key onBucket:(NSString*)bucketName;
+-(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSString*)ssecKey;
 
 -(void)checkBucket:(AWSBucket*)checkBucket forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block;
 @end
