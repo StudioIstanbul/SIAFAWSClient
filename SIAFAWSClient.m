@@ -16,6 +16,7 @@
 #import "SSKeychain.h"
 #import "XQueryComponents.h"
 #import "../Base64/Base64/MF_Base64Additions.h"
+#import "NSThread+Blocks.h"
 
 #define SIAFAWSemptyHash @"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
@@ -325,11 +326,15 @@ typedef void(^AWSCompBlock)(void);
     }
     __block AWSCompBlock compBlock = [operation.completionBlock copy];
     [operation setCompletionBlock:^{
-        if (compBlock) compBlock();
-        if (self.operationQueue.operationCount <= 0) {
-            [self willChangeValueForKey:@"isBusy"];
-            _isBusy = NO;
-            [self didChangeValueForKey:@"isBusy"];
+        if (self.callBackThread) {
+            [self.callBackThread performBlock:^{
+                if (compBlock) compBlock();
+                if (self.operationQueue.operationCount <= 0) {
+                    [self willChangeValueForKey:@"isBusy"];
+                    _isBusy = NO;
+                    [self didChangeValueForKey:@"isBusy"];
+                }
+            } waitUntilDone:NO];
         }
     }];
     [super enqueueHTTPRequestOperation:operation];

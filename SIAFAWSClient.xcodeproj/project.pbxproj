@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A901FCB81B766A2E001357C6 /* NSThread+Blocks.h in Headers */ = {isa = PBXBuildFile; fileRef = A901FCB61B766A2E001357C6 /* NSThread+Blocks.h */; };
+		A901FCB91B766A2E001357C6 /* NSThread+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = A901FCB71B766A2E001357C6 /* NSThread+Blocks.m */; };
 		A9CB066D1B70B51600331A38 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CB066C1B70B51600331A38 /* Cocoa.framework */; };
 		A9CB06771B70B51600331A38 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9CB06751B70B51600331A38 /* InfoPlist.strings */; };
 		A9CB06891B70B53900331A38 /* SIAFAWSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB06871B70B53900331A38 /* SIAFAWSClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -55,6 +57,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A901FCB61B766A2E001357C6 /* NSThread+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSThread+Blocks.h"; path = "HelperCategories/NSThread+Blocks.h"; sourceTree = SOURCE_ROOT; };
+		A901FCB71B766A2E001357C6 /* NSThread+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSThread+Blocks.m"; path = "HelperCategories/NSThread+Blocks.m"; sourceTree = SOURCE_ROOT; };
 		A9CB06691B70B51600331A38 /* SIAFAWSClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SIAFAWSClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9CB066C1B70B51600331A38 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		A9CB066F1B70B51600331A38 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -203,6 +207,8 @@
 				A9CB06D91B70B6CD00331A38 /* NSString+urlencode.m */,
 				A9D970511B72A24A00ECAFAE /* XQueryComponents.h */,
 				A9D970521B72A24A00ECAFAE /* XQueryComponents.m */,
+				A901FCB61B766A2E001357C6 /* NSThread+Blocks.h */,
+				A901FCB71B766A2E001357C6 /* NSThread+Blocks.m */,
 			);
 			name = HelperCategories;
 			path = ../../HelperCategories;
@@ -282,6 +288,7 @@
 				A9CB074D1B70BB4900331A38 /* AFXMLRequestOperation.h in Headers */,
 				A9CB074F1B70BB4900331A38 /* UIImageView+AFNetworking.h in Headers */,
 				A9D970531B72A24A00ECAFAE /* XQueryComponents.h in Headers */,
+				A901FCB81B766A2E001357C6 /* NSThread+Blocks.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -368,6 +375,7 @@
 				A9CB074E1B70BB4900331A38 /* AFXMLRequestOperation.m in Sources */,
 				A9CB07501B70BB4900331A38 /* UIImageView+AFNetworking.m in Sources */,
 				A9D970541B72A24A00ECAFAE /* XQueryComponents.m in Sources */,
+				A901FCB91B766A2E001357C6 /* NSThread+Blocks.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

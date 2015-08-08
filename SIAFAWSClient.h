@@ -74,6 +74,7 @@ typedef enum {
 @property (nonatomic, retain) AWSSigningKey* signingKey;
 @property (nonatomic) BOOL syncWithKeychain;
 @property (nonatomic, readonly) BOOL isBusy;
+@property (nonatomic, strong) NSThread* callBackThread;
 
 -(NSString*)host;
 
