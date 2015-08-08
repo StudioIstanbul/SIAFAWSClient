@@ -49,7 +49,7 @@ typedef void(^AWSCompBlock)(void);
         }
         keysFromKeychain = YES;
     }
-    [self.operationQueue setMaxConcurrentOperationCount:3];
+    [self.operationQueue setMaxConcurrentOperationCount:1];
     return self;
 }
 
@@ -166,7 +166,9 @@ typedef void(^AWSCompBlock)(void);
     self.bucket = bucketName;
     AWSOperation* uploadOperation = [self requestOperationWithMethod:@"PUT" path:key parameters:nil];
     [uploadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"upload completed");
+        if ([self.delegate respondsToSelector:@selector(awsclient:finishedUploadForUrl:)]) {
+            [self.delegate awsclient:self finishedUploadForUrl:url];
+        }
     } failure:[self failureBlock]];
     NSData* data = [NSData dataWithContentsOfURL:url];
     NSLog(@"uploading %li bytes", data.length);
@@ -243,7 +245,6 @@ typedef void(^AWSCompBlock)(void);
     if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
         baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
     }
-    NSLog(@"baseURL: %@", baseUrl);
     SIAFAWSRegion requestRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
     NSDate* date = [NSDate date];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
@@ -331,7 +332,6 @@ typedef void(^AWSCompBlock)(void);
             [self didChangeValueForKey:@"isBusy"];
         }
     }];
-    NSLog(@"auth header for %@: %@", operation.request.debugDescription, authHeader);
     [super enqueueHTTPRequestOperation:operation];
 }
 
@@ -437,6 +437,14 @@ typedef void(^AWSCompBlock)(void);
 @end
 
 @implementation AWSFile
-@synthesize etag, key, fileSize, lastModified, bucket;
+@synthesize etag, key = _key, fileSize, lastModified, bucket;
+
+-(void)setKey:(NSString *)key {
+    if ([key rangeOfString:@"/"].location != 0) {
+        _key = [NSString stringWithFormat:@"/%@", key];
+    } else {
+        _key = key;
+    }
+}
 
 @end

@@ -47,6 +47,7 @@ typedef enum {
 -(void)awsclient:(SIAFAWSClient *)client receivedBucketList:(NSArray *)buckets;
 -(NSString*)awsclientRequiresAccessKey:(SIAFAWSClient *)client;
 -(NSString*)awsclientRequiresSecretKey:(SIAFAWSClient *)client;
+-(void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL*)localURL;
 -(void)uploadProgress:(double)progress forURL:(NSURL*)localFileUrl;
 @end
 
