@@ -266,8 +266,6 @@ typedef void(^AWSCompBlock)(void);
     NSData* sha = [CryptoHelper sha256:request.HTTPBody];
     NSString* shaHex = [sha hexadecimalString];
     NSString* canonicalRequestString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n\n%@\n%@", request.HTTPMethod, [resourceString urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]], paramsString, headerString, [[request.allHTTPHeaderFields.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], shaHex];
-    NSString* scope = [NSString stringWithFormat:@"%@/%@/s3/aws4_request", [dateFormatter stringFromDate:date], SIAFAWSRegion(requestRegion)];
-    NSString* stringToSign = [NSString stringWithFormat:@"AWS4-HMAC-SHA256\n%@\n%@\n%@", [dateFormatter2 stringFromDate:date], scope, [[CryptoHelper sha256:[canonicalRequestString dataUsingEncoding:NSASCIIStringEncoding]] hexadecimalString]];
     
     if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60) || self.signingKey.region != requestRegion) {
         NSLog(@"create new signing key");
@@ -302,6 +300,10 @@ typedef void(^AWSCompBlock)(void);
         newSigningKey.accessKey = self.accessKey;
         if (self.syncWithKeychain) [newSigningKey saveToKeychain];
     }
+    
+    NSString* scope = [NSString stringWithFormat:@"%@/%@/s3/aws4_request", [dateFormatter stringFromDate:self.signingKey.keyDate], SIAFAWSRegion(requestRegion)];
+    NSString* stringToSign = [NSString stringWithFormat:@"AWS4-HMAC-SHA256\n%@\n%@\n%@", [dateFormatter2 stringFromDate:date], scope, [[CryptoHelper sha256:[canonicalRequestString dataUsingEncoding:NSASCIIStringEncoding]] hexadecimalString]];
+
     
     NSData* signatureData = [CryptoHelper hmac:stringToSign withDataKey:self.signingKey.key];
     signature = [signatureData hexadecimalString];
