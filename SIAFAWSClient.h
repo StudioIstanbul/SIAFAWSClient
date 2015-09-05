@@ -49,6 +49,8 @@ typedef enum {
 -(NSString*)awsclientRequiresSecretKey:(SIAFAWSClient *)client;
 -(void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL*)localURL;
 -(void)uploadProgress:(double)progress forURL:(NSURL*)localFileUrl;
+-(void)awsClient:(SIAFAWSClient*)client requestFailedWithError:(NSError*)error;
+-(void)awsClient:(SIAFAWSClient*)client changedLifeCycleForBucket:(NSString*)bucket;
 @end
 
 @interface AWSSigningKey : NSObject <NSCoding>
@@ -61,7 +63,7 @@ typedef enum {
 -(void)saveToKeychain;
 @end
 
-@class AWSBucket;
+@class AWSBucket, AWSLifeCycle;
 
 @interface SIAFAWSClient : AFHTTPClient
 
@@ -86,6 +88,8 @@ typedef enum {
 -(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSString*)ssecKey;
 
 -(void)checkBucket:(AWSBucket*)checkBucket forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block;
+
+-(void)setBucketLifecycle:(AWSLifeCycle*)awsLifecycle forBucket:(NSString*)bucketName;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation
@@ -114,5 +118,24 @@ typedef enum {
 @property (nonatomic, assign) NSInteger fileSize;
 @property (nonatomic, strong) NSString* etag;
 @property (nonatomic, strong) NSString* bucket;
+
+@end
+
+@interface AWSLifeCycleRule : NSObject
+@property (strong, nonatomic) NSString* ID;
+@property (strong, nonatomic) NSString* prefix;
+@property (assign, nonatomic) NSTimeInterval exiprationInterval;
+@property (assign, nonatomic) NSTimeInterval transitionInterval;
+@property (assign, nonatomic) BOOL transition;
+@property (assign, nonatomic) BOOL expiration;
+
+@end
+
+@interface AWSLifeCycle : NSObject
+
+@property (readonly, nonatomic) NSArray* rules;
+
+-(void) addLiveCycleRule:(AWSLifeCycleRule*)rule;
+-(NSData*) xmlData;
 
 @end

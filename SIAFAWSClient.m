@@ -172,7 +172,6 @@ typedef void(^AWSCompBlock)(void);
         }
     } failure:[self failureBlock]];
     NSData* data = [NSData dataWithContentsOfURL:url];
-    NSLog(@"uploading %li bytes", data.length);
     uploadOperation.request.HTTPBody = data;
     [uploadOperation.request setValue:[NSString stringWithFormat:@"%li", data.length] forHTTPHeaderField:@"Content-Length"];
     if (ssecKey) {
@@ -185,6 +184,22 @@ typedef void(^AWSCompBlock)(void);
         if ([self.delegate respondsToSelector:@selector(uploadProgress:forURL:)]) [self.delegate uploadProgress:(double)totalBytesWritten/(double)totalBytesExpectedToWrite forURL:url];
     }];
     [self enqueueHTTPRequestOperation:uploadOperation];
+}
+
+-(void)setBucketLifecycle:(AWSLifeCycle *)awsLifecycle forBucket:(NSString *)bucketName {
+    self.bucket = bucketName;
+    AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];
+    [lifeCycleOperation.request setURL:[NSURL URLWithString:@"/?lifecycle" relativeToURL:lifeCycleOperation.request.URL]];
+    NSData* lcData = awsLifecycle.xmlData;
+    lifeCycleOperation.request.HTTPBody = lcData;
+    [lifeCycleOperation.request setValue:[CryptoHelper md5Base64StringFromData:lcData] forHTTPHeaderField:@"Content-MD5"];
+    [lifeCycleOperation.request setValue:[NSString stringWithFormat:@"%li", lcData.length] forHTTPHeaderField:@"Content-Length"];
+    [lifeCycleOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([self.delegate respondsToSelector:@selector(awsClient:changedLifeCycleForBucket:)]) {
+            [self.delegate awsClient:self changedLifeCycleForBucket:bucketName];
+        }
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:lifeCycleOperation];
 }
 
 #pragma mark setter methods for credentials
@@ -310,6 +325,7 @@ typedef void(^AWSCompBlock)(void);
     NSData* signatureData = [CryptoHelper hmac:stringToSign withDataKey:self.signingKey.key];
     signature = [signatureData hexadecimalString];
     NSString* sigString = [NSString stringWithFormat:@"AWS4-HMAC-SHA256 Credential=%@/%@/%@/s3/aws4_request,SignedHeaders=%@,Signature=%@", self.signingKey.accessKey, [dateFormatter stringFromDate:self.signingKey.keyDate], SIAFAWSRegion(requestRegion), [request.allHTTPHeaderFields.allKeys commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], signature];
+    NSLog(@"sigString: %@", sigString);
     return sigString;
 }
 
@@ -361,6 +377,12 @@ typedef void(^AWSCompBlock)(void);
             }
         } else {
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
+            if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
+                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]}];
+                [self.delegate awsClient:self requestFailedWithError:awsError];
+            } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
+                [self.delegate awsClient:self requestFailedWithError:error];
+            }
         }
     };
     return block;
@@ -450,6 +472,74 @@ typedef void(^AWSCompBlock)(void);
     } else {
         _key = key;
     }
+}
+
+@end
+
+@implementation AWSLifeCycle {
+    NSMutableArray* _rules;
+}
+
+@synthesize rules;
+
+-(id)init {
+    self = [super init];
+    if (self) {
+        _rules = [NSMutableArray array];
+    }
+    return self;
+}
+
+-(NSArray*)rules {
+    return [NSArray arrayWithArray:_rules];
+}
+
+-(void)addLiveCycleRule:(AWSLifeCycleRule *)rule {
+    [_rules addObject:rule];
+}
+
+-(NSData*)xmlData {
+    NSMutableDictionary* valueDict = [NSMutableDictionary dictionary];
+    NSMutableArray* valueArray = [NSMutableArray arrayWithCapacity:_rules.count];
+    for (AWSLifeCycleRule* rule in _rules) {
+        NSMutableDictionary* ruleDict = [NSMutableDictionary dictionary];
+        NSMutableDictionary* ruleVals = [NSMutableDictionary dictionary];
+        [ruleVals setValue:rule.ID forKey:@"ID"];
+        [ruleVals setValue:rule.prefix forKey:@"Prefix"];
+        [ruleVals setValue:@"Enabled" forKey:@"Status"];
+        if (rule.transition) {
+            NSLog(@"transition %f", rule.transitionInterval);
+            [ruleVals setValue:@{@"Days": [NSString stringWithFormat:@"%0.0f", rule.transitionInterval / 24 / 60 / 60], @"StorageClass": @"GLACIER"} forKey:@"Transition"];
+        }
+        if (rule.expiration) {
+            NSLog(@"exipration %f", rule.exiprationInterval);
+            [ruleVals setValue:@{@"Days": [NSString stringWithFormat:@"%0.0f", rule.exiprationInterval / 24 / 60 / 60]} forKey:@"Expiration"];
+            
+        }
+        [ruleDict setValue:ruleVals forKey:@"Rule"];
+        [valueArray addObject:ruleDict];
+    }
+    [valueDict setValue:valueArray forKey:@"LifecycleConfiguration"];
+    NSString* xmlString = [valueDict XMLString];
+
+    NSData* xmlData = [xmlString dataUsingEncoding:NSUTF8StringEncoding];
+    return xmlData;
+}
+
+@end
+
+@implementation AWSLifeCycleRule
+
+@synthesize ID, transition, transitionInterval = _transitionInterval, exiprationInterval = _exiprationInterval, prefix, expiration;
+
+-(void)setExiprationInterval:(NSTimeInterval)exiprationInterval {
+    self.expiration = YES;
+    _exiprationInterval = exiprationInterval;
+}
+
+-(void)setTransitionInterval:(NSTimeInterval)transitionInterval {
+    self.transition = YES;
+    _transitionInterval = transitionInterval;
 }
 
 @end
