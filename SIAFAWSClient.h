@@ -38,7 +38,7 @@ typedef enum {
 #define SIAFAWSReginCount 9
 #define SIAFAWSRegionForBaseURL(url) [@[@"s3.amazonaws.com", @"s3-us-west-2.amazonaws.com", @"s3-us-west-1.amazonaws.com", @"s3-eu-west-1.amazonaws.com", @"s3-eu-central-1.amazonaws.com", @"s3-ap-southeast-1.amazonaws.com", @"s3-ap-southeast-2.amazonaws.com", @"s3-ap-northeast-1.amazonaws.com", @"s3-sa-east-1.amazonaws.com"] indexOfString:url]
 
-@class SIAFAWSClient;
+@class SIAFAWSClient, AWSLifeCycle;
 
 @protocol SIAFAWSClientProtocol
 
@@ -51,6 +51,7 @@ typedef enum {
 -(void)uploadProgress:(double)progress forURL:(NSURL*)localFileUrl;
 -(void)awsClient:(SIAFAWSClient*)client requestFailedWithError:(NSError*)error;
 -(void)awsClient:(SIAFAWSClient*)client changedLifeCycleForBucket:(NSString*)bucket;
+-(void)awsClient:(SIAFAWSClient*)client receivedLifecycleConfiguration:(AWSLifeCycle*)lifeCycleConfiguration forBucket:(NSString*)bucketName;
 @end
 
 @interface AWSSigningKey : NSObject <NSCoding>
@@ -90,6 +91,7 @@ typedef enum {
 -(void)checkBucket:(AWSBucket*)checkBucket forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block;
 
 -(void)setBucketLifecycle:(AWSLifeCycle*)awsLifecycle forBucket:(NSString*)bucketName;
+-(void)lifecycleRulesForBucket:(NSString*)bucketName;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation

@@ -202,6 +202,31 @@ typedef void(^AWSCompBlock)(void);
     [self enqueueHTTPRequestOperation:lifeCycleOperation];
 }
 
+-(void)lifecycleRulesForBucket:(NSString *)bucketName {
+    self.bucket = bucketName;
+    AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:@{@"lifecycle": [NSNull null]}];
+    [lifeCycleOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary* responseDict = [NSDictionary dictionaryWithXMLData:responseObject];
+        AWSLifeCycle* lifeCycle = [[AWSLifeCycle alloc] init];
+        NSArray* rules;
+        if ([[responseDict valueForKey:@"Rule"] isKindOfClass:[NSArray class]]) rules = [responseDict valueForKey:@"Rule"]; else rules = @[[responseDict valueForKey:@"Rule"]];
+        for (NSDictionary* rule in rules) {
+            AWSLifeCycleRule* lcRule = [[AWSLifeCycleRule alloc] init];
+            lcRule.ID = [rule valueForKey:@"ID"];
+            lcRule.prefix = [rule valueForKey:@"Prefix"];
+            if ([rule valueForKey:@"Transition"]) {
+                lcRule.transitionInterval = [[[rule valueForKey:@"Transition"] valueForKey:@"Days"] integerValue] * 24 * 60 * 60;
+            }
+            if ([rule valueForKey:@"Expiration"]) {
+                lcRule.exiprationInterval = [[[rule valueForKey:@"Expiration"] valueForKey:@"Days"] integerValue] * 24 * 60 * 60;
+            }
+            [lifeCycle addLiveCycleRule:lcRule];
+        }
+        if ([self.delegate respondsToSelector:@selector(awsClient:receivedLifecycleConfiguration:forBucket:)]) [self.delegate awsClient:self receivedLifecycleConfiguration:lifeCycle forBucket:bucketName];
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:lifeCycleOperation];
+}
+
 #pragma mark setter methods for credentials
 -(void)setAccessKey:(NSString *)accessKey {
     if (self.signingKey) {
