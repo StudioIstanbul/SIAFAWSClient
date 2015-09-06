@@ -57,8 +57,16 @@ typedef void(^AWSCompBlock)(void);
 #pragma mark methods for S3 buckets
 
 -(void)listBucket:(NSString *)bucketName {
+    [self listBucket:bucketName withPreviuousContents:nil fromMarkerKey:nil];
+}
+
+-(void)listBucket:(NSString *)bucketName withPreviuousContents:(NSMutableArray*)xfileContents fromMarkerKey:(NSString*)markerKey {
     self.bucket = bucketName;
-    AWSOperation* listOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
+    NSMutableDictionary* operationParams = [NSMutableDictionary dictionaryWithObject:@"500" forKey:@"max-keys"];
+    if (markerKey) [operationParams setValue:markerKey forKey:@"marker"];
+    AWSOperation* listOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:operationParams];
+    __block NSMutableArray* fileContents = xfileContents;
+    if (!fileContents) fileContents = [NSMutableArray new];
     [listOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary* responseDict = [NSDictionary dictionaryWithXMLData:responseObject];
         NSArray* contents;
@@ -67,13 +75,13 @@ typedef void(^AWSCompBlock)(void);
         } else {
             contents = [NSArray arrayWithObject:[responseDict valueForKey:@"Contents"]];
         }
+        NSLog(@"response %@", responseDict);        
         if (contents) {
             NSDateFormatter *rfc3339DateFormatter = [[NSDateFormatter alloc] init];
             NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
             [rfc3339DateFormatter setLocale:enUSPOSIXLocale];
             [rfc3339DateFormatter setDateFormat:@"yyyy'-'MM'-'dd'T'HH':'mm':'ss'.000Z'"];
             [rfc3339DateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-            NSMutableArray* fileContents = [NSMutableArray new];
             for (NSDictionary* fileDict in contents) {
                 AWSFile* newFile = [AWSFile new];
                 newFile.bucket = [responseDict valueForKey:@"Name"];
@@ -81,12 +89,20 @@ typedef void(^AWSCompBlock)(void);
                 newFile.etag = [fileDict valueForKey:@"ETag"];
                 newFile.fileSize = [[fileDict valueForKey:@"Size"] integerValue];
                 newFile.lastModified = [rfc3339DateFormatter dateFromString:[fileDict valueForKey:@"LastModified"]];
+                newFile.storageClass = SIAFAWSStandard;
+                if ([[fileDict valueForKey:@"StorageClass"] isEqualToString:@"GLACIER"]) newFile.storageClass = SIAFAWSGlacier;
+                else if ([[fileDict valueForKey:@"StorageClass"] isEqualToString:@"REDUCED_REDUNDANCY"]) newFile.storageClass = SIAFAWSReducedRedundancy;
                 [fileContents addObject:newFile];
             }
-            if ([delegate respondsToSelector:@selector(awsclient:receivedBucketContentList:forBucket:)]) {
-                [delegate awsclient:self receivedBucketContentList:[fileContents sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"key" ascending:YES]]] forBucket:bucketName];
+            if ([[responseDict valueForKey:@"IsTruncated"] isEqualToString:@"true"] && ![[responseDict valueForKey:@"Marker"] isEqualToString:((AWSFile*)fileContents.lastObject).key]) {
+                [self listBucket:bucketName withPreviuousContents:fileContents fromMarkerKey:((AWSFile*)fileContents.lastObject).key];
+            } else {
+                if ([delegate respondsToSelector:@selector(awsclient:receivedBucketContentList:forBucket:)]) {
+                    [delegate awsclient:self receivedBucketContentList:[fileContents sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"key" ascending:YES]]] forBucket:bucketName];
+                }
             }
         }
+        
     } failure:[self failureBlock]];
     __weak AFHTTPRequestOperation *weakOp = listOperation;
     [listOperation setRedirectResponseBlock:^NSURLRequest *(NSURLConnection *connection, NSURLRequest *request, NSURLResponse *redirectResponse) {
