@@ -217,6 +217,25 @@ typedef void(^AWSCompBlock)(void);
     [self enqueueHTTPRequestOperation:uploadOperation];
 }
 
+-(void)metadataForKey:(NSString *)key onBucket:(NSString *)bucketName {
+    [self metadataForKey:key onBucket:bucketName withSSECKey:nil];
+}
+
+-(void)metadataForKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey {
+    self.bucket = bucketName;
+    AWSOperation* metaDataOperation = [self requestOperationWithMethod:@"HEAD" path:key parameters:nil];
+    if (ssecKey) {
+        [metaDataOperation.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
+        [metaDataOperation.request setValue:[ssecKey base64String] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]; //x-amz-server-side​-encryption​-customer-key
+        [metaDataOperation.request setValue:[CryptoHelper md5Base64StringFromData:ssecKey] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key-MD5"]; //x-amz-server-side​-encryption​-customer-key-MD5
+    }
+    [metaDataOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary* responseDict = operation.response.allHeaderFields;
+        if ([self.delegate respondsToSelector:@selector(awsClient:receivedMetadata:forKey:onBucket:)]) [self.delegate awsClient:self receivedMetadata:responseDict forKey:key onBucket:bucketName];
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:metaDataOperation];
+}
+
 -(void)setBucketLifecycle:(AWSLifeCycle *)awsLifecycle forBucket:(NSString *)bucketName {
     self.bucket = bucketName;
     AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];
