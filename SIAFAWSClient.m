@@ -236,6 +236,34 @@ typedef void(^AWSCompBlock)(void);
     [self enqueueHTTPRequestOperation:metaDataOperation];
 }
 
+-(void)downloadFileFromKey:(NSString *)key onBucket:(NSString *)bucketName toURL:(NSURL *)fileURL {
+    [self downloadFileFromKey:key onBucket:bucketName toURL:fileURL withSSECKey:nil];
+}
+
+-(void)downloadFileFromKey:(NSString *)key onBucket:(NSString *)bucketName toURL:(NSURL *)fileURL withSSECKey:(NSData *)ssecKey {
+    self.bucket = bucketName;
+    AWSOperation* downloadOperation = [self requestOperationWithMethod:@"GET" path:key parameters:nil];
+    if (ssecKey) {
+        [downloadOperation.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
+        [downloadOperation.request setValue:[ssecKey base64String] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]; //x-amz-server-side​-encryption​-customer-key
+        [downloadOperation.request setValue:[CryptoHelper md5Base64StringFromData:ssecKey] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key-MD5"]; //x-amz-server-side​-encryption​-customer-key-MD5
+    }
+    [downloadOperation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        if ([self.delegate respondsToSelector:@selector(downloadProgress:forKey:)]) {
+            [self.delegate downloadProgress:(double)totalBytesRead/(double)totalBytesExpectedToRead forKey:key];
+        }
+    }];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:fileURL.path]) {
+        [[NSFileManager defaultManager] createFileAtPath:fileURL.path contents:nil attributes:nil];
+    }
+    NSOutputStream* outputStream = [NSOutputStream outputStreamWithURL:fileURL append:NO];
+    [downloadOperation setOutputStream:outputStream];
+    [downloadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([self.delegate respondsToSelector:@selector(awsclient:finishedDownloadForKey:toURL:)]) [self.delegate awsclient:self finishedDownloadForKey:key toURL:fileURL];
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:downloadOperation];
+}
+
 -(void)setBucketLifecycle:(AWSLifeCycle *)awsLifecycle forBucket:(NSString *)bucketName {
     self.bucket = bucketName;
     AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];

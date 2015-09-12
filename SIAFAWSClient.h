@@ -54,7 +54,9 @@ typedef enum {
 -(NSString*)awsclientRequiresAccessKey:(SIAFAWSClient *)client;
 -(NSString*)awsclientRequiresSecretKey:(SIAFAWSClient *)client;
 -(void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL*)localURL;
+-(void)awsclient:(SIAFAWSClient *)client finishedDownloadForKey:(NSString*)key toURL:(NSURL *)localURL;
 -(void)uploadProgress:(double)progress forURL:(NSURL*)localFileUrl;
+-(void)downloadProgress:(double)progress forKey:(NSString*)key;
 -(void)awsClient:(SIAFAWSClient*)client receivedMetadata:(NSDictionary*)metadata forKey:(NSString*)key onBucket:(NSString*)bucket;
 -(void)awsClient:(SIAFAWSClient*)client requestFailedWithError:(NSError*)error;
 -(void)awsClient:(SIAFAWSClient*)client changedLifeCycleForBucket:(NSString*)bucket;
@@ -95,6 +97,9 @@ typedef enum {
 -(void)uploadFileFromURL:(NSURL*)url toKey:(NSString*)key onBucket:(NSString*)bucketName;
 -(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData*)ssecKey;
 -(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey withStorageClass:(SIAFAWSStorageClass)storageClass andMetadata:(NSDictionary*)metadata;
+
+-(void)downloadFileFromKey:(NSString*)key onBucket:(NSString*)bucketName toURL:(NSURL*)fileURL;
+-(void)downloadFileFromKey:(NSString*)key onBucket:(NSString*)bucketName toURL:(NSURL*)fileURL withSSECKey:(NSData*)ssecKey;
 
 -(void)metadataForKey:(NSString*)key onBucket:(NSString*)bucketName;
 -(void)metadataForKey:(NSString*)key onBucket:(NSString*)bucketName withSSECKey:(NSData *)ssecKey;
