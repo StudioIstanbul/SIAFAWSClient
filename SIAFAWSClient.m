@@ -180,6 +180,10 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey {
+    [self uploadFileFromURL:url toKey:key onBucket:bucketName withSSECKey:ssecKey withStorageClass:SIAFAWSStandard andMetadata:nil];
+}
+
+-(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey withStorageClass:(SIAFAWSStorageClass)storageClass andMetadata:(NSDictionary *)metadata {
     self.bucket = bucketName;
     AWSOperation* uploadOperation = [self requestOperationWithMethod:@"PUT" path:key parameters:nil];
     [uploadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -190,6 +194,17 @@ typedef void(^AWSCompBlock)(void);
     NSData* data = [NSData dataWithContentsOfURL:url];
     uploadOperation.request.HTTPBody = data;
     [uploadOperation.request setValue:[NSString stringWithFormat:@"%li", data.length] forHTTPHeaderField:@"Content-Length"];
+    if (storageClass == SIAFAWSGlacier) {
+        NSLog(@"Error: Storage Class GLACIER not supported for file upload by AWS. Using STANDARD instead");
+        storageClass = SIAFAWSStandard;
+    }
+    if (storageClass == SIAFAWSReducedRedundancy) [uploadOperation.request setValue:@"REDUCED_REDUNDANCY" forHTTPHeaderField:@"x-amz-storage-class"];
+    if (metadata) {
+        for (NSString* metadataKey in metadata.allKeys) {
+            NSLog(@"metadata %@ = %@", metadataKey, [metadata valueForKey:metadataKey]);
+            [uploadOperation.request setValue:[metadata valueForKey:metadataKey] forHTTPHeaderField:[NSString stringWithFormat:@"x-amz-meta-%@", metadataKey]];
+        }
+    }
     if (ssecKey) {
         NSLog(@"uploading encrypted!");
         [uploadOperation.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
