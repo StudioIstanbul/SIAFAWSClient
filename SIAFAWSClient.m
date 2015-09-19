@@ -231,7 +231,29 @@ typedef void(^AWSCompBlock)(void);
     }
     [metaDataOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary* responseDict = operation.response.allHeaderFields;
-        if ([self.delegate respondsToSelector:@selector(awsClient:receivedMetadata:forKey:onBucket:)]) [self.delegate awsClient:self receivedMetadata:responseDict forKey:key onBucket:bucketName];
+        AWSFile* metadataFile = [AWSFile new];
+        metadataFile.bucket = bucketName;
+        metadataFile.key = key;
+        metadataFile.etag = [responseDict valueForKey:@"ETag"];
+        metadataFile.fileSize = [[responseDict valueForKey:@"Content-Length"] integerValue];
+        NSDateFormatter *rfc3339DateFormatter = [[NSDateFormatter alloc] init];
+        NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        [rfc3339DateFormatter setLocale:enUSPOSIXLocale];
+        [rfc3339DateFormatter setDateFormat:@"EEE', 'dd' 'MMM' 'yyyy' 'HH':'mm':'ss"];
+        [rfc3339DateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        metadataFile.lastModified = [rfc3339DateFormatter dateFromString:[responseDict valueForKey:@"Last-Modified"]];
+        metadataFile.storageClass = SIAFAWSStandard;
+        if ([[responseDict valueForKey:@"x-amz-storage-class"] isEqualToString:@"GLACIER"]) metadataFile.storageClass = SIAFAWSGlacier;
+        else if ([[responseDict valueForKey:@"x-amz-storage-class"] isEqualToString:@"REDUCED_REDUNDANCY"]) metadataFile.storageClass = SIAFAWSReducedRedundancy;
+        NSMutableDictionary* metaDict = [NSMutableDictionary new];
+        for (NSString* mkey in responseDict.allKeys) {
+            if ([mkey rangeOfString:@"x-amz-meta-"].location == 0) {
+                NSString* xmKey = [mkey substringFromIndex:11];
+                [metaDict setValue:[responseDict valueForKey:mkey] forKey:xmKey];
+            }
+        }
+        metadataFile.metadata = [NSDictionary dictionaryWithDictionary:metaDict];
+        if ([self.delegate respondsToSelector:@selector(awsClient:receivedMetadata:forKey:onBucket:)]) [self.delegate awsClient:self receivedMetadata:metadataFile forKey:key onBucket:bucketName];
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:metaDataOperation];
 }
@@ -262,6 +284,28 @@ typedef void(^AWSCompBlock)(void);
         if ([self.delegate respondsToSelector:@selector(awsclient:finishedDownloadForKey:toURL:)]) [self.delegate awsclient:self finishedDownloadForKey:key toURL:fileURL];
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:downloadOperation];
+}
+
+-(void)restoreFileFromKey:(NSString *)key onBucket:(NSString *)bucketName withExpiration:(NSTimeInterval)expiration {
+    self.bucket = bucketName;
+    AWSOperation* restoreOperation = [self requestOperationWithMethod:@"POST" path:key parameters:nil];
+    [restoreOperation.request setURL:[NSURL URLWithString:@"?restore" relativeToURL:restoreOperation.request.URL]];
+    NSMutableData* contentData = [NSMutableData new];
+    NSDictionary* requestXML = @{@"RestoreRequest": @{@"Days": [NSString stringWithFormat:@"%0.0f", expiration/24/60/60]}};
+    [contentData appendData:[[requestXML XMLString] dataUsingEncoding:NSUTF8StringEncoding]];
+    //[contentData appendData:[@"&restore" dataUsingEncoding:NSUTF8StringEncoding]];
+    restoreOperation.request.HTTPBody = contentData;
+    NSLog(@"contentData: %li bytes with MD5 %@", contentData.length, [CryptoHelper md5Base64StringFromData:contentData]);
+    [restoreOperation.request setValue:[CryptoHelper md5Base64StringFromData:contentData] forHTTPHeaderField:@"Content-MD5"];
+    [restoreOperation.request setValue:[NSString stringWithFormat:@"%li", contentData.length] forHTTPHeaderField:@"Content-Length"];
+    [restoreOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (operation.response.statusCode == 202) {
+            NSLog(@"restore in progress");
+        } else {
+            NSLog(@"object available");
+        }
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:restoreOperation];
 }
 
 -(void)setBucketLifecycle:(AWSLifeCycle *)awsLifecycle forBucket:(NSString *)bucketName {
@@ -378,10 +422,20 @@ typedef void(^AWSCompBlock)(void);
     NSString* paramsString;
     NSDictionary* paramsDict = [request.URL queryComponents];
     NSMutableArray* params = [NSMutableArray new];
+    if ([request.HTTPMethod isEqualToString:@"POST"] && request.HTTPBody) {
+        NSArray* postParams = [[[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] componentsSeparatedByString:@"&"];
+        for (__strong NSString* param in postParams) {
+            if ([param rangeOfString:@"="].location == NSNotFound) {
+                param = [NSString stringWithFormat:@"%@=", param];
+            }
+            [params addObject:param];
+        }
+    }
     for (NSString* key in [paramsDict.allKeys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
         [params addObject:[NSString stringWithFormat:@"%@=%@", key, [paramsDict valueForKey:key]]];
     }
-    paramsString = [params commaSeparatedURIEncodedListWithSeparatorString:@"&" andQuoteString:@"" andUnencodedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"="]];
+    paramsString = [params commaSeparatedURIEncodedListWithSeparatorString:@"&" andQuoteString:@"" andUnencodedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"=&;"]];
+    //paramsString = [paramsString stringByReplacingOccurrencesOfString:@"&" withString:@"&amp;"];
     NSString* headerString = [request.allHTTPHeaderFields sortedCommaSeparatedLowerCaseListWithSeparatorString:@"\n" andQuoteString:@"" andValueAssignmentString:@":"];
     NSData* sha = [CryptoHelper sha256:request.HTTPBody];
     NSString* shaHex = [sha hexadecimalString];
@@ -424,7 +478,7 @@ typedef void(^AWSCompBlock)(void);
     NSString* scope = [NSString stringWithFormat:@"%@/%@/s3/aws4_request", [dateFormatter stringFromDate:self.signingKey.keyDate], SIAFAWSRegion(requestRegion)];
     NSString* stringToSign = [NSString stringWithFormat:@"AWS4-HMAC-SHA256\n%@\n%@\n%@", [dateFormatter2 stringFromDate:date], scope, [[CryptoHelper sha256:[canonicalRequestString dataUsingEncoding:NSASCIIStringEncoding]] hexadecimalString]];
 
-    
+    NSLog(@"canonical request: %@", canonicalRequestString);
     NSData* signatureData = [CryptoHelper hmac:stringToSign withDataKey:self.signingKey.key];
     signature = [signatureData hexadecimalString];
     NSString* sigString = [NSString stringWithFormat:@"AWS4-HMAC-SHA256 Credential=%@/%@/%@/s3/aws4_request,SignedHeaders=%@,Signature=%@", self.signingKey.accessKey, [dateFormatter stringFromDate:self.signingKey.keyDate], SIAFAWSRegion(requestRegion), [request.allHTTPHeaderFields.allKeys commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], signature];
