@@ -293,11 +293,10 @@ typedef void(^AWSCompBlock)(void);
     NSMutableData* contentData = [NSMutableData new];
     NSDictionary* requestXML = @{@"RestoreRequest": @{@"Days": [NSString stringWithFormat:@"%0.0f", expiration/24/60/60]}};
     [contentData appendData:[[requestXML XMLString] dataUsingEncoding:NSUTF8StringEncoding]];
-    //[contentData appendData:[@"&restore" dataUsingEncoding:NSUTF8StringEncoding]];
     restoreOperation.request.HTTPBody = contentData;
-    NSLog(@"contentData: %li bytes with MD5 %@", contentData.length, [CryptoHelper md5Base64StringFromData:contentData]);
     [restoreOperation.request setValue:[CryptoHelper md5Base64StringFromData:contentData] forHTTPHeaderField:@"Content-MD5"];
     [restoreOperation.request setValue:[NSString stringWithFormat:@"%li", contentData.length] forHTTPHeaderField:@"Content-Length"];
+    [restoreOperation.request setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];
     [restoreOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (operation.response.statusCode == 202) {
             NSLog(@"restore in progress");
@@ -422,15 +421,6 @@ typedef void(^AWSCompBlock)(void);
     NSString* paramsString;
     NSDictionary* paramsDict = [request.URL queryComponents];
     NSMutableArray* params = [NSMutableArray new];
-    if ([request.HTTPMethod isEqualToString:@"POST"] && request.HTTPBody) {
-        NSArray* postParams = [[[NSString alloc] initWithData:request.HTTPBody encoding:NSUTF8StringEncoding] componentsSeparatedByString:@"&"];
-        for (__strong NSString* param in postParams) {
-            if ([param rangeOfString:@"="].location == NSNotFound) {
-                param = [NSString stringWithFormat:@"%@=", param];
-            }
-            [params addObject:param];
-        }
-    }
     for (NSString* key in [paramsDict.allKeys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)]) {
         [params addObject:[NSString stringWithFormat:@"%@=%@", key, [paramsDict valueForKey:key]]];
     }
@@ -513,6 +503,17 @@ typedef void(^AWSCompBlock)(void);
     [super enqueueHTTPRequestOperation:operation];
 }
 
+-(void)reenqueueOperation:(AWSOperation *)operation withKeyData:(NSData *)keyData {
+    AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:operation.request.URL.host];
+    if (keyData) {
+        [redirOp.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
+        [redirOp.request setValue:[keyData base64String] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]; //x-amz-server-side​-encryption​-customer-key
+        [redirOp.request setValue:[CryptoHelper md5Base64StringFromData:keyData] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key-MD5"]; //x-amz-server-side​-encryption​-customer-key-MD5
+    }
+    [redirOp setCompletionBlock:[operation completionBlock]];
+    [self enqueueHTTPRequestOperation:redirOp];
+}
+
 #pragma mark error handler methods
 
 -(AWSFailureBlock)failureBlock {
@@ -536,6 +537,9 @@ typedef void(^AWSCompBlock)(void);
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
             if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
                 NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]}];
+                [self.delegate awsClient:self requestFailedWithError:awsError];
+            } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && operation.response.statusCode == 400) {
+                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Bad request most possibly due to wrong encryption key.", @"wrong key message"), @"awsKey": operation.request.URL.path, @"awsOperation": operation}];
                 [self.delegate awsClient:self requestFailedWithError:awsError];
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
                 [self.delegate awsClient:self requestFailedWithError:error];

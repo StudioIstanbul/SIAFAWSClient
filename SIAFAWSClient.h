@@ -73,7 +73,7 @@ typedef enum {
 -(void)saveToKeychain;
 @end
 
-@class AWSBucket, AWSLifeCycle;
+@class AWSBucket, AWSLifeCycle, AWSOperation;
 
 @interface SIAFAWSClient : AFHTTPClient
 
@@ -110,6 +110,8 @@ typedef enum {
 
 -(void)setBucketLifecycle:(AWSLifeCycle*)awsLifecycle forBucket:(NSString*)bucketName;
 -(void)lifecycleRulesForBucket:(NSString*)bucketName;
+
+-(void)reenqueueOperation:(AWSOperation*)operation withKeyData:(NSData*)keyData;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation
