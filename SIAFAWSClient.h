@@ -53,6 +53,7 @@ typedef enum {
 -(void)awsclient:(SIAFAWSClient *)client receivedBucketList:(NSArray *)buckets;
 -(NSString*)awsclientRequiresAccessKey:(SIAFAWSClient *)client;
 -(NSString*)awsclientRequiresSecretKey:(SIAFAWSClient *)client;
+-(NSData*)awsclientRequiresKeyData:(SIAFAWSClient *)client;
 -(void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL*)localURL;
 -(void)awsclient:(SIAFAWSClient *)client finishedDownloadForKey:(NSString*)key toURL:(NSURL *)localURL;
 -(void)uploadProgress:(double)progress forURL:(NSURL*)localFileUrl;
@@ -110,14 +111,11 @@ typedef enum {
 
 -(void)setBucketLifecycle:(AWSLifeCycle*)awsLifecycle forBucket:(NSString*)bucketName;
 -(void)lifecycleRulesForBucket:(NSString*)bucketName;
-
--(void)reenqueueOperation:(AWSOperation*)operation withKeyData:(NSData*)keyData;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation
 
 @property (nonatomic, strong) NSMutableURLRequest *request;
-
 @end
 
 @interface AWSBucket : NSObject
@@ -137,12 +135,15 @@ typedef enum {
 
 @property (nonatomic, strong) NSString* key;
 @property (nonatomic, strong) NSDate* lastModified;
+@property (nonatomic, strong) NSDate* expirationDate;
 @property (nonatomic, assign) NSInteger fileSize;
 @property (nonatomic, strong) NSString* etag;
 @property (nonatomic, strong) NSString* bucket;
 @property (nonatomic, assign) SIAFAWSStorageClass storageClass;
 @property (nonatomic, strong) NSString* ssecMD5;
 @property (nonatomic, strong) NSDictionary* metadata;
+@property (nonatomic, assign) BOOL restoredKey;
+@property (nonatomic, assign) BOOL restoreInProgress;
 
 @end
 

@@ -21,11 +21,17 @@
 #define SIAFAWSemptyHash @"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
 typedef void(^AWSFailureBlock)(AFHTTPRequestOperation *operation, NSError *error);
+typedef void(^AWSSuccessBlock)(AFHTTPRequestOperation *operation, id responseObject);
 typedef void(^AWSCompBlock)(void);
 
 @interface SIAFAWSClient () {
     BOOL keysFromKeychain;
 }
+
+@end
+
+@interface AWSOperation ()
+@property (nonatomic, strong) AWSSuccessBlock legacyCompletionBlock;
 
 @end
 
@@ -50,8 +56,13 @@ typedef void(^AWSCompBlock)(void);
         }
         keysFromKeychain = YES;
     }
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFailure:) name:AFNetworkingOperationDidFinishNotification object:nil];
     [self.operationQueue setMaxConcurrentOperationCount:1];
     return self;
+}
+
+-(void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark methods for S3 buckets
@@ -242,9 +253,26 @@ typedef void(^AWSCompBlock)(void);
         [rfc3339DateFormatter setDateFormat:@"EEE', 'dd' 'MMM' 'yyyy' 'HH':'mm':'ss"];
         [rfc3339DateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
         metadataFile.lastModified = [rfc3339DateFormatter dateFromString:[responseDict valueForKey:@"Last-Modified"]];
+        metadataFile.expirationDate = [rfc3339DateFormatter dateFromString:[[[responseDict valueForKey:@"x-amz-expiration"] componentsSeparatedByString:@"\""] objectAtIndex:1]];
         metadataFile.storageClass = SIAFAWSStandard;
-        if ([[responseDict valueForKey:@"x-amz-storage-class"] isEqualToString:@"GLACIER"]) metadataFile.storageClass = SIAFAWSGlacier;
-        else if ([[responseDict valueForKey:@"x-amz-storage-class"] isEqualToString:@"REDUCED_REDUNDANCY"]) metadataFile.storageClass = SIAFAWSReducedRedundancy;
+        if ([[responseDict valueForKey:@"x-amz-storage-class"] isEqualToString:@"GLACIER"]) {
+            metadataFile.storageClass = SIAFAWSGlacier;
+            if ([responseDict valueForKey:@"x-amz-restore"]) {
+                NSLog(@"restore info available");
+                NSRegularExpression* operationRegex = [NSRegularExpression regularExpressionWithPattern:@"ongoing-request=\"(true|false)\"" options:0 error:nil];
+                NSRange operationRange = [operationRegex rangeOfFirstMatchInString:[responseDict valueForKey:@"x-amz-restore"] options:0 range:NSMakeRange(0, [[responseDict valueForKey:@"x-amz-restore"] length])];
+                NSString* operationString = [[responseDict valueForKey:@"x-amz-restore"] substringWithRange:operationRange];
+                if ([operationString isEqualToString:@"true"]) {
+                    NSLog(@"ongoing");
+                    metadataFile.restoreInProgress = YES;
+                    metadataFile.restoredKey = NO;
+                } else {
+                    NSLog(@"finished");
+                    metadataFile.restoreInProgress = NO;
+                    metadataFile.restoredKey = YES;
+                }
+            }
+        } else if ([[responseDict valueForKey:@"x-amz-storage-class"] isEqualToString:@"REDUCED_REDUNDANCY"]) metadataFile.storageClass = SIAFAWSReducedRedundancy;
         NSMutableDictionary* metaDict = [NSMutableDictionary new];
         for (NSString* mkey in responseDict.allKeys) {
             if ([mkey rangeOfString:@"x-amz-meta-"].location == 0) {
@@ -489,51 +517,66 @@ typedef void(^AWSCompBlock)(void);
     }
     __block AWSCompBlock compBlock = [operation.completionBlock copy];
     [operation setCompletionBlock:^{
-        if (self.callBackThread) {
+        if (!compBlock) {
+            NSLog(@"no completion block!");
+        }
+        if (self.callBackThread && !self.callBackThread.isFinished && !self.callBackThread.isCancelled && self.callBackThread.isExecuting) {
             [self.callBackThread performBlock:^{
                 if (compBlock) compBlock();
-                if (self.operationQueue.operationCount <= 0) {
-                    [self willChangeValueForKey:@"isBusy"];
-                    _isBusy = NO;
-                    [self didChangeValueForKey:@"isBusy"];
-                }
             } waitUntilDone:NO];
+        } else {
+            if (compBlock) compBlock();
+        }
+        if (self.operationQueue.operationCount <= 0) {
+            [self willChangeValueForKey:@"isBusy"];
+            _isBusy = NO;
+            [self didChangeValueForKey:@"isBusy"];
         }
     }];
     [super enqueueHTTPRequestOperation:operation];
 }
 
--(void)reenqueueOperation:(AWSOperation *)operation withKeyData:(NSData *)keyData {
-    AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:operation.request.URL.host];
-    if (keyData) {
-        [redirOp.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
-        [redirOp.request setValue:[keyData base64String] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]; //x-amz-server-side​-encryption​-customer-key
-        [redirOp.request setValue:[CryptoHelper md5Base64StringFromData:keyData] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key-MD5"]; //x-amz-server-side​-encryption​-customer-key-MD5
-    }
-    [redirOp setCompletionBlock:[operation completionBlock]];
-    [self enqueueHTTPRequestOperation:redirOp];
-}
-
 #pragma mark error handler methods
+
+-(void)checkFailure:(NSNotification*)notification {
+    AWSOperation *operation = (AWSOperation *)[notification object];
+
+    if(![operation isKindOfClass:[AWSOperation class]]) {
+        return;
+    }
+    if((400 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsclientRequiresKeyData:)]) || 301 == [operation.response statusCode]) {
+        NSString* endpoint = operation.request.URL.host;
+        NSData* keyData;
+        if (301 == [operation.response statusCode]) {
+            NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:operation.error.localizedRecoverySuggestion];
+            if ([recoverDict valueForKey:@"Endpoint"]) endpoint = [recoverDict valueForKey:@"Endpoint"];
+            NSString* baseUrl = [recoverDict valueForKey:@"Endpoint"];
+            if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
+                baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+            }
+            SIAFAWSRegion newRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
+            if (newRegion != self.region)  {
+                self.region = newRegion;
+            }
+        } else {
+            keyData = [self.delegate awsclientRequiresKeyData:self];
+        }
+        AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:endpoint];
+        if (keyData) {
+            [redirOp.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
+            [redirOp.request setValue:[keyData base64String] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]; //x-amz-server-side​-encryption​-customer-key
+            [redirOp.request setValue:[CryptoHelper md5Base64StringFromData:keyData] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key-MD5"]; //x-amz-server-side​-encryption​-customer-key-MD5
+        }
+        if (!operation.legacyCompletionBlock) NSLog(@"no completion block!");
+        __block AWSSuccessBlock compBlock = [operation.legacyCompletionBlock copy];
+        [redirOp setCompletionBlockWithSuccess:compBlock failure:[self failureBlock]];
+        [operation setCompletionBlock:nil];
+        [self enqueueHTTPRequestOperation:redirOp];
+    }
+}
 
 -(AWSFailureBlock)failureBlock {
     AWSFailureBlock block = ^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (error.code == -1011 && operation.response.statusCode == 301) {
-            NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion];
-            if ([recoverDict valueForKey:@"Endpoint"]) {
-                AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:[recoverDict valueForKey:@"Endpoint"]];
-                [redirOp setCompletionBlock:[operation completionBlock]];
-                NSString* baseUrl = [recoverDict valueForKey:@"Endpoint"];
-                if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
-                    baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
-                }
-                SIAFAWSRegion newRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
-                if (newRegion != self.region)  {
-                    self.region = newRegion;
-                }
-                [self enqueueHTTPRequestOperation:redirOp];
-            }
-        } else {
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
             if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
                 NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]}];
@@ -544,7 +587,6 @@ typedef void(^AWSCompBlock)(void);
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
                 [self.delegate awsClient:self requestFailedWithError:error];
             }
-        }
     };
     return block;
 }
@@ -554,6 +596,16 @@ typedef void(^AWSCompBlock)(void);
 @implementation AWSOperation
 
 @synthesize request;
+
+/*-(void)setCompletionBlock:(void (^)(void))block {
+    if (block) self.legacyCompletionBlock = [block copy];
+    [super setCompletionBlock:block];
+}*/
+
+-(void)setCompletionBlockWithSuccess:(void (^)(AFHTTPRequestOperation *, id))success failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure {
+    self.legacyCompletionBlock = [success copy];
+    [super setCompletionBlockWithSuccess:success failure:failure];
+}
 
 @end
 
@@ -625,7 +677,16 @@ typedef void(^AWSCompBlock)(void);
 @end
 
 @implementation AWSFile
-@synthesize etag, key = _key, fileSize, lastModified, bucket;
+@synthesize etag, key = _key, fileSize, lastModified, bucket, restoredKey = _restoredKey, restoreInProgress = _restoreInProgress, expirationDate;
+
+-(id)init {
+    self = [super init];
+    if (self) {
+        _restoreInProgress = NO;
+        _restoredKey = NO;
+    }
+    return self;
+}
 
 -(void)setKey:(NSString *)key {
     if ([key rangeOfString:@"/"].location != 0) {
