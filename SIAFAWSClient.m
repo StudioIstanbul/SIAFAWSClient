@@ -86,7 +86,6 @@ typedef void(^AWSCompBlock)(void);
         } else {
             contents = [NSArray arrayWithObject:[responseDict valueForKey:@"Contents"]];
         }
-        NSLog(@"response %@", responseDict);        
         if (contents) {
             NSDateFormatter *rfc3339DateFormatter = [[NSDateFormatter alloc] init];
             NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
@@ -246,6 +245,9 @@ typedef void(^AWSCompBlock)(void);
         metadataFile.bucket = bucketName;
         metadataFile.key = key;
         metadataFile.etag = [responseDict valueForKey:@"ETag"];
+        if ([metadataFile.etag rangeOfString:@"\""].location != NSNotFound) {
+            metadataFile.etag = [metadataFile.etag substringWithRange:NSMakeRange(1, metadataFile.etag.length-2)];
+        }
         metadataFile.fileSize = [[responseDict valueForKey:@"Content-Length"] integerValue];
         NSDateFormatter *rfc3339DateFormatter = [[NSDateFormatter alloc] init];
         NSLocale *enUSPOSIXLocale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
@@ -329,10 +331,19 @@ typedef void(^AWSCompBlock)(void);
         if (operation.response.statusCode == 202) {
             NSLog(@"restore in progress");
         } else {
-            NSLog(@"object available");
+            if ([self.delegate respondsToSelector:@selector(awsClient:objectIsAvailableAtKey:onBucket:)]) [self.delegate awsClient:self objectIsAvailableAtKey:key onBucket:bucketName];
         }
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:restoreOperation];
+}
+
+-(void)deleteKey:(NSString *)key onBucket:(NSString *)bucketName {
+    self.bucket = bucketName;
+    AWSOperation* deleteOperation = [self requestOperationWithMethod:@"DELETE" path:key parameters:nil];
+    [deleteOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)]) [self.delegate awsClient:self deletedKey:key onBucket:bucketName];
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:deleteOperation];
 }
 
 -(void)setBucketLifecycle:(AWSLifeCycle *)awsLifecycle forBucket:(NSString *)bucketName {
@@ -572,6 +583,10 @@ typedef void(^AWSCompBlock)(void);
         [redirOp setCompletionBlockWithSuccess:compBlock failure:[self failureBlock]];
         [operation setCompletionBlock:nil];
         [self enqueueHTTPRequestOperation:redirOp];
+    }
+    if (404 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)]) {
+        [self.delegate awsClient:self deletedKey:operation.request.URL.path onBucket:[[operation.request.URL.host componentsSeparatedByString:@"."] objectAtIndex:0]];
+        [operation setCompletionBlock:nil];
     }
 }
 

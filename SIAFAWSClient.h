@@ -62,6 +62,8 @@ typedef enum {
 -(void)awsClient:(SIAFAWSClient*)client requestFailedWithError:(NSError*)error;
 -(void)awsClient:(SIAFAWSClient*)client changedLifeCycleForBucket:(NSString*)bucket;
 -(void)awsClient:(SIAFAWSClient*)client receivedLifecycleConfiguration:(AWSLifeCycle*)lifeCycleConfiguration forBucket:(NSString*)bucketName;
+-(void)awsClient:(SIAFAWSClient*)client objectIsAvailableAtKey:(NSString*)key onBucket:(NSString*)bucket;
+-(void)awsClient:(SIAFAWSClient *)client deletedKey:(NSString*)key onBucket:(NSString *)bucket;
 @end
 
 @interface AWSSigningKey : NSObject <NSCoding>
@@ -103,6 +105,7 @@ typedef enum {
 -(void)downloadFileFromKey:(NSString*)key onBucket:(NSString*)bucketName toURL:(NSURL*)fileURL withSSECKey:(NSData*)ssecKey;
 
 -(void)restoreFileFromKey:(NSString*)key onBucket:(NSString*)bucketName withExpiration:(NSTimeInterval)expiration;
+-(void)deleteKey:(NSString*)key onBucket:(NSString*)bucketName;
 
 -(void)metadataForKey:(NSString*)key onBucket:(NSString*)bucketName;
 -(void)metadataForKey:(NSString*)key onBucket:(NSString*)bucketName withSSECKey:(NSData *)ssecKey;
