@@ -64,6 +64,7 @@ typedef enum {
 -(void)awsClient:(SIAFAWSClient*)client receivedLifecycleConfiguration:(AWSLifeCycle*)lifeCycleConfiguration forBucket:(NSString*)bucketName;
 -(void)awsClient:(SIAFAWSClient*)client objectIsAvailableAtKey:(NSString*)key onBucket:(NSString*)bucket;
 -(void)awsClient:(SIAFAWSClient *)client deletedKey:(NSString*)key onBucket:(NSString *)bucket;
+-(void)awsClient:(SIAFAWSClient *)client successfullyCreatedBucket:(NSString *)bucket;
 @end
 
 @interface AWSSigningKey : NSObject <NSCoding>
@@ -114,6 +115,8 @@ typedef enum {
 
 -(void)setBucketLifecycle:(AWSLifeCycle*)awsLifecycle forBucket:(NSString*)bucketName;
 -(void)lifecycleRulesForBucket:(NSString*)bucketName;
+
+-(void)createBucket:(NSString*)bucketName;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation

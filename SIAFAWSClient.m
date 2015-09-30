@@ -84,7 +84,7 @@ typedef void(^AWSCompBlock)(void);
         if ([[responseDict valueForKey:@"Contents"] isKindOfClass:[NSArray class]]) {
             contents = [responseDict valueForKey:@"Contents"];
         } else {
-            contents = [NSArray arrayWithObject:[responseDict valueForKey:@"Contents"]];
+            if ([responseDict valueForKey:@"Contents"]) contents = [NSArray arrayWithObject:[responseDict valueForKey:@"Contents"]];
         }
         if (contents) {
             NSDateFormatter *rfc3339DateFormatter = [[NSDateFormatter alloc] init];
@@ -180,6 +180,11 @@ typedef void(^AWSCompBlock)(void);
         else if ([responseString isEqualToString:@"READ_ACP"]) access = SIAFAWSReadACP;
         else access = SIAFAWSAccessUndefined;
         checkBucket.accessRight = access;
+        NSString* baseUrl = operation.request.URL.host;
+        if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
+            baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+        }
+        checkBucket.region = SIAFAWSRegionForBaseURL(baseUrl);
         block(access);
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:aclOperation];
@@ -203,6 +208,7 @@ typedef void(^AWSCompBlock)(void);
     } failure:[self failureBlock]];
     NSData* data = [NSData dataWithContentsOfURL:url];
     uploadOperation.request.HTTPBody = data;
+    [uploadOperation.request setValue:@"100-continue" forHTTPHeaderField:@"Expect"];
     [uploadOperation.request setValue:[NSString stringWithFormat:@"%li", data.length] forHTTPHeaderField:@"Content-Length"];
     if (storageClass == SIAFAWSGlacier) {
         NSLog(@"Error: Storage Class GLACIER not supported for file upload by AWS. Using STANDARD instead");
@@ -387,6 +393,25 @@ typedef void(^AWSCompBlock)(void);
     [self enqueueHTTPRequestOperation:lifeCycleOperation];
 }
 
+-(void)createBucket:(NSString *)bucketName {
+    SIAFAWSRegion bucketRegion = self.region;
+    self.bucket = bucketName;
+    self.region = SIAFAWSRegionUSStandard;
+    AWSOperation* createBucketOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];
+    NSDictionary* requestXML = @{@"CreateBucketConfiguration": @{@"LocationConstraint": SIAFAWSRegion(bucketRegion)}};
+    NSData* contentData = [[requestXML XMLString] dataUsingEncoding:NSUTF8StringEncoding];
+    [createBucketOperation.request setHTTPBody:contentData];
+    [createBucketOperation.request setValue:[NSString stringWithFormat:@"%li", contentData.length] forHTTPHeaderField:@"Content-Length"];
+    [createBucketOperation.request setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];
+    [createBucketOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if ([self.delegate respondsToSelector:@selector(awsClient:successfullyCreatedBucket:)]) {
+            [self.delegate awsClient:self successfullyCreatedBucket:bucketName];
+        }
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:createBucketOperation];
+    self.region = bucketRegion;
+}
+
 #pragma mark setter methods for credentials
 -(void)setAccessKey:(NSString *)accessKey {
     if (self.signingKey) {
@@ -561,6 +586,8 @@ typedef void(^AWSCompBlock)(void);
         if (301 == [operation.response statusCode]) {
             NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:operation.error.localizedRecoverySuggestion];
             if ([recoverDict valueForKey:@"Endpoint"]) endpoint = [recoverDict valueForKey:@"Endpoint"];
+            NSString* bucketName;
+            if ([recoverDict valueForKey:@"Bucket"]) bucketName = [recoverDict valueForKey:@"Bucket"];
             NSString* baseUrl = [recoverDict valueForKey:@"Endpoint"];
             if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
                 baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
@@ -569,10 +596,17 @@ typedef void(^AWSCompBlock)(void);
             if (newRegion != self.region)  {
                 self.region = newRegion;
             }
-        } else {
-            keyData = [self.delegate awsclientRequiresKeyData:self];
+            if ([endpoint rangeOfString:@"s3"].location == 0) endpoint = [NSString stringWithFormat:@"%@.%@", bucketName, endpoint];
+            NSLog(@"redirect to: %@", endpoint);
         }
+        if ([operation.request valueForHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]) keyData = [self.delegate awsclientRequiresKeyData:self];
         AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:endpoint];
+        if ([operation.request.URL queryComponents].allKeys.count > 0) {
+            NSMutableDictionary* queryDict = [operation.request.URL queryComponents];
+            NSString* paramString = queryDict.allKeys.lastObject;
+            NSLog(@"param found: %@", paramString);
+            [redirOp.request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"?%@", paramString] relativeToURL:redirOp.request.URL]];
+        }
         if (keyData) {
             [redirOp.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
             [redirOp.request setValue:[keyData base64String] forHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]; //x-amz-server-side​-encryption​-customer-key
@@ -592,6 +626,7 @@ typedef void(^AWSCompBlock)(void);
 
 -(AWSFailureBlock)failureBlock {
     AWSFailureBlock block = ^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (error.code != -999 &&  operation.response.statusCode != 301 && operation.response.statusCode != 404 && operation.response.statusCode != 400 && !([[operation.request.URL queryComponents].allKeys.lastObject isEqualToString:@"acl"] && operation.response.statusCode == 403)) {
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
             if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
                 NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]}];
@@ -600,8 +635,10 @@ typedef void(^AWSCompBlock)(void);
                 NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Bad request most possibly due to wrong encryption key.", @"wrong key message"), @"awsKey": operation.request.URL.path, @"awsOperation": operation}];
                 [self.delegate awsClient:self requestFailedWithError:awsError];
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
+                [self.operationQueue cancelAllOperations];
                 [self.delegate awsClient:self requestFailedWithError:error];
             }
+        }
     };
     return block;
 }
