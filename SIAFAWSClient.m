@@ -36,7 +36,7 @@ typedef void(^AWSCompBlock)(void);
 @end
 
 @implementation SIAFAWSClient
-@synthesize secretKey = _secretKey, accessKey = _accessKey, bucket, delegate, syncWithKeychain, isBusy = _isBusy;
+@synthesize secretKey = _secretKey, accessKey = _accessKey, bucket, delegate, syncWithKeychain, isBusy = _isBusy, lastErrorCode = _lastErrorCode;
 
 -(NSString*)host {
     return SIAFAWSRegionalBaseURL(self.region);
@@ -541,6 +541,7 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(void)enqueueHTTPRequestOperation:(AWSOperation *)operation {
+    _lastErrorCode = nil;
     NSMutableURLRequest* request = operation.request;
     [request setValue:[CryptoHelper sha256HexString:request.HTTPBody] forHTTPHeaderField:@"x-amz-content-sha256"];
     NSString* authHeader = [self AuthorizationHeaderStringForRequest:request];
@@ -580,13 +581,26 @@ typedef void(^AWSCompBlock)(void);
     if(![operation isKindOfClass:[AWSOperation class]]) {
         return;
     }
+    BOOL switchRegion = NO;
+    if (operation.error.localizedRecoverySuggestion) {
+        NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:operation.error.localizedRecoverySuggestion];
+        _lastErrorCode = [recoverDict valueForKey:@"Code"];
+        if ([recoverDict valueForKey:@"Region"]) {
+            self.region = SIAFAWSRegionForCode([recoverDict valueForKey:@"Region"]);
+            NSLog(@"switching region to %@ (%i)", [recoverDict valueForKey:@"Region"], self.region);
+            switchRegion = YES;
+        }
+        NSLog(@"error code: %@", _lastErrorCode);
+    }
+    
     if((400 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsclientRequiresKeyData:)]) || 301 == [operation.response statusCode]) {
         NSString* endpoint = operation.request.URL.host;
         NSData* keyData;
-        if (301 == [operation.response statusCode]) {
+        if (301 == [operation.response statusCode] || switchRegion) {
+            endpoint = SIAFAWSRegionalBaseURL(self.region);
             NSDictionary* recoverDict = [NSDictionary dictionaryWithXMLString:operation.error.localizedRecoverySuggestion];
             if ([recoverDict valueForKey:@"Endpoint"]) endpoint = [recoverDict valueForKey:@"Endpoint"];
-            NSString* bucketName;
+            NSString* bucketName = [[operation.request.URL.host componentsSeparatedByString:@"."] objectAtIndex:0];
             if ([recoverDict valueForKey:@"Bucket"]) bucketName = [recoverDict valueForKey:@"Bucket"];
             NSString* baseUrl = [recoverDict valueForKey:@"Endpoint"];
             if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
@@ -626,7 +640,7 @@ typedef void(^AWSCompBlock)(void);
 
 -(AWSFailureBlock)failureBlock {
     AWSFailureBlock block = ^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (error.code != -999 &&  operation.response.statusCode != 301 && operation.response.statusCode != 404 && operation.response.statusCode != 400 && !([[operation.request.URL queryComponents].allKeys.lastObject isEqualToString:@"acl"] && operation.response.statusCode == 403)) {
+        if (error.code != -999 && operation.response.statusCode != 301 && operation.response.statusCode != 404 && operation.response.statusCode != 400 && !(operation.response.statusCode == 403)) {
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
             if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
                 NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]}];
