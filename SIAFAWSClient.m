@@ -496,7 +496,6 @@ typedef void(^AWSCompBlock)(void);
     NSString* canonicalRequestString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n\n%@\n%@", request.HTTPMethod, [resourceString urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]], paramsString, headerString, [[request.allHTTPHeaderFields.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], shaHex];
     
     if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60) || self.signingKey.region != requestRegion) {
-        NSLog(@"create new signing key");
         if (!self.accessKey && !self.signingKey.accessKey) {
             if ([self.delegate respondsToSelector:@selector(awsclientRequiresAccessKey:)]) {
                 self.accessKey = [self.delegate awsclientRequiresAccessKey:self];
@@ -517,15 +516,8 @@ typedef void(^AWSCompBlock)(void);
                 return nil;
             }
         }
-        NSString* secStr = [NSString stringWithFormat:@"AWS4%@", self.secretKey];
-        NSData* dateKey = [CryptoHelper hmac:[dateFormatter stringFromDate:date] withDataKey:[NSData dataWithBytes:[secStr cStringUsingEncoding:NSASCIIStringEncoding] length:secStr.length]];
-        NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(requestRegion) withDataKey:dateKey];
-        NSData* dateRegionServiceKey = [CryptoHelper hmac:@"s3" withDataKey:dateRegionKey];
-        NSData* signingKey = [CryptoHelper hmac:@"aws4_request" withDataKey:dateRegionServiceKey];
-        AWSSigningKey* newSigningKey = [[AWSSigningKey alloc] initWithKey:signingKey andDate:date];
+        AWSSigningKey* newSigningKey = [self createSigningKeyForAccessKey:self.accessKey secretKey:self.secretKey andRegion:requestRegion];
         self.signingKey = newSigningKey;
-        newSigningKey.region = self.region;
-        newSigningKey.accessKey = self.accessKey;
         if (self.syncWithKeychain) [newSigningKey saveToKeychain];
     }
     
@@ -538,6 +530,22 @@ typedef void(^AWSCompBlock)(void);
     NSString* sigString = [NSString stringWithFormat:@"AWS4-HMAC-SHA256 Credential=%@/%@/%@/s3/aws4_request,SignedHeaders=%@,Signature=%@", self.signingKey.accessKey, [dateFormatter stringFromDate:self.signingKey.keyDate], SIAFAWSRegion(requestRegion), [request.allHTTPHeaderFields.allKeys commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], signature];
     NSLog(@"sigString: %@", sigString);
     return sigString;
+}
+
+-(AWSSigningKey*)createSigningKeyForAccessKey:(NSString *)accessKey secretKey:(NSString *)secretKey andRegion:(SIAFAWSRegion)region {
+    NSDate* date = [NSDate date];
+    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyyMMdd"];
+    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+    NSString* secStr = [NSString stringWithFormat:@"AWS4%@", secretKey];
+    NSData* dateKey = [CryptoHelper hmac:[dateFormatter stringFromDate:date] withDataKey:[NSData dataWithBytes:[secStr cStringUsingEncoding:NSASCIIStringEncoding] length:secStr.length]];
+    NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(region) withDataKey:dateKey];
+    NSData* dateRegionServiceKey = [CryptoHelper hmac:@"s3" withDataKey:dateRegionKey];
+    NSData* signingKey = [CryptoHelper hmac:@"aws4_request" withDataKey:dateRegionServiceKey];
+    AWSSigningKey* newSigningKey = [[AWSSigningKey alloc] initWithKey:signingKey andDate:date];
+    newSigningKey.region = region;
+    newSigningKey.accessKey = accessKey;
+    return newSigningKey;
 }
 
 -(void)enqueueHTTPRequestOperation:(AWSOperation *)operation {

@@ -119,6 +119,8 @@ typedef enum {
 -(void)lifecycleRulesForBucket:(NSString*)bucketName;
 
 -(void)createBucket:(NSString*)bucketName;
+
+-(AWSSigningKey*)createSigningKeyForAccessKey:(NSString*)accessKey secretKey:(NSString*)secretKey andRegion:(SIAFAWSRegion)region;
 @end
 
 @interface AWSOperation : AFHTTPRequestOperation
