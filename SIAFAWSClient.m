@@ -328,7 +328,7 @@ typedef void(^AWSCompBlock)(void);
     [restoreOperation.request setURL:[NSURL URLWithString:@"?restore" relativeToURL:restoreOperation.request.URL]];
     NSMutableData* contentData = [NSMutableData new];
     NSDictionary* requestXML = @{@"RestoreRequest": @{@"Days": [NSString stringWithFormat:@"%0.0f", expiration/24/60/60]}};
-    [contentData appendData:[[requestXML XMLString] dataUsingEncoding:NSUTF8StringEncoding]];
+    [contentData appendData:[[requestXML innerXML] dataUsingEncoding:NSUTF8StringEncoding]];
     restoreOperation.request.HTTPBody = contentData;
     [restoreOperation.request setValue:[CryptoHelper md5Base64StringFromData:contentData] forHTTPHeaderField:@"Content-MD5"];
     [restoreOperation.request setValue:[NSString stringWithFormat:@"%li", contentData.length] forHTTPHeaderField:@"Content-Length"];
@@ -356,16 +356,20 @@ typedef void(^AWSCompBlock)(void);
     self.bucket = bucketName;
     AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];
     [lifeCycleOperation.request setURL:[NSURL URLWithString:@"/?lifecycle" relativeToURL:lifeCycleOperation.request.URL]];
-    NSData* lcData = awsLifecycle.xmlData;
-    lifeCycleOperation.request.HTTPBody = lcData;
-    [lifeCycleOperation.request setValue:[CryptoHelper md5Base64StringFromData:lcData] forHTTPHeaderField:@"Content-MD5"];
-    [lifeCycleOperation.request setValue:[NSString stringWithFormat:@"%li", lcData.length] forHTTPHeaderField:@"Content-Length"];
-    [lifeCycleOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if ([self.delegate respondsToSelector:@selector(awsClient:changedLifeCycleForBucket:)]) {
-            [self.delegate awsClient:self changedLifeCycleForBucket:bucketName];
-        }
-    } failure:[self failureBlock]];
-    [self enqueueHTTPRequestOperation:lifeCycleOperation];
+    NSData* lcData = awsLifecycle.siXMLData;
+    if (lcData) {
+        lifeCycleOperation.request.HTTPBody = lcData;
+        [lifeCycleOperation.request setValue:[CryptoHelper md5Base64StringFromData:lcData] forHTTPHeaderField:@"Content-MD5"];
+        [lifeCycleOperation.request setValue:[NSString stringWithFormat:@"%li", lcData.length] forHTTPHeaderField:@"Content-Length"];
+        [lifeCycleOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            if ([self.delegate respondsToSelector:@selector(awsClient:changedLifeCycleForBucket:)]) {
+                [self.delegate awsClient:self changedLifeCycleForBucket:bucketName];
+            }
+        } failure:[self failureBlock]];
+        [self enqueueHTTPRequestOperation:lifeCycleOperation];
+    } else {
+        NSLog(@"no valid lifecycle data!");
+    }
 }
 
 -(void)lifecycleRulesForBucket:(NSString *)bucketName {
@@ -399,7 +403,7 @@ typedef void(^AWSCompBlock)(void);
     self.region = SIAFAWSRegionUSStandard;
     AWSOperation* createBucketOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];
     NSDictionary* requestXML = @{@"CreateBucketConfiguration": @{@"LocationConstraint": SIAFAWSRegion(bucketRegion)}};
-    NSData* contentData = [[requestXML XMLString] dataUsingEncoding:NSUTF8StringEncoding];
+    NSData* contentData = [[requestXML innerXML] dataUsingEncoding:NSUTF8StringEncoding];
     [createBucketOperation.request setHTTPBody:contentData];
     [createBucketOperation.request setValue:[NSString stringWithFormat:@"%li", contentData.length] forHTTPHeaderField:@"Content-Length"];
     [createBucketOperation.request setValue:@"application/xml" forHTTPHeaderField:@"Content-Type"];
@@ -606,7 +610,7 @@ typedef void(^AWSCompBlock)(void);
         NSLog(@"error code: %@", _lastErrorCode);
     }
     
-    if((400 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsclientRequiresKeyData:)]) || 301 == [operation.response statusCode]) {
+    if((400 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsclientRequiresKeyData:)] && [_lastErrorCode isEqualToString:@"UserKeyMustBeSpecified"]) || 301 == [operation.response statusCode]) {
         NSString* endpoint = operation.request.URL.host;
         NSData* keyData;
         if (301 == [operation.response statusCode] || switchRegion) {
@@ -799,7 +803,7 @@ typedef void(^AWSCompBlock)(void);
     [_rules addObject:rule];
 }
 
--(NSData*)xmlData {
+-(NSData*)siXMLData {
     NSMutableDictionary* valueDict = [NSMutableDictionary dictionary];
     NSMutableArray* valueArray = [NSMutableArray arrayWithCapacity:_rules.count];
     for (AWSLifeCycleRule* rule in _rules) {
@@ -821,7 +825,7 @@ typedef void(^AWSCompBlock)(void);
         [valueArray addObject:ruleDict];
     }
     [valueDict setValue:valueArray forKey:@"LifecycleConfiguration"];
-    NSString* xmlString = [valueDict XMLString];
+    NSString* xmlString = [valueDict innerXML];
 
     NSData* xmlData = [xmlString dataUsingEncoding:NSUTF8StringEncoding];
     return xmlData;

@@ -172,6 +172,6 @@ typedef enum {
 @property (readonly, nonatomic) NSArray* rules;
 
 -(void) addLiveCycleRule:(AWSLifeCycleRule*)rule;
--(NSData*) xmlData;
+-(NSData*) siXMLData;
 
 @end
