@@ -533,19 +533,24 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(AWSSigningKey*)createSigningKeyForAccessKey:(NSString *)accessKey secretKey:(NSString *)secretKey andRegion:(SIAFAWSRegion)region {
-    NSDate* date = [NSDate date];
-    NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-    [dateFormatter setDateFormat:@"yyyyMMdd"];
-    [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
-    NSString* secStr = [NSString stringWithFormat:@"AWS4%@", secretKey];
-    NSData* dateKey = [CryptoHelper hmac:[dateFormatter stringFromDate:date] withDataKey:[NSData dataWithBytes:[secStr cStringUsingEncoding:NSASCIIStringEncoding] length:secStr.length]];
-    NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(region) withDataKey:dateKey];
-    NSData* dateRegionServiceKey = [CryptoHelper hmac:@"s3" withDataKey:dateRegionKey];
-    NSData* signingKey = [CryptoHelper hmac:@"aws4_request" withDataKey:dateRegionServiceKey];
-    AWSSigningKey* newSigningKey = [[AWSSigningKey alloc] initWithKey:signingKey andDate:date];
-    newSigningKey.region = region;
-    newSigningKey.accessKey = accessKey;
-    return newSigningKey;
+    if (region <= 8) {
+        NSDate* date = [NSDate date];
+        NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyyMMdd"];
+        [dateFormatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
+        NSString* secStr = [NSString stringWithFormat:@"AWS4%@", secretKey];
+        NSData* dateKey = [CryptoHelper hmac:[dateFormatter stringFromDate:date] withDataKey:[NSData dataWithBytes:[secStr cStringUsingEncoding:NSASCIIStringEncoding] length:secStr.length]];
+        NSData* dateRegionKey = [CryptoHelper hmac:SIAFAWSRegion(region) withDataKey:dateKey];
+        NSData* dateRegionServiceKey = [CryptoHelper hmac:@"s3" withDataKey:dateRegionKey];
+        NSData* signingKey = [CryptoHelper hmac:@"aws4_request" withDataKey:dateRegionServiceKey];
+        AWSSigningKey* newSigningKey = [[AWSSigningKey alloc] initWithKey:signingKey andDate:date];
+        newSigningKey.region = region;
+        newSigningKey.accessKey = accessKey;
+        return newSigningKey;
+    } else {
+        NSLog(@"AWS Region not valid!");
+    }
+    return nil;
 }
 
 -(void)enqueueHTTPRequestOperation:(AWSOperation *)operation {
