@@ -1,0 +1,4 @@
+Documentation set was installed to Xcode!
+
+Path: /Users/andi/Library/Developer/Shared/Documentation/DocSets/net.studio-istanbul.SIAFAWSClient.docset
+Time: 2015-10-10 19:38:44 +0000

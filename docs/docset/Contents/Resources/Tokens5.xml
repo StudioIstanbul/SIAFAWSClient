@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AWSOperation.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AWSOperation</TokenIdentifier>
+			<Abstract type="html">an AWS Operation, this class is mainly used private but namespace exported to use it for debug
+or error handling reasons</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="5"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSOperation/setRequest:</TokenIdentifier>
+			<Abstract type="html">mutable request</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSMutableURLRequest *request</Declaration>
+			
+			
+			<Anchor>//api/name/request</Anchor>
+            <NodeRef refid="5"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSOperation/request</TokenIdentifier>
+			<Abstract type="html">mutable request</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSMutableURLRequest *request</Declaration>
+			
+			
+			<Anchor>//api/name/request</Anchor>
+            <NodeRef refid="5"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSOperation/request</TokenIdentifier>
+			<Abstract type="html">mutable request</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSMutableURLRequest *request</Declaration>
+			
+			
+			<Anchor>//api/name/request</Anchor>
+            <NodeRef refid="5"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

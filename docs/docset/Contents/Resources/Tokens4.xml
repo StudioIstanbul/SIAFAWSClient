@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AWSLifeCycleRule.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AWSLifeCycleRule</TokenIdentifier>
+			<Abstract type="html">describes a lifecycle rule defined for a bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="4"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/setID:</TokenIdentifier>
+			<Abstract type="html">ID of lifecycle rule, set to anything you want</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (strong, nonatomic) NSString *ID</Declaration>
+			
+			
+			<Anchor>//api/name/ID</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/ID</TokenIdentifier>
+			<Abstract type="html">ID of lifecycle rule, set to anything you want</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (strong, nonatomic) NSString *ID</Declaration>
+			
+			
+			<Anchor>//api/name/ID</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSLifeCycleRule/ID</TokenIdentifier>
+			<Abstract type="html">ID of lifecycle rule, set to anything you want</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (strong, nonatomic) NSString *ID</Declaration>
+			
+			
+			<Anchor>//api/name/ID</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/setPrefix:</TokenIdentifier>
+			<Abstract type="html">prefix for keys affected by this rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (strong, nonatomic) NSString *prefix</Declaration>
+			
+			
+			<Anchor>//api/name/prefix</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/prefix</TokenIdentifier>
+			<Abstract type="html">prefix for keys affected by this rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (strong, nonatomic) NSString *prefix</Declaration>
+			
+			
+			<Anchor>//api/name/prefix</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSLifeCycleRule/prefix</TokenIdentifier>
+			<Abstract type="html">prefix for keys affected by this rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (strong, nonatomic) NSString *prefix</Declaration>
+			
+			
+			<Anchor>//api/name/prefix</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/setExiprationInterval:</TokenIdentifier>
+			<Abstract type="html">timeinterval for delete of affected keys,rounding to days on server side!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) NSTimeInterval exiprationInterval</Declaration>
+			
+			
+			<Anchor>//api/name/exiprationInterval</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/exiprationInterval</TokenIdentifier>
+			<Abstract type="html">timeinterval for delete of affected keys,rounding to days on server side!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) NSTimeInterval exiprationInterval</Declaration>
+			
+			
+			<Anchor>//api/name/exiprationInterval</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSLifeCycleRule/exiprationInterval</TokenIdentifier>
+			<Abstract type="html">timeinterval for delete of affected keys,rounding to days on server side!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) NSTimeInterval exiprationInterval</Declaration>
+			
+			
+			<Anchor>//api/name/exiprationInterval</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/setTransitionInterval:</TokenIdentifier>
+			<Abstract type="html">timeinterval for transition to Glacier for affected keys</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) NSTimeInterval transitionInterval</Declaration>
+			
+			
+			<Anchor>//api/name/transitionInterval</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/transitionInterval</TokenIdentifier>
+			<Abstract type="html">timeinterval for transition to Glacier for affected keys</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) NSTimeInterval transitionInterval</Declaration>
+			
+			
+			<Anchor>//api/name/transitionInterval</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSLifeCycleRule/transitionInterval</TokenIdentifier>
+			<Abstract type="html">timeinterval for transition to Glacier for affected keys</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) NSTimeInterval transitionInterval</Declaration>
+			
+			
+			<Anchor>//api/name/transitionInterval</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/setTransition:</TokenIdentifier>
+			<Abstract type="html">transition active in rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) BOOL transition</Declaration>
+			
+			
+			<Anchor>//api/name/transition</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/transition</TokenIdentifier>
+			<Abstract type="html">transition active in rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) BOOL transition</Declaration>
+			
+			
+			<Anchor>//api/name/transition</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSLifeCycleRule/transition</TokenIdentifier>
+			<Abstract type="html">transition active in rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) BOOL transition</Declaration>
+			
+			
+			<Anchor>//api/name/transition</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/setExpiration:</TokenIdentifier>
+			<Abstract type="html">delete active in rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) BOOL expiration</Declaration>
+			
+			
+			<Anchor>//api/name/expiration</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycleRule/expiration</TokenIdentifier>
+			<Abstract type="html">delete active in rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) BOOL expiration</Declaration>
+			
+			
+			<Anchor>//api/name/expiration</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSLifeCycleRule/expiration</TokenIdentifier>
+			<Abstract type="html">delete active in rule</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (assign, nonatomic) BOOL expiration</Declaration>
+			
+			
+			<Anchor>//api/name/expiration</Anchor>
+            <NodeRef refid="4"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

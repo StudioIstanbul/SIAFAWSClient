@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AWSLifeCycle.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AWSLifeCycle</TokenIdentifier>
+			<Abstract type="html">describes the lifecycle configuration of a bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="3"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycle/setRules:</TokenIdentifier>
+			<Abstract type="html">array of lifecycle rules for bucket, do not modify this array! @see addLiveCycleRule: instead</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (readonly, nonatomic) NSArray *rules</Declaration>
+			
+			
+			<Anchor>//api/name/rules</Anchor>
+            <NodeRef refid="3"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycle/rules</TokenIdentifier>
+			<Abstract type="html">array of lifecycle rules for bucket, do not modify this array! @see addLiveCycleRule: instead</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (readonly, nonatomic) NSArray *rules</Declaration>
+			
+			
+			<Anchor>//api/name/rules</Anchor>
+            <NodeRef refid="3"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSLifeCycle/rules</TokenIdentifier>
+			<Abstract type="html">array of lifecycle rules for bucket, do not modify this array! @see addLiveCycleRule: instead</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (readonly, nonatomic) NSArray *rules</Declaration>
+			
+			
+			<Anchor>//api/name/rules</Anchor>
+            <NodeRef refid="3"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycle/addLiveCycleRule:</TokenIdentifier>
+			<Abstract type="html">add a lifecycle rule to configuration</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)addLiveCycleRule:(AWSLifeCycleRule *)rule</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>rule</Name>
+					<Abstract type="html">lifecycle rule to add to configuration</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/addLiveCycleRule:</Anchor>
+            <NodeRef refid="3"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSLifeCycle/siXMLData</TokenIdentifier>
+			<Abstract type="html">XML data for lifecycle configuration</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (NSData *)siXMLData</Declaration>
+			
+			
+			<Anchor>//api/name/siXMLData</Anchor>
+            <NodeRef refid="3"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

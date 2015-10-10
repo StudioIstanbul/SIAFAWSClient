@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Constants/SIAFAWSRegion.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/c/tdef/SIAFAWSRegion</TokenIdentifier>
+			<Abstract type="html">defines a valid AWS Region, please look up valid S3 regions at http://docs.aws.amazon.com/general/latest/gr/rande.html</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="10"/>
+		</Token>
+		
+		
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionUSStandard</TokenIdentifier>
+            <Abstract type="html">Standard AWS Region (defaults to &apos;us-east-1&apos;)</Abstract>
+            <Declaration>SIAFAWSRegionUSStandard</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionUSWestOregon</TokenIdentifier>
+            <Abstract type="html">AWS Region US West Oregon</Abstract>
+            <Declaration>SIAFAWSRegionUSWestOregon</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionUSWestNorthCalifornia</TokenIdentifier>
+            <Abstract type="html">AWS Region US West North California</Abstract>
+            <Declaration>SIAFAWSRegionUSWestNorthCalifornia</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionEUIreland</TokenIdentifier>
+            <Abstract type="html">AWS Region EU Ireland</Abstract>
+            <Declaration>SIAFAWSRegionEUIreland</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionEUFrankfurt</TokenIdentifier>
+            <Abstract type="html">AWS Region EU Frankfurt</Abstract>
+            <Declaration>SIAFAWSRegionEUFrankfurt</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionAPSingapore</TokenIdentifier>
+            <Abstract type="html">AWS Region AP Singapore</Abstract>
+            <Declaration>SIAFAWSRegionAPSingapore</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionAPSydney</TokenIdentifier>
+            <Abstract type="html">AWS Region AP Sydney</Abstract>
+            <Declaration>SIAFAWSRegionAPSydney</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionAPTokyo</TokenIdentifier>
+            <Abstract type="html">AWS Region AP Tokyo</Abstract>
+            <Declaration>SIAFAWSRegionAPTokyo</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRegionAPSaoPaulo</TokenIdentifier>
+            <Abstract type="html">AWS Region AP Sao Paulo</Abstract>
+            <Declaration>SIAFAWSRegionAPSaoPaulo</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="10"/>
+        </Token>
+        
+	</File>
+</Tokens>

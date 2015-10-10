@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="no"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:docset="http://developer.apple.com/rss/docset_extensions" xml:lang="en">
+    <id>//.atom/20151010223845</id>
+    <title type="text">SIAFAWSClient Documentation</title>
+    <rights>Copyright © 2015 Studio Istanbul Medya Hiz. Tic. Ltd. Sti.. All rights reserved.</rights>
+    <link rel="self" href="//.atom"></link>
+    <docset:publisherName>Studio Istanbul Medya Hiz. Tic. Ltd. Sti.</docset:publisherName>
+    <docset:publisherID>net.studio-istanbul.documentation</docset:publisherID>
+    <updated>2015-10-10T22:38:45+03:00</updated>
+    <entry>
+        <id>tag:.atom,2015-10-10:net.studio-istanbul.SIAFAWSClient/1.0.0</id>
+        <title type="text">SIAFAWSClient Documentation</title>
+        <updated>2015-10-10T22:38:45+03:00</updated>
+        <content type="text">SIAFAWSClient Documentation (v1.0.0)</content>
+        <link rel="enclosure" type="application/octet-stream" href="/net.studio-istanbul.SIAFAWSClient-1.0.xar" length="124249"></link>
+        <docset:identifier>net.studio-istanbul.SIAFAWSClient</docset:identifier>
+        <docset:version>1.0.0</docset:version>
+        <docset:minimumXcodeVersion>3.0.0</docset:minimumXcodeVersion>
+    </entry>
+</feed>

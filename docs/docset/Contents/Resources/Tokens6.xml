@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AWSSigningKey.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AWSSigningKey</TokenIdentifier>
+			<Abstract type="html">A Amazon AWS signing key.
+This key object is used to sign all requests for max 7 days and is bound to the specified region.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/instp/AWSSigningKey/key</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<NodeRef refid="6"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/setKey:</TokenIdentifier>
+			<Abstract type="html">this property stores the actual signing key data used for signing requests to AWS. Never set this on your own, always use SIAFAWSClient&apos;s helper function to create a valid key!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSData *key</Declaration>
+			
+			
+			<Anchor>//api/name/key</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/key</TokenIdentifier>
+			<Abstract type="html">this property stores the actual signing key data used for signing requests to AWS. Never set this on your own, always use SIAFAWSClient&apos;s helper function to create a valid key!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSData *key</Declaration>
+			
+			
+			<Anchor>//api/name/key</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSSigningKey/key</TokenIdentifier>
+			<Abstract type="html">this property stores the actual signing key data used for signing requests to AWS. Never set this on your own, always use SIAFAWSClient&apos;s helper function to create a valid key!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSData *key</Declaration>
+			
+			
+			<Anchor>//api/name/key</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/setKeyDate:</TokenIdentifier>
+			<Abstract type="html">this property stores the date this key has been created. Due to AWS security restrictions every key is valid for up to 7 days.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *keyDate</Declaration>
+			
+			
+			<Anchor>//api/name/keyDate</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/keyDate</TokenIdentifier>
+			<Abstract type="html">this property stores the date this key has been created. Due to AWS security restrictions every key is valid for up to 7 days.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *keyDate</Declaration>
+			
+			
+			<Anchor>//api/name/keyDate</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSSigningKey/keyDate</TokenIdentifier>
+			<Abstract type="html">this property stores the date this key has been created. Due to AWS security restrictions every key is valid for up to 7 days.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *keyDate</Declaration>
+			
+			
+			<Anchor>//api/name/keyDate</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/setRegion:</TokenIdentifier>
+			<Abstract type="html">the AWS region this key has been bound to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/region</TokenIdentifier>
+			<Abstract type="html">the AWS region this key has been bound to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSSigningKey/region</TokenIdentifier>
+			<Abstract type="html">the AWS region this key has been bound to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/setAccessKey:</TokenIdentifier>
+			<Abstract type="html">the AWS access key this key has been bound to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *accessKey</Declaration>
+			
+			
+			<Anchor>//api/name/accessKey</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/accessKey</TokenIdentifier>
+			<Abstract type="html">the AWS access key this key has been bound to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *accessKey</Declaration>
+			
+			
+			<Anchor>//api/name/accessKey</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSSigningKey/accessKey</TokenIdentifier>
+			<Abstract type="html">the AWS access key this key has been bound to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *accessKey</Declaration>
+			
+			
+			<Anchor>//api/name/accessKey</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/initWithKey:andDate:</TokenIdentifier>
+			<Abstract type="html">initialising a new key object (not a new key</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (id)initWithKey:(NSData *)keyContent andDate:(NSDate *)creationDate</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>keyContent</Name>
+					<Abstract type="html">the content data for this key</Abstract>
+				</Parameter><Parameter>
+					<Name>creationDate</Name>
+					<Abstract type="html">the actual creation date of this key</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/initWithKey:andDate:</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSSigningKey/saveToKeychain</TokenIdentifier>
+			<Abstract type="html">helper method to save a signing key directly to the OS X keychain</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)saveToKeychain</Declaration>
+			
+			
+			<Anchor>//api/name/saveToKeychain</Anchor>
+            <NodeRef refid="6"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

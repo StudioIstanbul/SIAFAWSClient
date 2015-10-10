@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Protocols/SIAFAWSClientProtocol.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intf/SIAFAWSClientProtocol</TokenIdentifier>
+			<Abstract type="html">  Implement these SIAFAWSClientProtocol functions in order to respond to AWS API request updates.  </Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="8"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsclient:receivedBucketContentList:forBucket:</TokenIdentifier>
+			<Abstract type="html">will be called after receiving a content list of a S3 bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsclient:(SIAFAWSClient *)client receivedBucketContentList:(NSArray *)bucketContents forBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketContents</Name>
+					<Abstract type="html">NSArray of AWSFile objects representing the contents of a bucket</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of the S3 bucket
+see listBucket:</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsclient:receivedBucketContentList:forBucket:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsclient:receivedBucketList:</TokenIdentifier>
+			<Abstract type="html">will be called when list of available buckets for the user&apos;s account is received</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsclient:(SIAFAWSClient *)client receivedBucketList:(NSArray *)buckets</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>buckets</Name>
+					<Abstract type="html">NSArray of AWSBucket objects representing the available buckets
+see listBuckets;</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsclient:receivedBucketList:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsclientRequiresAccessKey:</TokenIdentifier>
+			<Abstract type="html">will be called if client needs to provide an access key but access key has not been set.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (NSString *)awsclientRequiresAccessKey:(SIAFAWSClient *)client</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">delegate shall return NSString with user&apos;s access key
+see setAccessKey:</Abstract></ReturnValue>
+			<Anchor>//api/name/awsclientRequiresAccessKey:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsclientRequiresSecretKey:</TokenIdentifier>
+			<Abstract type="html">will be called if client needs to provide an secret key but secret key has not been set.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (NSString *)awsclientRequiresSecretKey:(SIAFAWSClient *)client</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">delegate shall return NSString with user&apos;s secret key
+see secretKey</Abstract></ReturnValue>
+			<Anchor>//api/name/awsclientRequiresSecretKey:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsclientRequiresKeyData:</TokenIdentifier>
+			<Abstract type="html">will be called if client needs to provide an encryption key for SSEC file encryption
+but key has not been set.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (NSData *)awsclientRequiresKeyData:(SIAFAWSClient *)client</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">delegate shall return NSString with user&apos;s access key</Abstract></ReturnValue>
+			<Anchor>//api/name/awsclientRequiresKeyData:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsclient:finishedUploadForUrl:</TokenIdentifier>
+			<Abstract type="html">will be called when uploading a local file has successfully finished</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL *)localURL</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>localURL</Name>
+					<Abstract type="html">the local file URL of the file uploaded</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsclient:finishedUploadForUrl:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsclient:finishedDownloadForKey:toURL:</TokenIdentifier>
+			<Abstract type="html">will be called when downloading a file has been successfully downloaded</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsclient:(SIAFAWSClient *)client finishedDownloadForKey:(NSString *)key toURL:(NSURL *)localURL</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">the AWS S3 bucket&apos;s key the file has been downloaded from</Abstract>
+				</Parameter><Parameter>
+					<Name>localURL</Name>
+					<Abstract type="html">the local file URL the file has been downloaded to</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsclient:finishedDownloadForKey:toURL:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/uploadProgress:forURL:</TokenIdentifier>
+			<Abstract type="html">periodically called to update upload progress for a single operation</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)uploadProgress:(double)progress forURL:(NSURL *)localFileUrl</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>progress</Name>
+					<Abstract type="html">double value for new progress between 0 and 1</Abstract>
+				</Parameter><Parameter>
+					<Name>localFileUrl</Name>
+					<Abstract type="html">local file URL for current upload operation</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/uploadProgress:forURL:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/downloadProgress:forKey:</TokenIdentifier>
+			<Abstract type="html">periodically called to update download progress for a single operation</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)downloadProgress:(double)progress forKey:(NSString *)key</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>progress</Name>
+					<Abstract type="html">double value for new progress between 0 and 1</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">S3 bucket key for current download operation</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/downloadProgress:forKey:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsClient:receivedMetadata:forKey:onBucket:</TokenIdentifier>
+			<Abstract type="html">will be called when metadata for AWS S3 file is received</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsClient:(SIAFAWSClient *)client receivedMetadata:(AWSFile *)fileMetadata forKey:(NSString *)key onBucket:(NSString *)bucket</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>fileMetadata</Name>
+					<Abstract type="html">AWSFile object with updated metadata</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">AWS S3 bucket&apos;s key for current file</Abstract>
+				</Parameter><Parameter>
+					<Name>bucket</Name>
+					<Abstract type="html">name of current bucket</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsClient:receivedMetadata:forKey:onBucket:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsClient:requestFailedWithError:</TokenIdentifier>
+			<Abstract type="html">will be called when a request to AWS service fails</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsClient:(SIAFAWSClient *)client requestFailedWithError:(NSError *)error</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>error</Name>
+					<Abstract type="html">NSError object describing the error</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsClient:requestFailedWithError:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsClient:changedLifeCycleForBucket:</TokenIdentifier>
+			<Abstract type="html">will be called if setting life cycle operation is successfull</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsClient:(SIAFAWSClient *)client changedLifeCycleForBucket:(NSString *)bucket</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>bucket</Name>
+					<Abstract type="html">name of the current bucket</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsClient:changedLifeCycleForBucket:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsClient:receivedLifecycleConfiguration:forBucket:</TokenIdentifier>
+			<Abstract type="html">will be called if bucket lifecycle settings are received</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsClient:(SIAFAWSClient *)client receivedLifecycleConfiguration:(AWSLifeCycle *)lifeCycleConfiguration forBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>lifeCycleConfiguration</Name>
+					<Abstract type="html">lifecycle configuration as AWSLifeCycle object for current bucket</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of the current bucket</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsClient:receivedLifecycleConfiguration:forBucket:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsClient:objectIsAvailableAtKey:onBucket:</TokenIdentifier>
+			<Abstract type="html">will be called if a restore request fails because object is already available</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsClient:(SIAFAWSClient *)client objectIsAvailableAtKey:(NSString *)key onBucket:(NSString *)bucket</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key of the requested object</Abstract>
+				</Parameter><Parameter>
+					<Name>bucket</Name>
+					<Abstract type="html">name of the current bucketName</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsClient:objectIsAvailableAtKey:onBucket:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsClient:deletedKey:onBucket:</TokenIdentifier>
+			<Abstract type="html">will be called if an object has been deleted successfully</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsClient:(SIAFAWSClient *)client deletedKey:(NSString *)key onBucket:(NSString *)bucket</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key of the deleted object</Abstract>
+				</Parameter><Parameter>
+					<Name>bucket</Name>
+					<Abstract type="html">name of the current bucketName</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsClient:deletedKey:onBucket:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/intfm/SIAFAWSClientProtocol/awsClient:successfullyCreatedBucket:</TokenIdentifier>
+			<Abstract type="html">will be called if bucket has been successfully ceated</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)awsClient:(SIAFAWSClient *)client successfullyCreatedBucket:(NSString *)bucket</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>client</Name>
+					<Abstract type="html">the client calling the delegate</Abstract>
+				</Parameter><Parameter>
+					<Name>bucket</Name>
+					<Abstract type="html">name of the current bucketName</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/awsClient:successfullyCreatedBucket:</Anchor>
+            <NodeRef refid="8"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

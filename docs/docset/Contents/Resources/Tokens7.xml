@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/SIAFAWSClient.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/SIAFAWSClient</TokenIdentifier>
+			<Abstract type="html">The main object handling Amazon AWS S3 operations via AFNetworking. Use this class to do your operations.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="7"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setBaseURL:</TokenIdentifier>
+			<Abstract type="html">the base URL that should be used for this client. Normally set automatically by choosing a region</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readwrite, retain) NSURL *baseURL</Declaration>
+			
+			
+			<Anchor>//api/name/baseURL</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/baseURL</TokenIdentifier>
+			<Abstract type="html">the base URL that should be used for this client. Normally set automatically by choosing a region</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readwrite, retain) NSURL *baseURL</Declaration>
+			
+			
+			<Anchor>//api/name/baseURL</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/baseURL</TokenIdentifier>
+			<Abstract type="html">the base URL that should be used for this client. Normally set automatically by choosing a region</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readwrite, retain) NSURL *baseURL</Declaration>
+			
+			
+			<Anchor>//api/name/baseURL</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setAccessKey:</TokenIdentifier>
+			<Abstract type="html">the user&apos;s access key, part of the credentials used to login to Amazon AWS</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *accessKey</Declaration>
+			
+			
+			<Anchor>//api/name/accessKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/accessKey</TokenIdentifier>
+			<Abstract type="html">the user&apos;s access key, part of the credentials used to login to Amazon AWS</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *accessKey</Declaration>
+			
+			
+			<Anchor>//api/name/accessKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/accessKey</TokenIdentifier>
+			<Abstract type="html">the user&apos;s access key, part of the credentials used to login to Amazon AWS</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *accessKey</Declaration>
+			
+			
+			<Anchor>//api/name/accessKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setSecretKey:</TokenIdentifier>
+			<Abstract type="html">the user&apos;s secret key, part of the credentials used to login to Amazon AWS. This value is only needed if no signing key is provided.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *secretKey</Declaration>
+			
+			
+			<Anchor>//api/name/secretKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/secretKey</TokenIdentifier>
+			<Abstract type="html">the user&apos;s secret key, part of the credentials used to login to Amazon AWS. This value is only needed if no signing key is provided.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *secretKey</Declaration>
+			
+			
+			<Anchor>//api/name/secretKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/secretKey</TokenIdentifier>
+			<Abstract type="html">the user&apos;s secret key, part of the credentials used to login to Amazon AWS. This value is only needed if no signing key is provided.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *secretKey</Declaration>
+			
+			
+			<Anchor>//api/name/secretKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setRegion:</TokenIdentifier>
+			<Abstract type="html">the AWS region to use for this client, automatically sets baseURLs and appropriate signing key if needed</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/region</TokenIdentifier>
+			<Abstract type="html">the AWS region to use for this client, automatically sets baseURLs and appropriate signing key if needed</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/region</TokenIdentifier>
+			<Abstract type="html">the AWS region to use for this client, automatically sets baseURLs and appropriate signing key if needed</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setBucket:</TokenIdentifier>
+			<Abstract type="html">the name of the AWS S3 bucket to use for this client</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *bucket</Declaration>
+			
+			
+			<Anchor>//api/name/bucket</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/bucket</TokenIdentifier>
+			<Abstract type="html">the name of the AWS S3 bucket to use for this client</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *bucket</Declaration>
+			
+			
+			<Anchor>//api/name/bucket</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/bucket</TokenIdentifier>
+			<Abstract type="html">the name of the AWS S3 bucket to use for this client</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) NSString *bucket</Declaration>
+			
+			
+			<Anchor>//api/name/bucket</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setDelegate:</TokenIdentifier>
+			<Abstract type="html">the delegate to be informed about success or failure of requests</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, weak) NSObject&lt;SIAFAWSClientProtocol&gt; *delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/delegate</TokenIdentifier>
+			<Abstract type="html">the delegate to be informed about success or failure of requests</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, weak) NSObject&lt;SIAFAWSClientProtocol&gt; *delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/delegate</TokenIdentifier>
+			<Abstract type="html">the delegate to be informed about success or failure of requests</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, weak) NSObject&lt;SIAFAWSClientProtocol&gt; *delegate</Declaration>
+			
+			
+			<Anchor>//api/name/delegate</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setSigningKey:</TokenIdentifier>
+			<Abstract type="html">the signing key for AWS operations. Optional, will be populated automatically on the first request if .accessKey and .secretKey are provided</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) AWSSigningKey *signingKey</Declaration>
+			
+			
+			<Anchor>//api/name/signingKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/signingKey</TokenIdentifier>
+			<Abstract type="html">the signing key for AWS operations. Optional, will be populated automatically on the first request if .accessKey and .secretKey are provided</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) AWSSigningKey *signingKey</Declaration>
+			
+			
+			<Anchor>//api/name/signingKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/signingKey</TokenIdentifier>
+			<Abstract type="html">the signing key for AWS operations. Optional, will be populated automatically on the first request if .accessKey and .secretKey are provided</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, retain) AWSSigningKey *signingKey</Declaration>
+			
+			
+			<Anchor>//api/name/signingKey</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setSyncWithKeychain:</TokenIdentifier>
+			<Abstract type="html">set to YES if you want credentials to be stored and retrieved from OS X keychain</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) BOOL syncWithKeychain</Declaration>
+			
+			
+			<Anchor>//api/name/syncWithKeychain</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/syncWithKeychain</TokenIdentifier>
+			<Abstract type="html">set to YES if you want credentials to be stored and retrieved from OS X keychain</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) BOOL syncWithKeychain</Declaration>
+			
+			
+			<Anchor>//api/name/syncWithKeychain</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/syncWithKeychain</TokenIdentifier>
+			<Abstract type="html">set to YES if you want credentials to be stored and retrieved from OS X keychain</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic) BOOL syncWithKeychain</Declaration>
+			
+			
+			<Anchor>//api/name/syncWithKeychain</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setIsBusy:</TokenIdentifier>
+			<Abstract type="html">will be YES if operation is currently executed</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) BOOL isBusy</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if busy</Abstract></ReturnValue>
+			<Anchor>//api/name/isBusy</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/isBusy</TokenIdentifier>
+			<Abstract type="html">will be YES if operation is currently executed</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) BOOL isBusy</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if busy</Abstract></ReturnValue>
+			<Anchor>//api/name/isBusy</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/isBusy</TokenIdentifier>
+			<Abstract type="html">will be YES if operation is currently executed</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) BOOL isBusy</Declaration>
+			
+			<ReturnValue><Abstract type="html">YES if busy</Abstract></ReturnValue>
+			<Anchor>//api/name/isBusy</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setCallBackThread:</TokenIdentifier>
+			<Abstract type="html">the NSThread to be used for delegate callbacks</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSThread *callBackThread</Declaration>
+			
+			
+			<Anchor>//api/name/callBackThread</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/callBackThread</TokenIdentifier>
+			<Abstract type="html">the NSThread to be used for delegate callbacks</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSThread *callBackThread</Declaration>
+			
+			
+			<Anchor>//api/name/callBackThread</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/callBackThread</TokenIdentifier>
+			<Abstract type="html">the NSThread to be used for delegate callbacks</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSThread *callBackThread</Declaration>
+			
+			
+			<Anchor>//api/name/callBackThread</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setLastErrorCode:</TokenIdentifier>
+			<Abstract type="html">AWS error code of the last error.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSString *lastErrorCode</Declaration>
+			
+			
+			<Anchor>//api/name/lastErrorCode</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/lastErrorCode</TokenIdentifier>
+			<Abstract type="html">AWS error code of the last error.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSString *lastErrorCode</Declaration>
+			
+			
+			<Anchor>//api/name/lastErrorCode</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/SIAFAWSClient/lastErrorCode</TokenIdentifier>
+			<Abstract type="html">AWS error code of the last error.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSString *lastErrorCode</Declaration>
+			
+			
+			<Anchor>//api/name/lastErrorCode</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/host</TokenIdentifier>
+			<Abstract type="html">returning the current hostname for operations</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (NSString *)host</Declaration>
+			
+			<ReturnValue><Abstract type="html">hostname</Abstract></ReturnValue>
+			<Anchor>//api/name/host</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/listBuckets</TokenIdentifier>
+			<Abstract type="html">list all buckets for user with credentials provided</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)listBuckets</Declaration>
+			
+			
+			<Anchor>//api/name/listBuckets</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/listBucketsWithAccessPermissionCheck:</TokenIdentifier>
+			<Abstract type="html">list all buckets for user with credentials provided but check if bucket policy allowes access if set to YES. This operation might be time consuming if a huge number of buckets is available!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)listBucketsWithAccessPermissionCheck:(BOOL)checkPermission</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>checkPermission</Name>
+					<Abstract type="html">set to YES for ACL check</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/listBucketsWithAccessPermissionCheck:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/listBucket:</TokenIdentifier>
+			<Abstract type="html">list the contents of a bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)listBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of the bucket to list contents</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/listBucket:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/uploadFileFromURL:toKey:onBucket:</TokenIdentifier>
+			<Abstract type="html">upload file to AWS S3</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">local file URL</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">remote AWS key to upload to. If key already exists it will be overwritten without further notice or a new version will be created if versioning is enabled in the bucket settings. Always provide an absolut key path.</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of the bucket to upload to</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/uploadFileFromURL:toKey:onBucket:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/uploadFileFromURL:toKey:onBucket:withSSECKey:</TokenIdentifier>
+			<Abstract type="html">upload a file to AWS S3 using a custom key for server side encryption. The uploaded file will only be restorable if you provide this key again. Encryption is performed remote by Amazon AWS.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">local file URL</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">remote AWS key to upload to. If key already exists it will be overwritten without further notice or a new version will be created if versioning is enabled in the bucket settings. Always provide an absolut key path.</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of the bucket to upload to</Abstract>
+				</Parameter><Parameter>
+					<Name>ssecKey</Name>
+					<Abstract type="html">key used to encrypt data, has to be 256 bit and AES256 compatible or nil if upload shall not be encrypted</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/uploadFileFromURL:toKey:onBucket:withSSECKey:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/uploadFileFromURL:toKey:onBucket:withSSECKey:withStorageClass:andMetadata:</TokenIdentifier>
+			<Abstract type="html">upload a file to AWS S3 using a custom key for server side encryption and with metadata. Metadata will be stored in AWS S3 key metadata headers.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/uploadFileFromURL:toKey:onBucket:withSSECKey:</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>- (void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey withStorageClass:(SIAFAWSStorageClass)storageClass andMetadata:(NSDictionary *)metadata</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>url</Name>
+					<Abstract type="html">local file URL</Abstract>
+				</Parameter><Parameter>
+					<Name>key</Name>
+					<Abstract type="html">remote AWS key to upload to. If key already exists it will be overwritten without further notice or a new version will be created if versioning is enabled in the bucket settings. Always provide an absolut key path.</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of the bucket to upload to</Abstract>
+				</Parameter><Parameter>
+					<Name>ssecKey</Name>
+					<Abstract type="html">key used to encrypt data, has to be 256 bit and AES256 compatible or nil if upload shall not be encrypted</Abstract>
+				</Parameter><Parameter>
+					<Name>storageClass</Name>
+					<Abstract type="html">AWS Storage class to be used. May be SIAFAWSStandard or SIAFAWSReducedRedundancy. Direct put to Glacier is not supported by AWS. Set up a lifecycle rule if you want to use Glacier. @see SIAFAWSStorageClass</Abstract>
+				</Parameter><Parameter>
+					<Name>metadata</Name>
+					<Abstract type="html">NSDictionary containing metadata as strings. NSDictionary keys must not include special characters or white spaces.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/uploadFileFromURL:toKey:onBucket:withSSECKey:withStorageClass:andMetadata:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/downloadFileFromKey:onBucket:toURL:</TokenIdentifier>
+			<Abstract type="html">download an unencrypted file from AWS S3 bucket key</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)downloadFileFromKey:(NSString *)key onBucket:(NSString *)bucketName toURL:(NSURL *)fileURL</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key to download</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of bucket to download from</Abstract>
+				</Parameter><Parameter>
+					<Name>fileURL</Name>
+					<Abstract type="html">local file URL to store downloaded file to</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/downloadFileFromKey:onBucket:toURL:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/downloadFileFromKey:onBucket:toURL:withSSECKey:</TokenIdentifier>
+			<Abstract type="html">download encrypted file from AWS S3 bucket key</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)downloadFileFromKey:(NSString *)key onBucket:(NSString *)bucketName toURL:(NSURL *)fileURL withSSECKey:(NSData *)ssecKey</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key to download</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of bucket to download from</Abstract>
+				</Parameter><Parameter>
+					<Name>fileURL</Name>
+					<Abstract type="html">local file URL to store downloaded file to</Abstract>
+				</Parameter><Parameter>
+					<Name>ssecKey</Name>
+					<Abstract type="html">key used to encrypt data, has to be 256 bit and AES256 compatible or nil if key to download is not encrypted</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/downloadFileFromKey:onBucket:toURL:withSSECKey:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/restoreFileFromKey:onBucket:withExpiration:</TokenIdentifier>
+			<Abstract type="html">restore a file from AWS Glacier that has been transfered due to lifecycle configuration.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)restoreFileFromKey:(NSString *)key onBucket:(NSString *)bucketName withExpiration:(NSTimeInterval)expiration</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key to restore, must be an existing key. Key to be restored must have been uploaded to S3 bucket at some time previously.</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">bucket name for restore operation</Abstract>
+				</Parameter><Parameter>
+					<Name>expiration</Name>
+					<Abstract type="html">time intervall to keep restored key on S3. NSTimeInterval for convinience but using full days on server side.</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/restoreFileFromKey:onBucket:withExpiration:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/deleteKey:onBucket:</TokenIdentifier>
+			<Abstract type="html">delete a file from Amazon AWS S3 and/or Glacier. This can&apos;t be undone if bucket versioning is not enabled on bucket.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)deleteKey:(NSString *)key onBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key of file to delete</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of bucket for delete operation</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/deleteKey:onBucket:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/metadataForKey:onBucket:</TokenIdentifier>
+			<Abstract type="html">fetch metadata for unencrypted file. This method fetches an AWSFile object with updated values for all properties including metadata dictionary. @see AWSFile for more information on available properties. This method fails if file is encrypted.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)metadataForKey:(NSString *)key onBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key to fetch metadata for</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">bucket name for metadata operation</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/metadataForKey:onBucket:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/metadataForKey:onBucket:withSSECKey:</TokenIdentifier>
+			<Abstract type="html">fetch metadata for a file. This method fetches an AWSFile object with updated values for all properties including metadata dictionary. @see AWSFile for more information on available properties.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)metadataForKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>key</Name>
+					<Abstract type="html">key to fetch metadata for</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">bucket name for metadata operation</Abstract>
+				</Parameter><Parameter>
+					<Name>ssecKey</Name>
+					<Abstract type="html">key used to encrypt data, has to be 256 bit and AES256 compatible or nil if key is not encrypted</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/metadataForKey:onBucket:withSSECKey:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/checkBucket:forPermissionWithBlock:</TokenIdentifier>
+			<Abstract type="html">perform a block with access rights property on a bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)checkBucket:(AWSBucket *)checkBucket forPermissionWithBlock:(void ( ^ ) ( SIAFAWSAccessRight accessRight ))block</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>checkBucket</Name>
+					<Abstract type="html">bucket to check</Abstract>
+				</Parameter><Parameter>
+					<Name>block</Name>
+					<Abstract type="html">block to execute</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/checkBucket:forPermissionWithBlock:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/setBucketLifecycle:forBucket:</TokenIdentifier>
+			<Abstract type="html">set a lifecycle for bucket. This method is overriding any existing bucket lifecycle. Create a AWSLifecycle object and set properties on it first.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/cl/AWSLifeCycleRule</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>- (void)setBucketLifecycle:(AWSLifeCycle *)awsLifecycle forBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>awsLifecycle</Name>
+					<Abstract type="html">lifecycle to set</Abstract>
+				</Parameter><Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">bucket name to set lifecycle</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/setBucketLifecycle:forBucket:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/lifecycleRulesForBucket:</TokenIdentifier>
+			<Abstract type="html">fetch lifecycle configuration for Amazon AWS bucket.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+	<RelatedTokens>
+		<TokenIdentifier>//apple_ref/occ/cl/AWSLifeCycleRule</TokenIdentifier>
+		
+	</RelatedTokens>
+	
+			<Declaration>- (void)lifecycleRulesForBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">bucket name to fetch lifecycle</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/lifecycleRulesForBucket:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/createBucket:</TokenIdentifier>
+			<Abstract type="html">create a bucket in current user&apos;s account.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (void)createBucket:(NSString *)bucketName</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>bucketName</Name>
+					<Abstract type="html">name of the new bucket</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/createBucket:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/SIAFAWSClient/createSigningKeyForAccessKey:secretKey:andRegion:</TokenIdentifier>
+			<Abstract type="html">create a new signing key with the credentials provided. This signing key is bound to S3 service and the provided region and valid for 7 days. This method is called automatically if no valid signing key is detected but accessKey and secretKey exist or are provided by the delegate class.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (AWSSigningKey *)createSigningKeyForAccessKey:(NSString *)accessKey secretKey:(NSString *)secretKey andRegion:(SIAFAWSRegion)region</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>accessKey</Name>
+					<Abstract type="html">access key of the user</Abstract>
+				</Parameter><Parameter>
+					<Name>secretKey</Name>
+					<Abstract type="html">secret key of the user</Abstract>
+				</Parameter><Parameter>
+					<Name>region</Name>
+					<Abstract type="html">AWSRegion to use for this signing key</Abstract>
+				</Parameter>
+			</Parameters>
+			
+			<Anchor>//api/name/createSigningKeyForAccessKey:secretKey:andRegion:</Anchor>
+            <NodeRef refid="7"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

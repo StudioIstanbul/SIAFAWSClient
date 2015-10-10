@@ -1,0 +1,287 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title>SIAFAWSClient Reference</title>
+		<link rel="stylesheet" type="text/css" href="css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="index.html">SIAFAWSClient </a></h1>
+				<a id="developerHome" href="index.html">Studio Istanbul Medya Hiz. Tic. Ltd. Sti.</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">SIAFAWSClient Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar"></ul>
+		</header>
+		<article>
+			<div id="overview_contents" role="main">
+				<div class="main-navigation navigation-top">
+					<a href="hierarchy.html">Next</a>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">SIAFAWSClient Reference</h1>
+					</div>		
+				</div>
+				<div id="container">
+					
+					<div class="section section-overview index-overview">
+						
+						
+						<h1><a href="Classes/SIAFAWSClient.html">SIAFAWSClient</a></h1>
+
+<p>Client for Amazon AWS S3 based on AFNetworking. This class uses Amazon AWS Signature Version 4 for authentication purposes.</p>
+
+<h2>Init</h2>
+
+<p>Init a new client with or without base URL. If no valid URL is provided URL is detected automatically based on selected region.</p>
+
+<pre><code>_awsClient = [[SIAFAWSClient alloc] initWithBaseURL:[NSURL URLWithString:[NSString stringWithFormat:@"https://%@", SIAFAWSRegionalBaseURL(SIAFAWSRegionEUFrankfurt)]]];
+_awsClient.delegate = self;
+</code></pre>
+
+<h2>Set credentials</h2>
+
+<p>Set credentials by setting the properties:</p>
+
+<pre><code>_awsClient.accessKey = @"USER_ACCESSKEY";
+_awsClient.secretKey = @"USER_SECRETKEY";
+</code></pre>
+
+<h2>Fetch bucket list</h2>
+
+<p>To fetch a list of available buckets for the provided user just call:</p>
+
+<pre><code>[_awsClient listBuckets];
+</code></pre>
+
+<p>If request is accepted by server your delegates</p>
+
+<pre><code>-(void)awsclient:(SIAFAWSClient *)client receivedBucketList:(NSArray *)buckets
+</code></pre>
+
+<p>method will be called.</p>
+
+<h2>Fetch keys for bucket</h2>
+
+<p>To fetch a list of keys stored in a bucket call</p>
+
+<pre><code>[_awsClient listBucket:@"MY_BUCKET"];
+</code></pre>
+
+<p>If request is accepted your delegates</p>
+
+<pre><code>-(void)awsclient:(SIAFAWSClient *)client receivedBucketContentList:(NSArray *)bucketContents forBucket:(NSString *)bucketName
+</code></pre>
+
+<p>method will be called providing a NSArray of <a href="Classes/AWSFile.html">AWSFile</a> objects containing metadata. Please make sure to call</p>
+
+<pre><code>[_awsClient metadataForKey:@"/AWSKEY" onBucket:@"MY_BUCKET" withSSECKey:nil];
+</code></pre>
+
+<p>to update file metadata if some data needed is missing as some information is not fetched during listing of available keys. If file is encrypted, make sure to include AES256 key as NSData object.</p>
+
+<h2>Upload file</h2>
+
+<p>For uploading a local file just call</p>
+
+<pre><code>[_awsClient uploadFileFromURL:[NSURL fileURLWithPath:@"/path/to/my/file"] toKey:@"/keyNameOnS3" onBucket:@"MY_BUCKET" withSSECKey:nil withStorageClass:SIAFAWSStandard andMetadata:nil];
+</code></pre>
+
+<p>If file shall be encrypted make sure to include AES256 key as NSData. Encryption will be performed on server side by Amazon AWS S3. You can choose between two different storage classes <strong>SIAFAWSStandard</strong> and <strong>SIAFAWSReducedRedundancy</strong> which will affect pricing for AWS S3 service. Upload to Glacier is not supported by Amazon, please use bucket life cycle in order to support Glacier.</p>
+
+<p>The following methods on your delegate will be called:</p>
+
+<pre><code>-(void)uploadProgress:(double)progress forURL:(NSURL*)localFileUrl; // continuously updates file upload progress
+
+-(void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL*)localURL; // upload is finished
+</code></pre>
+
+<h2>Download file</h2>
+
+<p>To download a file you should call</p>
+
+<pre><code>[_awsClient downloadFileFromKey:@"/myKeyOnS3" onBucket:@"MY_BUCKET" toURL:localURL nil];
+</code></pre>
+
+<p>If file has been encrypted on upload make sure to include AES256 key as NSData. Decryption will be performed on server side by Amazon AWS S3.</p>
+
+<p>The following methods on your delegate will be called:</p>
+
+<pre><code>-(void)downloadProgress:(double)progress forKey:(NSString*)key; // continuously updates file download progress
+
+-(void)awsclient:(SIAFAWSClient *)client finishedDownloadForKey:(NSString*)key toURL:(NSURL *)localURL  // download is finished
+</code></pre>
+
+<h2>Delete file</h2>
+
+<p>To delete a file call</p>
+
+<pre><code>[_awsClient deleteKey:@"/myKeyOnS3" onBucket:@"MY_BUCKET"];
+</code></pre>
+
+<p>If versioning is not enabled on your bucket, deletion will be permanent.</p>
+
+<h2>Restore file</h2>
+
+<p>If a file is currently only stored on Glacier due to life cycle configuration of your bucket you can restore it by calling</p>
+
+<pre><code>SIAWSFile* myFile = // some AWSFile object returned by requesting metadata
+if (myFile.storageClass == SIAFAWSGlacier) { // make sure file is really on Glacier
+    [_awsClient restoreFileFromKey:myFile.awsKey onBucket:myFile.awsBucket withExpiration:10*60*60*24]; // restore for 10 days
+}
+</code></pre>
+
+<p>The following delegates will be called, if file is already available:</p>
+
+<pre><code>-(void)awsClient:(SIAFAWSClient*)client objectIsAvailableAtKey:(NSString*)key onBucket:(NSString*)bucket // object is available due to an earlier restore request
+</code></pre>
+
+<h2>Bucket life cycle</h2>
+
+<p>You can set a bucket lifecycle configuration by creating the according <strong><a href="Classes/AWSLifeCycle.html">AWSLifeCycle</a></strong> and <strong><a href="Classes/AWSLifeCycleRule.html">AWSLifeCycleRule</a></strong> objects and uploading them. This will overwrite any existing life cycle configuration for this bucket!</p>
+
+<p>Example:</p>
+
+<pre><code>AWSLifeCycle* lc = [AWSLifeCycle new];
+AWSLifeCycleRule* lcRule = [AWSLifeCycleRule new];
+lcRule.ID = @"myLifeCycleRuleID"; // ID required by AWS S3
+lcRule.prefix = @"";  // valid for all files
+lcRule.transitionInterval =  10*60*60*24; // transfer to Glacier after 10 days
+lcRule.exiprationInterval = 20*60*60*24; // delete after 20 days
+[lc addLiveCycleRule:lcRule]; // add rule to configuration
+[_awsClient setBucketLifecycle:lc forBucket:@"MY_BUCKET"]; // upload configuration
+</code></pre>
+
+<p>You can also read the current life cycle configuration by requesting it:</p>
+
+<pre><code>[_awsClient lifecycleRulesForBucket:@"MY_BUCKET"];
+</code></pre>
+
+<p>The according delegate methods will be called when requests are successfull:</p>
+
+<pre><code>-(void)awsClient:(SIAFAWSClient*)client receivedLifecycleConfiguration:(AWSLifeCycle*)lifeCycleConfiguration forBucket:(NSString*)bucketName; // life cycle configuration received
+
+-(void)awsClient:(SIAFAWSClient*)client changedLifeCycleForBucket:(NSString*)bucket; // life cycle configuration uploaded
+</code></pre>
+
+<h2>Error handling</h2>
+
+<p>Some parts of error handling are performed automatically. If any non-fixable error occurs your delegate method will be called:</p>
+
+<pre><code>-(void)awsClient:(SIAFAWSClient*)client requestFailedWithError:(NSError*)error;
+</code></pre>
+
+<p>You can use the provided NSError object to get more information about the error or get an Error string from .lastErrorCode property. See Amazon AWS S3 Error codes for valid codes.</p>
+
+<h2>Create bucket</h2>
+
+<p>You can also create a new bucket:</p>
+
+<pre><code>[_awsClient createBucket:@"NEW_BUCKET"];
+</code></pre>
+
+<p>Make sure your bucket name is valid according to Amazon AWS S3 bucket name rules.</p>
+
+<h2>Encryption</h2>
+
+<p>Server Side Encryption with Custom Key (SSEC) is supported by upload and download functions of this class. You have to supply a valid AES256 key on upload, download or metadata request if a key is encrypted.</p>
+
+<h2>Signing key</h2>
+
+<p>This class supports connecting to S3 without supplying the user&rsquo;s secret key. You can also supply a valid AWS signing key to connect. Signing keys are valid for 7 days and bound to a specific service region. Signing keys have to be created using this classes helper functions but is created automatically if both access key and secret key are provided.</p>
+
+<pre><code>NSData* signingKey = [_awsClient createSigningKeyForAccessKey:@"ACCESS_KEY" secretKey:@"SECRET_KEY" andRegion:SIAFAWSRegionStandard]; // create a valid signing key
+[_awsClient setSigningKey:signingKey];
+</code></pre>
+
+<p>See <a href="http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html">http://docs.aws.amazon.com/AmazonS3/latest/API/sig-v4-authenticating-requests.html</a>#signing-request-intro for more information on signing keys.</p>
+
+<h2>Documentation</h2>
+
+<p>Please see <strong>/docs</strong> folder or header files for more information on functions and properties.</p>
+
+<h2>License</h2>
+
+<p><strong>Apache License 2.0</strong> - Feel free to use this class in your own commercial or non-commercial projects. No attribution required but appreciated. Please share your changes or additions by filing a pull-request on github.</p>
+
+<p>See LICENSE file for details.</p>
+						
+						
+					</div>
+					
+                        
+                    
+					
+					
+					<div class="index-column">
+						<h2 class="index-title">Class References</h2>
+						<ul>
+							
+							<li><a href="Classes/AWSBucket.html">AWSBucket</a></li>
+							
+							<li><a href="Classes/AWSFile.html">AWSFile</a></li>
+							
+							<li><a href="Classes/AWSLifeCycle.html">AWSLifeCycle</a></li>
+							
+							<li><a href="Classes/AWSLifeCycleRule.html">AWSLifeCycleRule</a></li>
+							
+							<li><a href="Classes/AWSOperation.html">AWSOperation</a></li>
+							
+							<li><a href="Classes/AWSSigningKey.html">AWSSigningKey</a></li>
+							
+							<li><a href="Classes/SIAFAWSClient.html">SIAFAWSClient</a></li>
+							
+						</ul>
+					</div>
+					
+					
+						
+					<div class="index-column">
+						
+						<h2 class="index-title">Protocol References</h2>
+						<ul>
+							
+							<li><a href="Protocols/SIAFAWSClientProtocol.html">SIAFAWSClientProtocol</a></li>
+							
+						</ul>
+						
+                        
+						<h2 class="index-title">Constant References</h2>
+						<ul>
+                        
+                        <li><a href="Constants/SIAFAWSAccessRight.html">SIAFAWSAccessRight</a></li>
+                        
+                        <li><a href="Constants/SIAFAWSRegion.html">SIAFAWSRegion</a></li>
+                        
+                        <li><a href="Constants/SIAFAWSStorageClass.html">SIAFAWSStorageClass</a></li>
+                        
+						</ul>
+						
+						
+					</div>
+					
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<a href="hierarchy.html">Next</a>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 Studio Istanbul Medya Hiz. Tic. Ltd. Sti.. All rights reserved. (Last updated: 2015-10-10)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+	
+					</div>
+				</div>
+			</div>
+		</article>		
+	</body>
+</html>

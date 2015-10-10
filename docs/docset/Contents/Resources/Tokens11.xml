@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Constants/SIAFAWSStorageClass.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/c/tdef/SIAFAWSStorageClass</TokenIdentifier>
+			<Abstract type="html">defines an AWS S3 storage class</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="11"/>
+		</Token>
+		
+		
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSStandard</TokenIdentifier>
+            <Abstract type="html">Amazon S3 standard storage class</Abstract>
+            <Declaration>SIAFAWSStandard</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="11"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSReducedRedundancy</TokenIdentifier>
+            <Abstract type="html">Amazon S3 reduced redundancy storage class</Abstract>
+            <Declaration>SIAFAWSReducedRedundancy</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="11"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSGlacier</TokenIdentifier>
+            <Abstract type="html">Amazon Glacier storage class
+This can&apos;t be set, only for response from AWS</Abstract>
+            <Declaration>SIAFAWSGlacier</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="11"/>
+        </Token>
+        
+	</File>
+</Tokens>

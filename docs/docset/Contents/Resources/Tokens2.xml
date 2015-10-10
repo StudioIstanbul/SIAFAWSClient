@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AWSFile.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AWSFile</TokenIdentifier>
+			<Abstract type="html">describes a file in an AWS S3 bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="2"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setKey:</TokenIdentifier>
+			<Abstract type="html">remote AWS S3 key used to store this file</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *key</Declaration>
+			
+			
+			<Anchor>//api/name/key</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/key</TokenIdentifier>
+			<Abstract type="html">remote AWS S3 key used to store this file</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *key</Declaration>
+			
+			
+			<Anchor>//api/name/key</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/key</TokenIdentifier>
+			<Abstract type="html">remote AWS S3 key used to store this file</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *key</Declaration>
+			
+			
+			<Anchor>//api/name/key</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setLastModified:</TokenIdentifier>
+			<Abstract type="html">last modification date for remote representation of this file</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *lastModified</Declaration>
+			
+			
+			<Anchor>//api/name/lastModified</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/lastModified</TokenIdentifier>
+			<Abstract type="html">last modification date for remote representation of this file</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *lastModified</Declaration>
+			
+			
+			<Anchor>//api/name/lastModified</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/lastModified</TokenIdentifier>
+			<Abstract type="html">last modification date for remote representation of this file</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *lastModified</Declaration>
+			
+			
+			<Anchor>//api/name/lastModified</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setExpirationDate:</TokenIdentifier>
+			<Abstract type="html">expiration date when this file will be deleted according to lifecycle configuration. @see setBucketLifeCycle:forBucket:</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *expirationDate</Declaration>
+			
+			
+			<Anchor>//api/name/expirationDate</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/expirationDate</TokenIdentifier>
+			<Abstract type="html">expiration date when this file will be deleted according to lifecycle configuration. @see setBucketLifeCycle:forBucket:</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *expirationDate</Declaration>
+			
+			
+			<Anchor>//api/name/expirationDate</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/expirationDate</TokenIdentifier>
+			<Abstract type="html">expiration date when this file will be deleted according to lifecycle configuration. @see setBucketLifeCycle:forBucket:</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDate *expirationDate</Declaration>
+			
+			
+			<Anchor>//api/name/expirationDate</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setFileSize:</TokenIdentifier>
+			<Abstract type="html">size of remote representation for this file in bytes, excluding metadata</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) NSInteger fileSize</Declaration>
+			
+			
+			<Anchor>//api/name/fileSize</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/fileSize</TokenIdentifier>
+			<Abstract type="html">size of remote representation for this file in bytes, excluding metadata</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) NSInteger fileSize</Declaration>
+			
+			
+			<Anchor>//api/name/fileSize</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/fileSize</TokenIdentifier>
+			<Abstract type="html">size of remote representation for this file in bytes, excluding metadata</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) NSInteger fileSize</Declaration>
+			
+			
+			<Anchor>//api/name/fileSize</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setEtag:</TokenIdentifier>
+			<Abstract type="html">etag property of remote file. Equals MD5 checksum only if file is not encrypted!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *etag</Declaration>
+			
+			
+			<Anchor>//api/name/etag</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/etag</TokenIdentifier>
+			<Abstract type="html">etag property of remote file. Equals MD5 checksum only if file is not encrypted!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *etag</Declaration>
+			
+			
+			<Anchor>//api/name/etag</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/etag</TokenIdentifier>
+			<Abstract type="html">etag property of remote file. Equals MD5 checksum only if file is not encrypted!</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *etag</Declaration>
+			
+			
+			<Anchor>//api/name/etag</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setBucket:</TokenIdentifier>
+			<Abstract type="html">bucket name this file belongs to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *bucket</Declaration>
+			
+			
+			<Anchor>//api/name/bucket</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/bucket</TokenIdentifier>
+			<Abstract type="html">bucket name this file belongs to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *bucket</Declaration>
+			
+			
+			<Anchor>//api/name/bucket</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/bucket</TokenIdentifier>
+			<Abstract type="html">bucket name this file belongs to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *bucket</Declaration>
+			
+			
+			<Anchor>//api/name/bucket</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setStorageClass:</TokenIdentifier>
+			<Abstract type="html">storage class of this file. @see SIAFAWSStorageClass for possible values.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSStorageClass storageClass</Declaration>
+			
+			
+			<Anchor>//api/name/storageClass</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/storageClass</TokenIdentifier>
+			<Abstract type="html">storage class of this file. @see SIAFAWSStorageClass for possible values.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSStorageClass storageClass</Declaration>
+			
+			
+			<Anchor>//api/name/storageClass</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/storageClass</TokenIdentifier>
+			<Abstract type="html">storage class of this file. @see SIAFAWSStorageClass for possible values.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSStorageClass storageClass</Declaration>
+			
+			
+			<Anchor>//api/name/storageClass</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setSsecMD5:</TokenIdentifier>
+			<Abstract type="html">MD5 checksum of the key data that has been used to encrypt this file. Store to check for correct key data later.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *ssecMD5</Declaration>
+			
+			
+			<Anchor>//api/name/ssecMD5</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/ssecMD5</TokenIdentifier>
+			<Abstract type="html">MD5 checksum of the key data that has been used to encrypt this file. Store to check for correct key data later.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *ssecMD5</Declaration>
+			
+			
+			<Anchor>//api/name/ssecMD5</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/ssecMD5</TokenIdentifier>
+			<Abstract type="html">MD5 checksum of the key data that has been used to encrypt this file. Store to check for correct key data later.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *ssecMD5</Declaration>
+			
+			
+			<Anchor>//api/name/ssecMD5</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setMetadata:</TokenIdentifier>
+			<Abstract type="html">dictionary with custom metadata provided on upload</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDictionary *metadata</Declaration>
+			
+			
+			<Anchor>//api/name/metadata</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/metadata</TokenIdentifier>
+			<Abstract type="html">dictionary with custom metadata provided on upload</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDictionary *metadata</Declaration>
+			
+			
+			<Anchor>//api/name/metadata</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/metadata</TokenIdentifier>
+			<Abstract type="html">dictionary with custom metadata provided on upload</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSDictionary *metadata</Declaration>
+			
+			
+			<Anchor>//api/name/metadata</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setRestoredKey:</TokenIdentifier>
+			<Abstract type="html">YES if the file has been restored from Glacier and is available</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL restoredKey</Declaration>
+			
+			
+			<Anchor>//api/name/restoredKey</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/restoredKey</TokenIdentifier>
+			<Abstract type="html">YES if the file has been restored from Glacier and is available</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL restoredKey</Declaration>
+			
+			
+			<Anchor>//api/name/restoredKey</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/restoredKey</TokenIdentifier>
+			<Abstract type="html">YES if the file has been restored from Glacier and is available</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL restoredKey</Declaration>
+			
+			
+			<Anchor>//api/name/restoredKey</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/setRestoreInProgress:</TokenIdentifier>
+			<Abstract type="html">YES if this file is currently to be stored from Glacier but operation has not finished yet.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL restoreInProgress</Declaration>
+			
+			
+			<Anchor>//api/name/restoreInProgress</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSFile/restoreInProgress</TokenIdentifier>
+			<Abstract type="html">YES if this file is currently to be stored from Glacier but operation has not finished yet.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL restoreInProgress</Declaration>
+			
+			
+			<Anchor>//api/name/restoreInProgress</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSFile/restoreInProgress</TokenIdentifier>
+			<Abstract type="html">YES if this file is currently to be stored from Glacier but operation has not finished yet.</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) BOOL restoreInProgress</Declaration>
+			
+			
+			<Anchor>//api/name/restoreInProgress</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

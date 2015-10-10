@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Constants/SIAFAWSAccessRight.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/c/tdef/SIAFAWSAccessRight</TokenIdentifier>
+			<Abstract type="html">defines access rights to a S3 bucket, based on ACL bucket policy</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="9"/>
+		</Token>
+		
+		
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSAccessUndefined</TokenIdentifier>
+            <Abstract type="html">Access is undefined or policy missing</Abstract>
+            <Declaration>SIAFAWSAccessUndefined</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="9"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSFullControl</TokenIdentifier>
+            <Abstract type="html">Full control</Abstract>
+            <Declaration>SIAFAWSFullControl</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="9"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSWrite</TokenIdentifier>
+            <Abstract type="html">Write access to bucket</Abstract>
+            <Declaration>SIAFAWSWrite</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="9"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSWriteACP</TokenIdentifier>
+            <Abstract type="html">Write access to bucket policy</Abstract>
+            <Declaration>SIAFAWSWriteACP</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="9"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSRead</TokenIdentifier>
+            <Abstract type="html">Read access to bucket</Abstract>
+            <Declaration>SIAFAWSRead</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="9"/>
+        </Token>
+        
+        <Token>
+            <TokenIdentifier>//apple_ref/c/econst/SIAFAWSReadACP</TokenIdentifier>
+            <Abstract type="html">Read access to bucket policy</Abstract>
+            <Declaration>SIAFAWSReadACP</Declaration>
+            
+            <DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+            <NodeRef refid="9"/>
+        </Token>
+        
+	</File>
+</Tokens>

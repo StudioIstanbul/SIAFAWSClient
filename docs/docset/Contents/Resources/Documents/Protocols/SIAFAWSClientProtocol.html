@@ -1,0 +1,1272 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>SIAFAWSClientProtocol Protocol Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">SIAFAWSClient </a></h1>
+				<a id="developerHome" href="../index.html">Studio Istanbul Medya Hiz. Tic. Ltd. Sti.</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">SIAFAWSClientProtocol Protocol Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/awsClient:changedLifeCycleForBucket:">&nbsp;&nbsp;&nbsp;&nbsp;- awsClient:changedLifeCycleForBucket:</option>
+	
+	<option value="//api/name/awsClient:deletedKey:onBucket:">&nbsp;&nbsp;&nbsp;&nbsp;- awsClient:deletedKey:onBucket:</option>
+	
+	<option value="//api/name/awsClient:objectIsAvailableAtKey:onBucket:">&nbsp;&nbsp;&nbsp;&nbsp;- awsClient:objectIsAvailableAtKey:onBucket:</option>
+	
+	<option value="//api/name/awsClient:receivedLifecycleConfiguration:forBucket:">&nbsp;&nbsp;&nbsp;&nbsp;- awsClient:receivedLifecycleConfiguration:forBucket:</option>
+	
+	<option value="//api/name/awsClient:receivedMetadata:forKey:onBucket:">&nbsp;&nbsp;&nbsp;&nbsp;- awsClient:receivedMetadata:forKey:onBucket:</option>
+	
+	<option value="//api/name/awsClient:requestFailedWithError:">&nbsp;&nbsp;&nbsp;&nbsp;- awsClient:requestFailedWithError:</option>
+	
+	<option value="//api/name/awsClient:successfullyCreatedBucket:">&nbsp;&nbsp;&nbsp;&nbsp;- awsClient:successfullyCreatedBucket:</option>
+	
+	<option value="//api/name/awsclient:finishedDownloadForKey:toURL:">&nbsp;&nbsp;&nbsp;&nbsp;- awsclient:finishedDownloadForKey:toURL:</option>
+	
+	<option value="//api/name/awsclient:finishedUploadForUrl:">&nbsp;&nbsp;&nbsp;&nbsp;- awsclient:finishedUploadForUrl:</option>
+	
+	<option value="//api/name/awsclient:receivedBucketContentList:forBucket:">&nbsp;&nbsp;&nbsp;&nbsp;- awsclient:receivedBucketContentList:forBucket:</option>
+	
+	<option value="//api/name/awsclient:receivedBucketList:">&nbsp;&nbsp;&nbsp;&nbsp;- awsclient:receivedBucketList:</option>
+	
+	<option value="//api/name/awsclientRequiresAccessKey:">&nbsp;&nbsp;&nbsp;&nbsp;- awsclientRequiresAccessKey:</option>
+	
+	<option value="//api/name/awsclientRequiresKeyData:">&nbsp;&nbsp;&nbsp;&nbsp;- awsclientRequiresKeyData:</option>
+	
+	<option value="//api/name/awsclientRequiresSecretKey:">&nbsp;&nbsp;&nbsp;&nbsp;- awsclientRequiresSecretKey:</option>
+	
+	<option value="//api/name/downloadProgress:forKey:">&nbsp;&nbsp;&nbsp;&nbsp;- downloadProgress:forKey:</option>
+	
+	<option value="//api/name/uploadProgress:forURL:">&nbsp;&nbsp;&nbsp;&nbsp;- uploadProgress:forURL:</option>
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsClient:changedLifeCycleForBucket:">awsClient:changedLifeCycleForBucket:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsClient:deletedKey:onBucket:">awsClient:deletedKey:onBucket:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsClient:objectIsAvailableAtKey:onBucket:">awsClient:objectIsAvailableAtKey:onBucket:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsClient:receivedLifecycleConfiguration:forBucket:">awsClient:receivedLifecycleConfiguration:forBucket:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsClient:receivedMetadata:forKey:onBucket:">awsClient:receivedMetadata:forKey:onBucket:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsClient:requestFailedWithError:">awsClient:requestFailedWithError:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsClient:successfullyCreatedBucket:">awsClient:successfullyCreatedBucket:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsclient:finishedDownloadForKey:toURL:">awsclient:finishedDownloadForKey:toURL:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsclient:finishedUploadForUrl:">awsclient:finishedUploadForUrl:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsclient:receivedBucketContentList:forBucket:">awsclient:receivedBucketContentList:forBucket:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsclient:receivedBucketList:">awsclient:receivedBucketList:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsclientRequiresAccessKey:">awsclientRequiresAccessKey:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsclientRequiresKeyData:">awsclientRequiresKeyData:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/awsclientRequiresSecretKey:">awsclientRequiresSecretKey:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/downloadProgress:forKey:">downloadProgress:forKey:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/uploadProgress:forURL:">uploadProgress:forURL:</a></span></li>
+	
+</ul></li>
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="SIAFAWSClientProtocol Protocol Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">SIAFAWSClientProtocol Protocol Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">SIAFAWSClient.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>  Implement these SIAFAWSClientProtocol functions in order to respond to AWS API request updates.</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsclient:receivedBucketContentList:forBucket:">&ndash;&nbsp;awsclient:receivedBucketContentList:forBucket:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsclient:receivedBucketList:">&ndash;&nbsp;awsclient:receivedBucketList:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsclientRequiresAccessKey:">&ndash;&nbsp;awsclientRequiresAccessKey:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsclientRequiresSecretKey:">&ndash;&nbsp;awsclientRequiresSecretKey:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsclientRequiresKeyData:">&ndash;&nbsp;awsclientRequiresKeyData:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsclient:finishedUploadForUrl:">&ndash;&nbsp;awsclient:finishedUploadForUrl:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsclient:finishedDownloadForKey:toURL:">&ndash;&nbsp;awsclient:finishedDownloadForKey:toURL:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/uploadProgress:forURL:">&ndash;&nbsp;uploadProgress:forURL:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/downloadProgress:forKey:">&ndash;&nbsp;downloadProgress:forKey:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsClient:receivedMetadata:forKey:onBucket:">&ndash;&nbsp;awsClient:receivedMetadata:forKey:onBucket:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsClient:requestFailedWithError:">&ndash;&nbsp;awsClient:requestFailedWithError:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsClient:changedLifeCycleForBucket:">&ndash;&nbsp;awsClient:changedLifeCycleForBucket:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsClient:receivedLifecycleConfiguration:forBucket:">&ndash;&nbsp;awsClient:receivedLifecycleConfiguration:forBucket:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsClient:objectIsAvailableAtKey:onBucket:">&ndash;&nbsp;awsClient:objectIsAvailableAtKey:onBucket:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsClient:deletedKey:onBucket:">&ndash;&nbsp;awsClient:deletedKey:onBucket:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/awsClient:successfullyCreatedBucket:">&ndash;&nbsp;awsClient:successfullyCreatedBucket:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/awsClient:changedLifeCycleForBucket:" title="awsClient:changedLifeCycleForBucket:"></a>
+	<h3 class="subsubtitle method-title">awsClient:changedLifeCycleForBucket:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if setting life cycle operation is successfull</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsClient:(SIAFAWSClient *)<em>client</em> changedLifeCycleForBucket:(NSString *)<em>bucket</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucket</em></dt>
+			<dd><p>name of the current bucket</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsClient:deletedKey:onBucket:" title="awsClient:deletedKey:onBucket:"></a>
+	<h3 class="subsubtitle method-title">awsClient:deletedKey:onBucket:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if an object has been deleted successfully</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsClient:(SIAFAWSClient *)<em>client</em> deletedKey:(NSString *)<em>key</em> onBucket:(NSString *)<em>bucket</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>key</em></dt>
+			<dd><p>key of the deleted object</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucket</em></dt>
+			<dd><p>name of the current bucketName</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsClient:objectIsAvailableAtKey:onBucket:" title="awsClient:objectIsAvailableAtKey:onBucket:"></a>
+	<h3 class="subsubtitle method-title">awsClient:objectIsAvailableAtKey:onBucket:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if a restore request fails because object is already available</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsClient:(SIAFAWSClient *)<em>client</em> objectIsAvailableAtKey:(NSString *)<em>key</em> onBucket:(NSString *)<em>bucket</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>key</em></dt>
+			<dd><p>key of the requested object</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucket</em></dt>
+			<dd><p>name of the current bucketName</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsClient:receivedLifecycleConfiguration:forBucket:" title="awsClient:receivedLifecycleConfiguration:forBucket:"></a>
+	<h3 class="subsubtitle method-title">awsClient:receivedLifecycleConfiguration:forBucket:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if bucket lifecycle settings are received</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsClient:(SIAFAWSClient *)<em>client</em> receivedLifecycleConfiguration:(AWSLifeCycle *)<em>lifeCycleConfiguration</em> forBucket:(NSString *)<em>bucketName</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>lifeCycleConfiguration</em></dt>
+			<dd><p>lifecycle configuration as <a href="../Classes/AWSLifeCycle.html">AWSLifeCycle</a> object for current bucket</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucketName</em></dt>
+			<dd><p>name of the current bucket</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsClient:receivedMetadata:forKey:onBucket:" title="awsClient:receivedMetadata:forKey:onBucket:"></a>
+	<h3 class="subsubtitle method-title">awsClient:receivedMetadata:forKey:onBucket:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called when metadata for AWS S3 file is received</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsClient:(SIAFAWSClient *)<em>client</em> receivedMetadata:(AWSFile *)<em>fileMetadata</em> forKey:(NSString *)<em>key</em> onBucket:(NSString *)<em>bucket</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>fileMetadata</em></dt>
+			<dd><p><a href="../Classes/AWSFile.html">AWSFile</a> object with updated metadata</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>key</em></dt>
+			<dd><p>AWS S3 bucket&rsquo;s key for current file</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucket</em></dt>
+			<dd><p>name of current bucket</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsClient:requestFailedWithError:" title="awsClient:requestFailedWithError:"></a>
+	<h3 class="subsubtitle method-title">awsClient:requestFailedWithError:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called when a request to AWS service fails</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsClient:(SIAFAWSClient *)<em>client</em> requestFailedWithError:(NSError *)<em>error</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>error</em></dt>
+			<dd><p>NSError object describing the error</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsClient:successfullyCreatedBucket:" title="awsClient:successfullyCreatedBucket:"></a>
+	<h3 class="subsubtitle method-title">awsClient:successfullyCreatedBucket:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if bucket has been successfully ceated</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsClient:(SIAFAWSClient *)<em>client</em> successfullyCreatedBucket:(NSString *)<em>bucket</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucket</em></dt>
+			<dd><p>name of the current bucketName</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsclient:finishedDownloadForKey:toURL:" title="awsclient:finishedDownloadForKey:toURL:"></a>
+	<h3 class="subsubtitle method-title">awsclient:finishedDownloadForKey:toURL:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called when downloading a file has been successfully downloaded</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsclient:(SIAFAWSClient *)<em>client</em> finishedDownloadForKey:(NSString *)<em>key</em> toURL:(NSURL *)<em>localURL</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>key</em></dt>
+			<dd><p>the AWS S3 bucket&rsquo;s key the file has been downloaded from</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>localURL</em></dt>
+			<dd><p>the local file URL the file has been downloaded to</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsclient:finishedUploadForUrl:" title="awsclient:finishedUploadForUrl:"></a>
+	<h3 class="subsubtitle method-title">awsclient:finishedUploadForUrl:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called when uploading a local file has successfully finished</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsclient:(SIAFAWSClient *)<em>client</em> finishedUploadForUrl:(NSURL *)<em>localURL</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>localURL</em></dt>
+			<dd><p>the local file URL of the file uploaded</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsclient:receivedBucketContentList:forBucket:" title="awsclient:receivedBucketContentList:forBucket:"></a>
+	<h3 class="subsubtitle method-title">awsclient:receivedBucketContentList:forBucket:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called after receiving a content list of a S3 bucket</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsclient:(SIAFAWSClient *)<em>client</em> receivedBucketContentList:(NSArray *)<em>bucketContents</em> forBucket:(NSString *)<em>bucketName</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucketContents</em></dt>
+			<dd><p>NSArray of <a href="../Classes/AWSFile.html">AWSFile</a> objects representing the contents of a bucket</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>bucketName</em></dt>
+			<dd><p>name of the S3 bucket
+see listBucket:</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsclient:receivedBucketList:" title="awsclient:receivedBucketList:"></a>
+	<h3 class="subsubtitle method-title">awsclient:receivedBucketList:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called when list of available buckets for the user&rsquo;s account is received</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)awsclient:(SIAFAWSClient *)<em>client</em> receivedBucketList:(NSArray *)<em>buckets</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>buckets</em></dt>
+			<dd><p>NSArray of <a href="../Classes/AWSBucket.html">AWSBucket</a> objects representing the available buckets
+see listBuckets;</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsclientRequiresAccessKey:" title="awsclientRequiresAccessKey:"></a>
+	<h3 class="subsubtitle method-title">awsclientRequiresAccessKey:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if client needs to provide an access key but access key has not been set.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (NSString *)awsclientRequiresAccessKey:(SIAFAWSClient *)<em>client</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>delegate shall return NSString with user&rsquo;s access key
+see setAccessKey:</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsclientRequiresKeyData:" title="awsclientRequiresKeyData:"></a>
+	<h3 class="subsubtitle method-title">awsclientRequiresKeyData:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if client needs to provide an encryption key for SSEC file encryption
+but key has not been set.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (NSData *)awsclientRequiresKeyData:(SIAFAWSClient *)<em>client</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>delegate shall return NSString with user&rsquo;s access key</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/awsclientRequiresSecretKey:" title="awsclientRequiresSecretKey:"></a>
+	<h3 class="subsubtitle method-title">awsclientRequiresSecretKey:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>will be called if client needs to provide an secret key but secret key has not been set.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (NSString *)awsclientRequiresSecretKey:(SIAFAWSClient *)<em>client</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>client</em></dt>
+			<dd><p>the client calling the delegate</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>delegate shall return NSString with user&rsquo;s secret key
+see secretKey</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/downloadProgress:forKey:" title="downloadProgress:forKey:"></a>
+	<h3 class="subsubtitle method-title">downloadProgress:forKey:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>periodically called to update download progress for a single operation</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)downloadProgress:(double)<em>progress</em> forKey:(NSString *)<em>key</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progress</em></dt>
+			<dd><p>double value for new progress between 0 and 1</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>key</em></dt>
+			<dd><p>S3 bucket key for current download operation</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/uploadProgress:forURL:" title="uploadProgress:forURL:"></a>
+	<h3 class="subsubtitle method-title">uploadProgress:forURL:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>periodically called to update upload progress for a single operation</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)uploadProgress:(double)<em>progress</em> forURL:(NSURL *)<em>localFileUrl</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progress</em></dt>
+			<dd><p>double value for new progress between 0 and 1</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>localFileUrl</em></dt>
+			<dd><p>local file URL for current upload operation</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">SIAFAWSClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+                    
+                    
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 Studio Istanbul Medya Hiz. Tic. Ltd. Sti.. All rights reserved. (Last updated: 2015-10-10)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

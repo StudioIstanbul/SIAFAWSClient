@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/AWSBucket.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/AWSBucket</TokenIdentifier>
+			<Abstract type="html">decribes an AWS S3 bucket and access rights to it</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+            
+			
+			<NodeRef refid="1"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/setAccessRight:</TokenIdentifier>
+			<Abstract type="html">access rights according to bucket&apos;s ACL</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSAccessRight accessRight</Declaration>
+			
+			
+			<Anchor>//api/name/accessRight</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/accessRight</TokenIdentifier>
+			<Abstract type="html">access rights according to bucket&apos;s ACL</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSAccessRight accessRight</Declaration>
+			
+			
+			<Anchor>//api/name/accessRight</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSBucket/accessRight</TokenIdentifier>
+			<Abstract type="html">access rights according to bucket&apos;s ACL</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSAccessRight accessRight</Declaration>
+			
+			
+			<Anchor>//api/name/accessRight</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/setName:</TokenIdentifier>
+			<Abstract type="html">name of the bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/name</TokenIdentifier>
+			<Abstract type="html">name of the bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSBucket/name</TokenIdentifier>
+			<Abstract type="html">name of the bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) NSString *name</Declaration>
+			
+			
+			<Anchor>//api/name/name</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/setCreationDate:</TokenIdentifier>
+			<Abstract type="html">date of creation for this bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSDate *creationDate</Declaration>
+			
+			
+			<Anchor>//api/name/creationDate</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/creationDate</TokenIdentifier>
+			<Abstract type="html">date of creation for this bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSDate *creationDate</Declaration>
+			
+			
+			<Anchor>//api/name/creationDate</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSBucket/creationDate</TokenIdentifier>
+			<Abstract type="html">date of creation for this bucket</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSDate *creationDate</Declaration>
+			
+			
+			<Anchor>//api/name/creationDate</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/setRegion:</TokenIdentifier>
+			<Abstract type="html">AWS region this bucket is stored</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/region</TokenIdentifier>
+			<Abstract type="html">AWS region this bucket is stored</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSBucket/region</TokenIdentifier>
+			<Abstract type="html">AWS region this bucket is stored</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, assign) SIAFAWSRegion region</Declaration>
+			
+			
+			<Anchor>//api/name/region</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/setRegionName:</TokenIdentifier>
+			<Abstract type="html">NSString to access AWS region name</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSString *regionName</Declaration>
+			
+			
+			<Anchor>//api/name/regionName</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/regionName</TokenIdentifier>
+			<Abstract type="html">NSString to access AWS region name</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSString *regionName</Declaration>
+			
+			
+			<Anchor>//api/name/regionName</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSBucket/regionName</TokenIdentifier>
+			<Abstract type="html">NSString to access AWS region name</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, readonly) NSString *regionName</Declaration>
+			
+			
+			<Anchor>//api/name/regionName</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/setAwsClient:</TokenIdentifier>
+			<Abstract type="html">client this bucket belongs to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) SIAFAWSClient *awsClient</Declaration>
+			
+			
+			<Anchor>//api/name/awsClient</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/awsClient</TokenIdentifier>
+			<Abstract type="html">client this bucket belongs to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) SIAFAWSClient *awsClient</Declaration>
+			
+			
+			<Anchor>//api/name/awsClient</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instp/AWSBucket/awsClient</TokenIdentifier>
+			<Abstract type="html">client this bucket belongs to</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>@property (nonatomic, strong) SIAFAWSClient *awsClient</Declaration>
+			
+			
+			<Anchor>//api/name/awsClient</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/AWSBucket/initWithName:andCreationDate:</TokenIdentifier>
+			<Abstract type="html">create a new bucket object to represent AWS S3 bucket (not creating a remote bucket!)</Abstract>
+			<DeclaredIn>SIAFAWSClient.h</DeclaredIn>
+			
+			<Declaration>- (id)initWithName:(NSString *)name andCreationDate:(NSDate *)date</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>name</Name>
+					<Abstract type="html">bucket name</Abstract>
+				</Parameter><Parameter>
+					<Name>date</Name>
+					<Abstract type="html">creation date for this bucket</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">bucket object</Abstract></ReturnValue>
+			<Anchor>//api/name/initWithName:andCreationDate:</Anchor>
+            <NodeRef refid="1"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

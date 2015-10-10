@@ -6,6 +6,20 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		A988495B1BC7D46A0035626C /* SIAFAWSDocumentation */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = A988495E1BC7D46A0035626C /* Build configuration list for PBXAggregateTarget "SIAFAWSDocumentation" */;
+			buildPhases = (
+				A988495F1BC7D4860035626C /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = SIAFAWSDocumentation;
+			productName = SIAFAWSDocumentation;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		A901FCB81B766A2E001357C6 /* NSThread+Blocks.h in Headers */ = {isa = PBXBuildFile; fileRef = A901FCB61B766A2E001357C6 /* NSThread+Blocks.h */; };
 		A901FCB91B766A2E001357C6 /* NSThread+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = A901FCB71B766A2E001357C6 /* NSThread+Blocks.m */; };
@@ -59,6 +73,7 @@
 /* Begin PBXFileReference section */
 		A901FCB61B766A2E001357C6 /* NSThread+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSThread+Blocks.h"; path = "HelperCategories/NSThread+Blocks.h"; sourceTree = SOURCE_ROOT; };
 		A901FCB71B766A2E001357C6 /* NSThread+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSThread+Blocks.m"; path = "HelperCategories/NSThread+Blocks.m"; sourceTree = SOURCE_ROOT; };
+		A98849621BC7DEF80035626C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = SOURCE_ROOT; };
 		A9CB06691B70B51600331A38 /* SIAFAWSClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SIAFAWSClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9CB066C1B70B51600331A38 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		A9CB066F1B70B51600331A38 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -181,6 +196,7 @@
 		A9CB06731B70B51600331A38 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				A98849621BC7DEF80035626C /* README.md */,
 				A9CB06741B70B51600331A38 /* SIAFAWSClient-Info.plist */,
 				A9CB06751B70B51600331A38 /* InfoPlist.strings */,
 				A9CB06781B70B51600331A38 /* SIAFAWSClient-Prefix.pch */,
@@ -335,6 +351,7 @@
 			projectRoot = "";
 			targets = (
 				A9CB06681B70B51600331A38 /* SIAFAWSClient */,
+				A988495B1BC7D46A0035626C /* SIAFAWSDocumentation */,
 			);
 		};
 /* End PBXProject section */
@@ -349,6 +366,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		A988495F1BC7D4860035626C /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/local/bin/appledoc \\\n--project-name \"${PROJECT_NAME}\" \\\n--project-company \"Studio Istanbul Medya Hiz. Tic. Ltd. Sti.\" \\\n--company-id \"net.studio-istanbul\" \\\n--output \"${PROJECT_DIR}/docs\" \\\n--docset-atom-filename \"${company}.atom\" \\\n--docset-feed-url \"${companyURL}/${company}/%DOCSETATOMFILENAME\" \\\n--docset-package-url \"${companyURL}/${company}/%DOCSETPACKAGEFILENAME\" \\\n--docset-fallback-url \"${companyURL}/${company}\" \\\n--publish-docset \\\n--logformat xcode \\\n--keep-undocumented-objects \\\n--keep-undocumented-members \\\n--keep-intermediate-files \\\n--no-repeat-first-par \\\n--no-warn-invalid-crossref \\\n--merge-categories \\\n--docset-platform-family \"macosx\" \\\n--ignore \"*.m\" \\\n--ignore \"AFNetworking\" \\\n--ignore \"sskeychain\" \\\n--ignore \"XMLDictionary\" \\\n--ignore \"HelperCategories\" \\\n--ignore \"Base64\" \\\n--verbose 5 \\\n--exit-threshold 2 \\\n--index-desc \"${PROJECT_DIR}/README.md\" \\\n\"${PROJECT_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		A9CB06641B70B51600331A38 /* Sources */ = {
@@ -393,6 +426,20 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A988495C1BC7D46A0035626C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		A988495D1BC7D46A0035626C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		A9CB067C1B70B51600331A38 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -491,6 +538,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A988495E1BC7D46A0035626C /* Build configuration list for PBXAggregateTarget "SIAFAWSDocumentation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A988495C1BC7D46A0035626C /* Debug */,
+				A988495D1BC7D46A0035626C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A9CB06631B70B51600331A38 /* Build configuration list for PBXProject "SIAFAWSClient" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
