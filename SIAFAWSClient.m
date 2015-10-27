@@ -199,6 +199,7 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey withStorageClass:(SIAFAWSStorageClass)storageClass andMetadata:(NSDictionary *)metadata {
+    key = [key urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/+"]];
     self.bucket = bucketName;
     AWSOperation* uploadOperation = [self requestOperationWithMethod:@"PUT" path:key parameters:nil];
     [uploadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -239,6 +240,7 @@ typedef void(^AWSCompBlock)(void);
 
 -(void)metadataForKey:(NSString *)key onBucket:(NSString *)bucketName withSSECKey:(NSData *)ssecKey {
     self.bucket = bucketName;
+    key = [key urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/+"]];
     AWSOperation* metaDataOperation = [self requestOperationWithMethod:@"HEAD" path:key parameters:nil];
     if (ssecKey) {
         [metaDataOperation.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
@@ -300,6 +302,7 @@ typedef void(^AWSCompBlock)(void);
 
 -(void)downloadFileFromKey:(NSString *)key onBucket:(NSString *)bucketName toURL:(NSURL *)fileURL withSSECKey:(NSData *)ssecKey {
     self.bucket = bucketName;
+    key = [key urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/+"]];
     AWSOperation* downloadOperation = [self requestOperationWithMethod:@"GET" path:key parameters:nil];
     if (ssecKey) {
         [downloadOperation.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
@@ -472,10 +475,17 @@ typedef void(^AWSCompBlock)(void);
 
 -(NSString*)AuthorizationHeaderStringForRequest:(NSMutableURLRequest*)request {
     NSString* baseUrl = request.URL.host;
-    if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
-        baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+    SIAFAWSRegion requestRegion = self.region;
+    if (baseUrl) {
+        if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
+            baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+        }
+        if ([baseUrl rangeOfString:@"/"].location != NSNotFound) {
+            baseUrl = [baseUrl substringToIndex:[baseUrl rangeOfString:@"/"].location];
+        }
+        requestRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
+        if (requestRegion > 8) requestRegion = self.region;
     }
-    SIAFAWSRegion requestRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
     NSDate* date = [NSDate date];
     NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
     [dateFormatter setDateFormat:@"yyyyMMdd"];
@@ -486,6 +496,11 @@ typedef void(^AWSCompBlock)(void);
     [request setValue:[dateFormatter2 stringFromDate:date] forHTTPHeaderField:@"x-amz-date"];
     NSString* signature;
     NSString* resourceString = [[request URL] path];
+    resourceString = [resourceString stringByReplacingOccurrencesOfString:@"+" withString:@" "];
+    NSMutableCharacterSet* charset = [NSMutableCharacterSet whitespaceCharacterSet];
+    [charset addCharactersInString:@"/"];
+    resourceString = [resourceString urlencodeWithoutCharactersInSet:charset];
+    resourceString = [resourceString stringByReplacingOccurrencesOfString:@" " withString:@"%20"];
     NSString* paramsString;
     NSDictionary* paramsDict = [request.URL queryComponents];
     NSMutableArray* params = [NSMutableArray new];
@@ -497,7 +512,7 @@ typedef void(^AWSCompBlock)(void);
     NSString* headerString = [request.allHTTPHeaderFields sortedCommaSeparatedLowerCaseListWithSeparatorString:@"\n" andQuoteString:@"" andValueAssignmentString:@":"];
     NSData* sha = [CryptoHelper sha256:request.HTTPBody];
     NSString* shaHex = [sha hexadecimalString];
-    NSString* canonicalRequestString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n\n%@\n%@", request.HTTPMethod, [resourceString urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/"]], paramsString, headerString, [[request.allHTTPHeaderFields.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], shaHex];
+    NSString* canonicalRequestString = [NSString stringWithFormat:@"%@\n%@\n%@\n%@\n\n%@\n%@", request.HTTPMethod, resourceString, paramsString, headerString, [[request.allHTTPHeaderFields.allKeys sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)] commaSeparatedLowerCaseListWithSeparatorString:@";" andQuoteString:@""], shaHex];
     
     if (!self.signingKey || [self.signingKey.keyDate timeIntervalSinceNow] <= -(6*24*60*60) || self.signingKey.region != requestRegion) {
         if (!self.accessKey && !self.signingKey.accessKey) {
