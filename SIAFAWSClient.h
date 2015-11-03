@@ -64,7 +64,7 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
 #define SIAFAWSRegionForCode(regioncode) [@[@"us-east-1", @"us-west-2", @"us-west-1", @"eu-west-1", @"eu-central-1", @"ap-southeast-1", @"ap-southeast-2", @"ap-northeast-1", @"sa-east-1"] indexOfString:regioncode]
 #define SIAFAWSRegionName(enum) [@[@"US Standard", @"US West Oregon", @"US West North California", @"EU Ireland", @"EU Frankfurt", @"AP Singapore", @"AP Sydney", @"AP Tokyo", @"AP Sao Paulo"] objectAtIndex:enum]
 #define SIAFAWSRegionalBaseURL(enum) [@[@"s3.amazonaws.com", @"s3-us-west-2.amazonaws.com", @"s3-us-west-1.amazonaws.com", @"s3-eu-west-1.amazonaws.com", @"s3-eu-central-1.amazonaws.com", @"s3-ap-southeast-1.amazonaws.com", @"s3-ap-southeast-2.amazonaws.com", @"s3-ap-northeast-1.amazonaws.com", @"s3-sa-east-1.amazonaws.com"] objectAtIndex:enum]
-#define SIAFAWSReginCount 9
+#define SIAFAWSRegionCount 9
 #define SIAFAWSRegionForBaseURL(url) [@[@"s3.amazonaws.com", @"s3-us-west-2.amazonaws.com", @"s3-us-west-1.amazonaws.com", @"s3-eu-west-1.amazonaws.com", @"s3-eu-central-1.amazonaws.com", @"s3-ap-southeast-1.amazonaws.com", @"s3-ap-southeast-2.amazonaws.com", @"s3-ap-northeast-1.amazonaws.com", @"s3-sa-east-1.amazonaws.com"] indexOfString:url]
 
 @class SIAFAWSClient, AWSLifeCycle, AWSFile;
