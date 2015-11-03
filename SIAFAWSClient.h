@@ -378,7 +378,7 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
 
 /** set a lifecycle for bucket. This method is overriding any existing bucket lifecycle. Create a AWSLifecycle object and set properties on it first.
  @see AWSLifeCycle and @see AWSLifeCycleRule for more information on lifecycle configuration.
- @param awsLifecycle lifecycle to set
+ @param awsLifecycle lifecycle to set, pass nil to delete lifecycle
  @param bucketName bucket name to set lifecycle
 */
 -(void)setBucketLifecycle:(AWSLifeCycle*)awsLifecycle forBucket:(NSString*)bucketName;

@@ -389,21 +389,32 @@ typedef void(^AWSCompBlock)(void);
 
 -(void)setBucketLifecycle:(AWSLifeCycle *)awsLifecycle forBucket:(NSString *)bucketName {
     self.bucket = bucketName;
-    AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];
-    [lifeCycleOperation.request setURL:[NSURL URLWithString:@"/?lifecycle" relativeToURL:lifeCycleOperation.request.URL]];
-    NSData* lcData = awsLifecycle.siXMLData;
-    if (lcData) {
-        lifeCycleOperation.request.HTTPBody = lcData;
-        [lifeCycleOperation.request setValue:[CryptoHelper md5Base64StringFromData:lcData] forHTTPHeaderField:@"Content-MD5"];
-        [lifeCycleOperation.request setValue:[NSString stringWithFormat:@"%li", lcData.length] forHTTPHeaderField:@"Content-Length"];
+    if (awsLifecycle && awsLifecycle.rules.count > 0) {
+        AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"PUT" path:@"/" parameters:nil];
+        [lifeCycleOperation.request setURL:[NSURL URLWithString:@"/?lifecycle" relativeToURL:lifeCycleOperation.request.URL]];
+        NSData* lcData = awsLifecycle.siXMLData;
+        if (lcData) {
+            lifeCycleOperation.request.HTTPBody = lcData;
+            [lifeCycleOperation.request setValue:[CryptoHelper md5Base64StringFromData:lcData] forHTTPHeaderField:@"Content-MD5"];
+            [lifeCycleOperation.request setValue:[NSString stringWithFormat:@"%li", lcData.length] forHTTPHeaderField:@"Content-Length"];
+            [lifeCycleOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                if ([self.delegate respondsToSelector:@selector(awsClient:changedLifeCycleForBucket:)]) {
+                    [self.delegate awsClient:self changedLifeCycleForBucket:bucketName];
+                }
+            } failure:[self failureBlock]];
+            [self enqueueHTTPRequestOperation:lifeCycleOperation];
+        } else {
+            NSLog(@"no valid lifecycle data!");
+        }
+    } else {
+        AWSOperation* lifeCycleOperation = [self requestOperationWithMethod:@"DELETE" path:@"/" parameters:nil];
+        [lifeCycleOperation.request setURL:[NSURL URLWithString:@"/?lifecycle" relativeToURL:lifeCycleOperation.request.URL]];
         [lifeCycleOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             if ([self.delegate respondsToSelector:@selector(awsClient:changedLifeCycleForBucket:)]) {
                 [self.delegate awsClient:self changedLifeCycleForBucket:bucketName];
             }
         } failure:[self failureBlock]];
         [self enqueueHTTPRequestOperation:lifeCycleOperation];
-    } else {
-        NSLog(@"no valid lifecycle data!");
     }
 }
 
@@ -848,7 +859,7 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(void)addLiveCycleRule:(AWSLifeCycleRule *)rule {
-    [_rules addObject:rule];
+    if (rule.exiprationInterval > 0 || rule.transitionInterval > 0) [_rules addObject:rule];
 }
 
 -(NSData*)siXMLData {
