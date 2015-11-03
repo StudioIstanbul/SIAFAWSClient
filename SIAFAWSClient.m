@@ -36,7 +36,7 @@ typedef void(^AWSCompBlock)(void);
 @end
 
 @implementation SIAFAWSClient
-@synthesize secretKey = _secretKey, accessKey = _accessKey, bucket, delegate, syncWithKeychain, isBusy = _isBusy, lastErrorCode = _lastErrorCode;
+@synthesize secretKey = _secretKey, accessKey = _accessKey, bucket, delegate, syncWithKeychain, isBusy = _isBusy, lastErrorCode = _lastErrorCode, region = _region;
 
 -(NSString*)host {
     return SIAFAWSRegionalBaseURL(self.region);
@@ -145,6 +145,7 @@ typedef void(^AWSCompBlock)(void);
             }
             myBucket.region = SIAFAWSRegionForBaseURL(baseUrl);
             if (checkPermission) {
+                myBucket.region = -1;
                 [self checkBucket:myBucket forPermissionWithBlock:^(SIAFAWSAccessRight accessRight) {
                     if (accessRight == SIAFAWSFullControl || accessRight == SIAFAWSRead || accessRight == SIAFAWSWrite) [bucketList addObject:myBucket];
                     if ([self.delegate respondsToSelector:@selector(awsclient:receivedBucketList:)]) {
@@ -166,28 +167,59 @@ typedef void(^AWSCompBlock)(void);
     [self listBucketsWithAccessPermissionCheck:NO];
 }
 
+-(void)regionForBucket:(AWSBucket *)bucketObject {
+    [self regionForBucket:bucketObject forPermissionWithBlock:nil];
+}
+
+-(void)regionForBucket:(AWSBucket *)bucketObject forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block {
+    self.bucket = bucketObject.name;
+    AWSOperation* regionOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
+    [regionOperation.request setURL:[NSURL URLWithString:@"/?location" relativeToURL:regionOperation.request.URL]];
+    [regionOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary* responseDict = [NSDictionary dictionaryWithXMLData:responseObject];
+        NSString* regionString = [responseDict valueForKey:@"__text"];
+        if (!regionString || regionString.length == 0) regionString = @"us-east-1";
+        if ([regionString isEqualToString:@"EU"]) regionString = @"eu-west-1";
+        bucketObject.region = SIAFAWSRegionForCode(regionString);
+        NSLog(@"aws region for bucket %li %@", bucketObject.region, regionString);
+        if (block) {
+            [self checkBucket:bucketObject forPermissionWithBlock:block];
+        }
+    } failure:[self failureBlock]];
+    [self enqueueHTTPRequestOperation:regionOperation];
+}
+
 -(void)checkBucket:(AWSBucket*)checkBucket forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block {
     self.bucket = checkBucket.name;
-    AWSOperation* aclOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:@{@"acl":[NSNull null]}];
-    [aclOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSDictionary* respDic = [NSDictionary dictionaryWithXMLData:responseObject];
-        NSString* responseString = [[[respDic valueForKey:@"AccessControlList"] valueForKey:@"Grant"] valueForKey:@"Permission"];
-        SIAFAWSAccessRight access = 0;
-        if ([responseString isEqualToString:@"FULL_CONTROL"]) access = SIAFAWSFullControl;
-        else if ([responseString isEqualToString:@"WRITE"]) access = SIAFAWSWrite;
-        else if ([responseString isEqualToString:@"WRITE_ACP"]) access = SIAFAWSWriteACP;
-        else if ([responseString isEqualToString:@"READ"]) access = SIAFAWSRead;
-        else if ([responseString isEqualToString:@"READ_ACP"]) access = SIAFAWSReadACP;
-        else access = SIAFAWSAccessUndefined;
-        checkBucket.accessRight = access;
-        NSString* baseUrl = operation.request.URL.host;
-        if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
-            baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
-        }
-        checkBucket.region = SIAFAWSRegionForBaseURL(baseUrl);
-        block(access);
-    } failure:[self failureBlock]];
-    [self enqueueHTTPRequestOperation:aclOperation];
+    if (checkBucket.region == -1) {
+        [self regionForBucket:checkBucket forPermissionWithBlock:block];
+    } else {
+        self.region = checkBucket.region;
+        AWSOperation* aclOperation = [self requestOperationWithMethod:@"HEAD" path:@"/" parameters:nil];
+        [aclOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            checkBucket.accessRight = SIAFAWSFullControl;
+            NSString* baseUrl = operation.request.URL.host;
+            if (baseUrl) {
+                if ([baseUrl rangeOfString:@".s3"].location != NSNotFound) {
+                    baseUrl = [baseUrl substringFromIndex:[baseUrl rangeOfString:@".s3"].location+1];
+                }
+                if ([baseUrl rangeOfString:@"/"].location != NSNotFound) {
+                    baseUrl = [baseUrl substringToIndex:[baseUrl rangeOfString:@"/"].location];
+                }
+                checkBucket.region = (int) SIAFAWSRegionForBaseURL(baseUrl);
+                if (checkBucket.region > 8) checkBucket.region = self.region;
+            }
+            block(SIAFAWSFullControl);
+        } failure:^(AFHTTPRequestOperation* operation, NSError* err) {
+            NSLog(@"AWS Error: %li - %@", operation.response.statusCode, err.localizedRecoverySuggestion);
+            if (operation.response.statusCode == 403) {
+                block(SIAFAWSAccessUndefined);
+            } else {
+                [self failureBlock](operation, err);
+            }
+        }];
+        [self enqueueHTTPRequestOperation:aclOperation];
+    }
 }
 
 -(void)uploadFileFromURL:(NSURL *)url toKey:(NSString *)key onBucket:(NSString *)bucketName {
@@ -430,6 +462,7 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(void)setRegion:(SIAFAWSRegion)region {
+    if (region < 0 || region > SIAFAWSRegionCount) region = 0;
     if (self.signingKey) {
         if (region != self.signingKey.region) {
             self.signingKey.keyDate = [NSDate distantPast];
@@ -625,7 +658,7 @@ typedef void(^AWSCompBlock)(void);
         NSLog(@"error code: %@", _lastErrorCode);
     }
     
-    if((400 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsclientRequiresKeyData:)] && [_lastErrorCode isEqualToString:@"UserKeyMustBeSpecified"]) || 301 == [operation.response statusCode]) {
+    if((400 == [operation.response statusCode] && (([self.delegate respondsToSelector:@selector(awsclientRequiresKeyData:)] && [_lastErrorCode isEqualToString:@"UserKeyMustBeSpecified"]) || [_lastErrorCode isEqualToString:@"AuthorizationHeaderMalformed"])) || 301 == [operation.response statusCode]) {
         NSString* endpoint = operation.request.URL.host;
         NSData* keyData;
         if (301 == [operation.response statusCode] || switchRegion) {

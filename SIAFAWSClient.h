@@ -389,6 +389,11 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
 */
 -(void)lifecycleRulesForBucket:(NSString*)bucketName;
 
+/** refresh region info on bucket object
+@param bucketObject bucket object to refresh
+*/
+-(void)regionForBucket:(AWSBucket*)bucketObject;
+
 /** create a bucket in current user's account.
  @param bucketName name of the new bucket
 */
