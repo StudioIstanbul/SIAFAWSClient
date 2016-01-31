@@ -120,12 +120,19 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
 
 
 /**
- will be called when uploading a local file has successfully finished
+ will be called when uploading a local file has successfully finished.
  @param client the client calling the delegate
  @param localURL the local file URL of the file uploaded
 */
 -(void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL*)localURL;
 
+/**
+ will be called when uploading a local file has successfully finished
+ @param client the client calling the delegate
+ @param localURL the local file URL of the file uploaded
+ @param awsKey the key the file has been uploaded to
+ */
+-(void)awsclient:(SIAFAWSClient *)client finishedUploadForUrl:(NSURL*)localURL awsKey:(NSString*)awsKey;
 
 /**
  will be called when downloading a file has been successfully downloaded

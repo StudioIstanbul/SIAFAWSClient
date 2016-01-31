@@ -235,7 +235,9 @@ typedef void(^AWSCompBlock)(void);
     self.bucket = bucketName;
     AWSOperation* uploadOperation = [self requestOperationWithMethod:@"PUT" path:key parameters:nil];
     [uploadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if ([self.delegate respondsToSelector:@selector(awsclient:finishedUploadForUrl:)]) {
+        if ([self.delegate respondsToSelector:@selector(awsclient:finishedUploadForUrl:awsKey:)]) {
+            [self.delegate awsclient:self finishedUploadForUrl:url awsKey:key];
+        } else if ([self.delegate respondsToSelector:@selector(awsclient:finishedUploadForUrl:)]) {
             [self.delegate awsclient:self finishedUploadForUrl:url];
         }
     } failure:[self failureBlock]];
