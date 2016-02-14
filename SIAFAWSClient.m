@@ -153,6 +153,7 @@ typedef void(^AWSCompBlock)(void);
                     }
                 }];
             } else {
+                [self regionForBucket:myBucket];
                 [bucketList addObject:myBucket];
             }
         }
@@ -165,6 +166,23 @@ typedef void(^AWSCompBlock)(void);
 
 -(void)listBuckets {
     [self listBucketsWithAccessPermissionCheck:NO];
+}
+
+-(void)validateCredentials {
+    self.bucket = nil;
+    AWSOperation* bucketListOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
+    [bucketListOperation setCompletionBlock:^{
+        BOOL valid = NO;
+        if (bucketListOperation.error) {
+            valid = NO;
+        } else {
+            valid = YES;
+        }
+        if ([self.delegate respondsToSelector:@selector(credentialsValid:)]) {
+            [self.delegate credentialsValid:valid];
+        }
+    }];
+    [self enqueueHTTPRequestOperation:bucketListOperation];
 }
 
 -(void)regionForBucket:(AWSBucket *)bucketObject {

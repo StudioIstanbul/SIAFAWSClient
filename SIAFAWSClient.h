@@ -82,6 +82,11 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
  */
 -(void)awsclient:(SIAFAWSClient*)client receivedBucketContentList:(NSArray*)bucketContents forBucket:(NSString*)bucketName;
 
+/**
+ will be called if a result for credential validation is available.
+ @param validationResponse is YES if credentials are valid otherwise NO.
+*/
+-(void)credentialsValid:(BOOL)validationResponse;
 
 /**
  will be called when list of available buckets for the user's account is received
@@ -295,6 +300,9 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
  @return hostname
 */
 -(NSString*)host;
+
+/** validates credentials provided, calls -(void)credentialsValid:(BOOL)validationResponse on delegate. */
+-(void)validateCredentials;
 
 /** list all buckets for user with credentials provided */
 -(void)listBuckets;
