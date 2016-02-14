@@ -35,6 +35,12 @@ typedef void(^AWSCompBlock)(void);
 
 @end
 
+@interface SIAFAWSClient () {
+    NSDictionary* errorMessages;
+}
+
+@end
+
 @implementation SIAFAWSClient
 @synthesize secretKey = _secretKey, accessKey = _accessKey, bucket, delegate, syncWithKeychain, isBusy = _isBusy, lastErrorCode = _lastErrorCode, region = _region;
 
@@ -58,6 +64,85 @@ typedef void(^AWSCompBlock)(void);
     }
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(checkFailure:) name:AFNetworkingOperationDidFinishNotification object:nil];
     [self.operationQueue setMaxConcurrentOperationCount:1];
+    errorMessages = @{@"AccessDenied" :	NSLocalizedString(@"Access to the server resource has been denied. Please check your access key, security key and permissions on bucket and service via the Amazon AWS console on http://aws.amazon.com.", @"access denied AWS error"),
+        @"AccountProblem": NSLocalizedString(@"There is a problem with your AWS account that prevents the operation from completing successfully. Please use Contact Amazon.", @"account problem AWS error"),
+        @"AmbiguousGrantByEmailAddress": NSLocalizedString(@"The email address you provided is associated with more than one account.", @"AmbiguousGrantByEmailAddress AWS error"),
+        @"BadDigest" : NSLocalizedString(@"The Content-MD5 you specified did not match what we received.", @"BadDigest AWS error"),
+        @"BucketAlreadyExists" : NSLocalizedString(@"The requested bucket name is not available. The bucket namespace is shared by all users of the system. Please select a different name and try again.", @"BucketAlreadyExists AWS error"),
+        @"BucketAlreadyOwnedByYou": NSLocalizedString(@"Your previous request to create the named bucket succeeded and you already own it. You get this error in all AWS regions except US East (N. Virginia) region, us-east-1. In us-east-1 region, you will get 200 OK, but it is no-op (if bucket exists it Amazon S3 will not do anything).", @"BucketAlreadyOwnedByYou AWS error"),
+        @"BucketNotEmpty" :	NSLocalizedString(@"The bucket you tried to delete is not empty.", @"BucketNotEmpty AWS error"),
+        @"CredentialsNotSupported": NSLocalizedString(@"This request does not support credentials.", @"CredentialsNotSupported AWS error"),
+        @"CrossLocationLoggingProhibited" : NSLocalizedString(@"Cross-location logging not allowed. Buckets in one geographic location cannot log information to a bucket in another location.", @"CrossLocationLoggingProhibited"),
+        @"EntityTooSmall" : NSLocalizedString(@"Your proposed upload is smaller than the minimum allowed object size.", @"EntityTooSmall AWS error"),
+        @"EntityTooLarge": NSLocalizedString(@"Your proposed upload exceeds the maximum allowed object size.", @"EntityTooLarge aws error"),
+        @"ExpiredToken" : NSLocalizedString(@"The provided token has expired.", @"ExpiredToken aws error"),
+        @"IllegalVersioningConfigurationException": NSLocalizedString(@"Indicates that the versioning configuration specified in the request is invalid.", @"IllegalVersioningConfigurationException aws error"),
+        @"IncompleteBody": NSLocalizedString(@"You did not provide the number of bytes specified by the Content-Length HTTP header.", @"IncompleteBody aws error"),
+        @"IncorrectNumberOfFilesInPostRequest": NSLocalizedString(@"POST requires exactly one file upload per request.", @"IncorrectNumberOfFilesInPostRequest aws error"),
+        @"InlineDataTooLarge": NSLocalizedString(@"Inline data exceeds the maximum allowed size.", @"InlineDataTooLarge aws error"),
+        @"InternalError" : NSLocalizedString(@"AWS encountered an internal error. Please try again.", @"InternalError aws error"),
+        @"InvalidAccessKeyId": NSLocalizedString(@"The AWS access key Id you provided does not exist in our records.", @"InvalidAccessKeyId aws error"),
+        @"InvalidAddressingHeader": NSLocalizedString(@"You must specify the Anonymous role.", @"InvalidAddressingHeader aws error"),
+        @"InvalidArgument": NSLocalizedString(@"Invalid Argument provided in bad request to AWS", @"InvalidArgument aws error"),
+        @"InvalidBucketName": NSLocalizedString(@"The specified bucket is not valid.", @"InvalidBucketName aws error"),
+        @"InvalidBucketState": NSLocalizedString(@"The request is not valid with the current state of the bucket.", @"InvalidBucketState aws error"),
+        @"InvalidDigest": NSLocalizedString(@"The Content-MD5 you specified is not valid.", @"InvalidDigest aws error"),
+        @"InvalidEncryptionAlgorithmError": NSLocalizedString(@"The encryption request you specified is not valid. The valid value is AES256.", @"InvalidEncryptionAlgorithmError aws error"),
+        @"InvalidLocationConstraint": NSLocalizedString(@"The specified location constraint is not valid. For more information about regions, see How to Select a Region for Your Buckets.", @"InvalidLocationConstraint aws error"),
+        @"InvalidObjectState": NSLocalizedString(@"The operation is not valid for the current state of the object.", @"InvalidObjectState aws error"),
+        @"InvalidPart": NSLocalizedString(@"One or more of the specified parts could not be found. The part might not have been uploaded, or the specified entity tag might not have matched the part's entity tag.", @"InvalidPart aws error"),
+        @"InvalidPartOrder": NSLocalizedString(@"The list of parts was not in ascending order. Parts list must specified in order by part number.", @"InvalidPartOrder aws error"),
+        @"InvalidPayer": NSLocalizedString(@"All access to this object has been disabled.", @"InvalidPayer aws error"),
+        @"InvalidPolicyDocument": NSLocalizedString(@"The content of the form does not meet the conditions specified in the policy document.", @"InvalidPolicyDocument aws error"),
+        @"InvalidRange": NSLocalizedString(@"The requested range cannot be satisfied.", @"InvalidRange aws error"),
+        @"InvalidRequest": NSLocalizedString(@"SOAP requests must be made over an HTTPS connection.", @"InvalidRequest aws error"),
+        @"InvalidSecurity": NSLocalizedString(@"The provided security credentials are not valid.", @"InvalidSecurity aws error"),
+        @"InvalidSOAPRequest": NSLocalizedString(@"The SOAP request body is invalid." , @"InvalidSOAPRequest aws error"),
+        @"InvalidStorageClass": NSLocalizedString(@"The storage class you specified is not valid.", @"InvalidStorageClass aws error"),
+        @"InvalidTargetBucketForLogging": NSLocalizedString(@"The target bucket for logging does not exist, is not owned by you, or does not have the appropriate grants for the log-delivery group.", @"InvalidTargetBucketForLogging aws error"),
+        @"InvalidToken": NSLocalizedString(@"The provided token is malformed or otherwise invalid.", @"InvalidToken aws error"),
+        @"InvalidURI": NSLocalizedString(@"Couldn't parse the specified URI.", @"InvalidURI aws error"),
+        @"KeyTooLong": NSLocalizedString(@"Your key is too long.", @"KeyTooLong aws error"),
+        @"MalformedACLError": NSLocalizedString(@"The XML you provided was not well-formed or did not validate against our published schema.", @"MalformedACLError"),
+        @"MalformedPOSTRequest": NSLocalizedString(@"The body of your POST request is not well-formed multipart/form-data.", @"MalformedPOSTRequest aws error"),
+        @"MalformedXML": NSLocalizedString(@"This happens when the user sends malformed xml (xml that doesn't conform to the published xsd) for the configuration. The error message is, \"The XML you provided was not well-formed or did not validate against our published schema.\".", @"MalformedXML aws error"),
+        @"MaxMessageLengthExceeded": NSLocalizedString(@"Your request was too big.", @"MaxMessageLengthExceeded aws error"),
+        @"MaxPostPreDataLengthExceededError": NSLocalizedString(@"Your POST request fields preceding the upload file were too large.", @"MaxPostPreDataLengthExceededError aws error"),
+        @"MetadataTooLarge": NSLocalizedString(@"Your metadata headers exceed the maximum allowed metadata size.", @"MetadataTooLarge aws error"),
+        @"MethodNotAllowed": NSLocalizedString(@"The specified method is not allowed against this resource.", @"MethodNotAllowed aws error"),
+        @"MissingAttachment": NSLocalizedString(@"A SOAP attachment was expected, but none were found.", @"MissingAttachment aws error"),
+        @"MissingContentLength": NSLocalizedString(@"You must provide the Content-Length HTTP header.", @"MissingContentLength aws error"),
+        @"MissingRequestBodyError": NSLocalizedString(@"This happens when the user sends an empty xml document as a request. The error message is, \"Request body is empty.\".", @"MissingRequestBodyError aws error"),
+        @"MissingSecurityElement": NSLocalizedString(@"The SOAP 1.1 request is missing a security element.", @"MissingSecurityElement aws error"),
+        @"MissingSecurityHeader": NSLocalizedString(@"Your request is missing a required header.", @"MissingSecurityHeader aws error"),
+        @"NoLoggingStatusForKey": NSLocalizedString(@"There is no such thing as a logging status subresource for a key.", @"NoLoggingStatusForKey"),
+        @"NoSuchBucket": NSLocalizedString(@"The specified bucket does not exist.", @"NoSuchBucket aws error"),
+        @"NoSuchKey": NSLocalizedString(@"The specified key does not exist.", @"NoSuchKey aws error"),
+        @"NoSuchLifecycleConfiguration": NSLocalizedString(@"The lifecycle configuration does not exist.", @"NoSuchLifecycleConfiguration aws error"),
+        @"NoSuchUpload": NSLocalizedString(@"The specified multipart upload does not exist. The upload ID might be invalid, or the multipart upload might have been aborted or completed.", @"NoSuchUpload aws error"),
+        @"NoSuchVersion": NSLocalizedString(@"Indicates that the version ID specified in the request does not match an existing version.", @"NoSuchVersion aws error"),
+        @"NotImplemented": NSLocalizedString(@"A header you provided implies functionality that is not implemented.", @"NotImplemented aws error"),
+        @"NotSignedUp": NSLocalizedString(@"Your account is not signed up for the Amazon S3 service. You must sign up before you can use Amazon S3. You can sign up at the following URL: http://aws.amazon.com/s3", @"NotSignedUp aws error"),
+        @"NoSuchBucketPolicy": NSLocalizedString(@"The specified bucket does not have a bucket policy.", @"NoSuchBucketPolicy aws error"),
+        @"OperationAborted": NSLocalizedString(@"A conflicting conditional operation is currently in progress against this resource. Try again.", @"OperationAborted aws error"),
+        @"PermanentRedirect": NSLocalizedString(@"The bucket you are attempting to access must be addressed using the specified endpoint. Send all future requests to this endpoint.", @"PermanentRedirect aws error"),
+        @"PreconditionFailed": NSLocalizedString(@"At least one of the preconditions you specified did not hold.", @"PreconditionFailed aws error"),
+        @"Redirect": NSLocalizedString(@"Temporary redirect.", @"Redirect aws error"),
+        @"RestoreAlreadyInProgress": NSLocalizedString(@"Object restore is already in progress.", @"RestoreAlreadyInProgress aws error"),
+        @"RequestIsNotMultiPartContent": NSLocalizedString(@"Bucket POST must be of the enclosure-type multipart/form-data.", @"RequestIsNotMultiPartContent aws error"),
+        @"RequestTimeout": NSLocalizedString(@"Your socket connection to the server was not read from or written to within the timeout period.", @"RequestTimeout aws error"),
+        @"RequestTimeTooSkewed": NSLocalizedString(@"The difference between the request time and the server's time is too large. Please check your Mac's time settings!", @"RequestTimeTooSkewed aws error"),
+        @"RequestTorrentOfBucketError": NSLocalizedString(@"Requesting the torrent file of a bucket is not permitted.", @"RequestTorrentOfBucketError aws error"),
+        @"SignatureDoesNotMatch": NSLocalizedString(@"The request signature AWS calculated does not match the signature you provided. Check your AWS secret access key and signing method.", @"SignatureDoesNotMatch aws error"),
+        @"ServiceUnavailable": NSLocalizedString(@"Reduce your request rate.", @"ServiceUnavailable aws error"),
+        @"SlowDown": NSLocalizedString(@"Reduce your request rate.", @"SlowDown aws error"),
+        @"TemporaryRedirect": NSLocalizedString(@"You are being redirected to the bucket while DNS updates.", @"TemporaryRedirect aws error"),
+        @"TokenRefreshRequired": NSLocalizedString(@"The provided token must be refreshed.", @"TokenRefreshRequired aws error"),
+        @"TooManyBuckets": NSLocalizedString(@"You have attempted to create more buckets than allowed.", @"TooManyBuckets aws error"),
+        @"UnexpectedContent": NSLocalizedString(@"This request does not support content.", @"UnexpectedContent aws error"),
+        @"UnresolvableGrantByEmailAddress": NSLocalizedString(@"The email address you provided does not match any account on record.", @"UnresolvableGrantByEmailAddress aws error"),
+                      @"UserKeyMustBeSpecified": NSLocalizedString(@"The bucket POST must contain the specified field name. If it is specified, check the order of the fields.", @"UserKeyMustBeSpecified aws error")};
+        
     return self;
 }
 
@@ -736,10 +821,13 @@ typedef void(^AWSCompBlock)(void);
 
 -(AWSFailureBlock)failureBlock {
     AWSFailureBlock block = ^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (error.code != -999 && operation.response.statusCode != 301 && operation.response.statusCode != 404 && operation.response.statusCode != 400 && !(operation.response.statusCode == 403)) {
+        if (error.code != -999 && operation.response.statusCode != 301 && operation.response.statusCode != 404 && operation.response.statusCode != 400 && (!(operation.response.statusCode == 403) || [self.lastErrorCode isEqualToString:@"AccessDenied"])) {
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
             if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
-                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]}];
+                NSString* statusCode = [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Code"];
+                NSString* message = [errorMessages valueForKey:statusCode];
+                if (!message || message.length <= 0) message = [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"];
+                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: message}];
                 [self.delegate awsClient:self requestFailedWithError:awsError];
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && operation.response.statusCode == 400) {
                 NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Bad request most possibly due to wrong encryption key.", @"wrong key message"), @"awsKey": operation.request.URL.path, @"awsOperation": operation}];
