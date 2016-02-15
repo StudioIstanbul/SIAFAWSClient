@@ -256,9 +256,10 @@ typedef void(^AWSCompBlock)(void);
 -(void)validateCredentials {
     self.bucket = nil;
     AWSOperation* bucketListOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
+    __weak AWSOperation* thisOperation = bucketListOperation;
     [bucketListOperation setCompletionBlock:^{
         BOOL valid = NO;
-        if (bucketListOperation.error) {
+        if (thisOperation.error) {
             valid = NO;
         } else {
             valid = YES;
@@ -742,6 +743,7 @@ typedef void(^AWSCompBlock)(void);
         [self didChangeValueForKey:@"isBusy"];
     }
     __block AWSCompBlock compBlock = [operation.completionBlock copy];
+    __weak AWSOperation* thisOperation = operation;
     [operation setCompletionBlock:^{
         if (!compBlock) {
             NSLog(@"no completion block!");
@@ -753,7 +755,7 @@ typedef void(^AWSCompBlock)(void);
         } else {
             if (compBlock) compBlock();
         }
-        if (self.operationQueue.operationCount <= 0) {
+        if (self.operationQueue.operationCount <= 0 || (self.operationQueue.operationCount == 1 && [self.operationQueue.operations objectAtIndex:0] == thisOperation)) {
             [self willChangeValueForKey:@"isBusy"];
             _isBusy = NO;
             [self didChangeValueForKey:@"isBusy"];
@@ -776,7 +778,7 @@ typedef void(^AWSCompBlock)(void);
         _lastErrorCode = [recoverDict valueForKey:@"Code"];
         if ([recoverDict valueForKey:@"Region"]) {
             self.region = SIAFAWSRegionForCode([recoverDict valueForKey:@"Region"]);
-            NSLog(@"switching region to %@ (%i)", [recoverDict valueForKey:@"Region"], self.region);
+            NSLog(@"switching region to %@ (%li)", [recoverDict valueForKey:@"Region"], self.region);
             switchRegion = YES;
         }
         NSLog(@"error code: %@", _lastErrorCode);
