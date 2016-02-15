@@ -669,8 +669,12 @@ typedef void(^AWSCompBlock)(void);
                 self.accessKey = [self.delegate awsclientRequiresAccessKey:self];
             } else {
                 NSError* accessKeyError = [NSError errorWithDomain:@"SIAFAWSClient" code:100 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"No access key provided for Amazon S3", @"SIAFAWSError no access key")}];
-                NSAlert* alert = [NSAlert alertWithError:accessKeyError];
-                [alert runModal];
+                if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
+                    [self.delegate awsClient:self requestFailedWithError:accessKeyError];
+                } else {
+                    NSAlert* alert = [NSAlert alertWithError:accessKeyError];
+                    [alert runModal];
+                }
                 return nil;
             }
         }
@@ -679,8 +683,12 @@ typedef void(^AWSCompBlock)(void);
                 self.accessKey = [self.delegate awsclientRequiresSecretKey:self];
             } else {
                 NSError* secretKeyError = [NSError errorWithDomain:@"SIAFAWSClient" code:101 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"No secret key provided for Amazon S3", @"SIAFAWSError no secret key")}];
-                NSAlert* alert = [NSAlert alertWithError:secretKeyError];
-                [alert runModal];
+                if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
+                    [self.delegate awsClient:self requestFailedWithError:secretKeyError];
+                } else {
+                    NSAlert* alert = [NSAlert alertWithError:secretKeyError];
+                    [alert runModal];
+                }
                 return nil;
             }
         }
