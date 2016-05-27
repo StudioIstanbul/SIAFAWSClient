@@ -823,8 +823,14 @@ typedef void(^AWSCompBlock)(void);
         [operation setCompletionBlock:nil];
         [self enqueueHTTPRequestOperation:redirOp];
     }
-    if (404 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)]) {
+    if (404 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)] && ![_lastErrorCode isEqualToString:@"NoSuchBucket"]) {
         [self.delegate awsClient:self deletedKey:operation.request.URL.path onBucket:[[operation.request.URL.host componentsSeparatedByString:@"."] objectAtIndex:0]];
+        [operation setCompletionBlock:nil];
+    } else if (404 == [operation.response statusCode]  && [self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [_lastErrorCode isEqualToString:@"NoSuchBucket"]) {
+        NSString* message = NSLocalizedString(@"Bucket does not exist!", @"bucket does not exist error message");
+        NSString* desc = NSLocalizedString(@"The bucket you selected does not exist on Amazon AWS S3 anymore. Please recreate it or select a different bucket.", @"bucket error description");
+        NSError* bucketError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: message, NSLocalizedRecoverySuggestionErrorKey: desc}];
+        [self.delegate awsClient:self requestFailedWithError:bucketError];
         [operation setCompletionBlock:nil];
     }
 }
