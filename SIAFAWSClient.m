@@ -340,7 +340,7 @@ typedef void(^AWSCompBlock)(void);
     AWSOperation* uploadOperation = [self requestOperationWithMethod:@"PUT" path:key parameters:nil];
     [uploadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if ([self.delegate respondsToSelector:@selector(awsclient:finishedUploadForUrl:awsKey:)]) {
-            [self.delegate awsclient:self finishedUploadForUrl:url awsKey:key];
+            [self.delegate awsclient:self finishedUploadForUrl:url awsKey:[key urldecode]];
         } else if ([self.delegate respondsToSelector:@selector(awsclient:finishedUploadForUrl:)]) {
             [self.delegate awsclient:self finishedUploadForUrl:url];
         }
@@ -846,7 +846,7 @@ typedef void(^AWSCompBlock)(void);
                 NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: message}];
                 [self.delegate awsClient:self requestFailedWithError:awsError];
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && operation.response.statusCode == 400) {
-                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Bad request most possibly due to wrong encryption key.", @"wrong key message"), @"awsKey": operation.request.URL.path, @"awsOperation": operation}];
+                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Bad request most possibly due to wrong encryption key.", @"wrong key message"), @"awsKey": [operation.request.URL.path urldecode], @"awsOperation": operation}];
                 [self.delegate awsClient:self requestFailedWithError:awsError];
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
                 [self.operationQueue cancelAllOperations];
