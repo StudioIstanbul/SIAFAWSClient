@@ -357,7 +357,7 @@ typedef void(^AWSCompBlock)(void);
     if (metadata) {
         for (NSString* metadataKey in metadata.allKeys) {
             NSLog(@"metadata %@ = %@", metadataKey, [metadata valueForKey:metadataKey]);
-            [uploadOperation.request setValue:[metadata valueForKey:metadataKey] forHTTPHeaderField:[NSString stringWithFormat:@"x-amz-meta-%@", metadataKey]];
+            [uploadOperation.request setValue:[[metadata valueForKey:metadataKey] urlencode] forHTTPHeaderField:[NSString stringWithFormat:@"x-amz-meta-%@", [metadataKey urlencode]]];
         }
     }
     if (ssecKey) {
@@ -424,8 +424,8 @@ typedef void(^AWSCompBlock)(void);
         NSMutableDictionary* metaDict = [NSMutableDictionary new];
         for (NSString* mkey in responseDict.allKeys) {
             if ([mkey rangeOfString:@"x-amz-meta-"].location == 0) {
-                NSString* xmKey = [mkey substringFromIndex:11];
-                [metaDict setValue:[responseDict valueForKey:mkey] forKey:xmKey];
+                NSString* xmKey = [[mkey substringFromIndex:11] urldecode];
+                [metaDict setValue:[[responseDict valueForKey:mkey] urldecode] forKey:xmKey];
             }
         }
         metadataFile.metadata = [NSDictionary dictionaryWithDictionary:metaDict];
