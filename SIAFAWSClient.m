@@ -783,7 +783,7 @@ typedef void(^AWSCompBlock)(void);
         }
         NSLog(@"error code: %@", _lastErrorCode);
     }
-    
+        
     if((400 == [operation.response statusCode] && (([self.delegate respondsToSelector:@selector(awsclientRequiresKeyData:)] && [_lastErrorCode isEqualToString:@"UserKeyMustBeSpecified"]) || [_lastErrorCode isEqualToString:@"AuthorizationHeaderMalformed"])) || 301 == [operation.response statusCode]) {
         NSString* endpoint = operation.request.URL.host;
         NSData* keyData;
@@ -823,7 +823,7 @@ typedef void(^AWSCompBlock)(void);
         [operation setCompletionBlock:nil];
         [self enqueueHTTPRequestOperation:redirOp];
     }
-    if (404 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)] && ![_lastErrorCode isEqualToString:@"NoSuchBucket"]) {
+    if (404 == [operation.response statusCode] && [self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)] && [_lastErrorCode isEqualToString:@"NoSuchKey"]) {
         [self.delegate awsClient:self deletedKey:operation.request.URL.path onBucket:[[operation.request.URL.host componentsSeparatedByString:@"."] objectAtIndex:0]];
         [operation setCompletionBlock:nil];
     } else if (404 == [operation.response statusCode]  && [self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [_lastErrorCode isEqualToString:@"NoSuchBucket"]) {
@@ -837,7 +837,7 @@ typedef void(^AWSCompBlock)(void);
 
 -(AWSFailureBlock)failureBlock {
     AWSFailureBlock block = ^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (error.code != -999 && operation.response.statusCode != 301 && operation.response.statusCode != 404 && operation.response.statusCode != 400 && (!(operation.response.statusCode == 403) || [self.lastErrorCode isEqualToString:@"AccessDenied"])) {
+        if (error.code != -999 && operation.response.statusCode != 301 && operation.response.statusCode != 404 && (!(operation.response.statusCode == 403) || [self.lastErrorCode isEqualToString:@"AccessDenied"])) {
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
             if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
                 NSString* statusCode = [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Code"];
