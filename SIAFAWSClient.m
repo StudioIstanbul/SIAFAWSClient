@@ -429,7 +429,7 @@ typedef void(^AWSCompBlock)(void);
             }
         }
         metadataFile.metadata = [NSDictionary dictionaryWithDictionary:metaDict];
-        if ([self.delegate respondsToSelector:@selector(awsClient:receivedMetadata:forKey:onBucket:)]) [self.delegate awsClient:self receivedMetadata:metadataFile forKey:key onBucket:bucketName];
+        if ([self.delegate respondsToSelector:@selector(awsClient:receivedMetadata:forKey:onBucket:)]) [self.delegate awsClient:self receivedMetadata:metadataFile forKey:[key urldecode] onBucket:bucketName];
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:metaDataOperation];
 }
@@ -449,7 +449,7 @@ typedef void(^AWSCompBlock)(void);
     }
     [downloadOperation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
         if ([self.delegate respondsToSelector:@selector(downloadProgress:forKey:)]) {
-            [self.delegate downloadProgress:(double)totalBytesRead/(double)totalBytesExpectedToRead forKey:key];
+            [self.delegate downloadProgress:(double)totalBytesRead/(double)totalBytesExpectedToRead forKey:[key urldecode]];
         }
     }];
     if (![[NSFileManager defaultManager] fileExistsAtPath:fileURL.path]) {
@@ -458,13 +458,14 @@ typedef void(^AWSCompBlock)(void);
     NSOutputStream* outputStream = [NSOutputStream outputStreamWithURL:fileURL append:NO];
     [downloadOperation setOutputStream:outputStream];
     [downloadOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if ([self.delegate respondsToSelector:@selector(awsclient:finishedDownloadForKey:toURL:)]) [self.delegate awsclient:self finishedDownloadForKey:key toURL:fileURL];
+        if ([self.delegate respondsToSelector:@selector(awsclient:finishedDownloadForKey:toURL:)]) [self.delegate awsclient:self finishedDownloadForKey:[key urldecode] toURL:fileURL];
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:downloadOperation];
 }
 
 -(void)restoreFileFromKey:(NSString *)key onBucket:(NSString *)bucketName withExpiration:(NSTimeInterval)expiration {
     self.bucket = bucketName;
+    key = [key urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/+"]];
     AWSOperation* restoreOperation = [self requestOperationWithMethod:@"POST" path:key parameters:nil];
     [restoreOperation.request setURL:[NSURL URLWithString:@"?restore" relativeToURL:restoreOperation.request.URL]];
     NSMutableData* contentData = [NSMutableData new];
@@ -478,7 +479,7 @@ typedef void(^AWSCompBlock)(void);
         if (operation.response.statusCode == 202) {
             NSLog(@"restore in progress");
         } else {
-            if ([self.delegate respondsToSelector:@selector(awsClient:objectIsAvailableAtKey:onBucket:)]) [self.delegate awsClient:self objectIsAvailableAtKey:key onBucket:bucketName];
+            if ([self.delegate respondsToSelector:@selector(awsClient:objectIsAvailableAtKey:onBucket:)]) [self.delegate awsClient:self objectIsAvailableAtKey:[key urldecode] onBucket:bucketName];
         }
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:restoreOperation];
@@ -486,9 +487,10 @@ typedef void(^AWSCompBlock)(void);
 
 -(void)deleteKey:(NSString *)key onBucket:(NSString *)bucketName {
     self.bucket = bucketName;
+    key = [key urlencodeWithoutCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"/+"]];
     AWSOperation* deleteOperation = [self requestOperationWithMethod:@"DELETE" path:key parameters:nil];
     [deleteOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        if ([self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)]) [self.delegate awsClient:self deletedKey:key onBucket:bucketName];
+        if ([self.delegate respondsToSelector:@selector(awsClient:deletedKey:onBucket:)]) [self.delegate awsClient:self deletedKey:[key urldecode] onBucket:bucketName];
     } failure:[self failureBlock]];
     [self enqueueHTTPRequestOperation:deleteOperation];
 }
