@@ -255,20 +255,26 @@ typedef void(^AWSCompBlock)(void);
 
 -(void)validateCredentials {
     self.bucket = nil;
-    AWSOperation* bucketListOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
-    __weak AWSOperation* thisOperation = bucketListOperation;
-    [bucketListOperation setCompletionBlock:^{
-        BOOL valid = NO;
-        if (thisOperation.error) {
-            valid = NO;
-        } else {
-            valid = YES;
-        }
+    if (self.accessKey && self.secretKey && self.accessKey.length > 0 && self.secretKey.length > 0) {
+        AWSOperation* bucketListOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
+        __weak AWSOperation* thisOperation = bucketListOperation;
+        [bucketListOperation setCompletionBlock:^{
+            BOOL valid = NO;
+            if (thisOperation.error) {
+                valid = NO;
+            } else {
+                valid = YES;
+            }
+            if ([self.delegate respondsToSelector:@selector(credentialsValid:)]) {
+                [self.delegate credentialsValid:valid];
+            }
+        }];
+        [self enqueueHTTPRequestOperation:bucketListOperation];
+    } else {
         if ([self.delegate respondsToSelector:@selector(credentialsValid:)]) {
-            [self.delegate credentialsValid:valid];
+            [self.delegate credentialsValid:NO];
         }
-    }];
-    [self enqueueHTTPRequestOperation:bucketListOperation];
+    }
 }
 
 -(void)regionForBucket:(AWSBucket *)bucketObject {
@@ -763,7 +769,12 @@ typedef void(^AWSCompBlock)(void);
             [self didChangeValueForKey:@"isBusy"];
         }
     }];
-    [super enqueueHTTPRequestOperation:operation];
+    if (self.accessKey && self.secretKey && self.accessKey.length > 0 && self.secretKey > 0) [super enqueueHTTPRequestOperation:operation]; else {
+        if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
+            NSError* keyError = [NSError errorWithDomain:@"siafawsclient" code:101 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Credentials missing", @"key error"), NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"Your AWS access key and/or secret key are missing. Please provide these keys.", @"keys missing error")}];
+            [self.delegate awsClient:self requestFailedWithError:keyError];
+        }
+    }
 }
 
 #pragma mark error handler methods
