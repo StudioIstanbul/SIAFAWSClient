@@ -284,7 +284,9 @@ typedef void(^AWSCompBlock)(void);
 -(void)regionForBucket:(AWSBucket *)bucketObject forPermissionWithBlock:(void(^)(SIAFAWSAccessRight accessRight))block {
     self.bucket = bucketObject.name;
     AWSOperation* regionOperation = [self requestOperationWithMethod:@"GET" path:@"/" parameters:nil];
-    [regionOperation.request setURL:[NSURL URLWithString:@"/?location" relativeToURL:regionOperation.request.URL]];
+    NSURLComponents* urlcomps = [NSURLComponents componentsWithURL:regionOperation.request.URL resolvingAgainstBaseURL:YES];
+    [urlcomps setQuery:@"location"];
+    [regionOperation.request setURL:[urlcomps URL]];
     [regionOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         NSDictionary* responseDict = [NSDictionary dictionaryWithXMLData:responseObject];
         NSString* regionString = [responseDict valueForKey:@"__text"];
@@ -641,6 +643,7 @@ typedef void(^AWSCompBlock)(void);
         if ([baseUrl rangeOfString:@"/"].location != NSNotFound) {
             baseUrl = [baseUrl substringToIndex:[baseUrl rangeOfString:@"/"].location];
         }
+        //NSLog(@"base url %@ - region %@ (%li)", baseUrl, SIAFAWSRegionName(SIAFAWSRegionForBaseURL(baseUrl)),SIAFAWSRegionForBaseURL(baseUrl));
         requestRegion = (int) SIAFAWSRegionForBaseURL(baseUrl);
         if (requestRegion > 8) requestRegion = self.region;
     }
@@ -769,6 +772,10 @@ typedef void(^AWSCompBlock)(void);
             [self didChangeValueForKey:@"isBusy"];
         }
     }];
+    if (operation.willRedirect) {
+        operation.isRedirected = YES;
+        operation.willRedirect = NO;
+    }
     if (self.accessKey && self.secretKey && self.accessKey.length > 0 && self.secretKey > 0) [super enqueueHTTPRequestOperation:operation]; else {
         if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
             NSError* keyError = [NSError errorWithDomain:@"siafawsclient" code:101 userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Credentials missing", @"key error"), NSLocalizedRecoverySuggestionErrorKey: NSLocalizedString(@"Your AWS access key and/or secret key are missing. Please provide these keys.", @"keys missing error")}];
@@ -816,6 +823,7 @@ typedef void(^AWSCompBlock)(void);
             }
             if ([endpoint rangeOfString:@"s3"].location == 0) endpoint = [NSString stringWithFormat:@"%@.%@", bucketName, endpoint];
             NSLog(@"redirect to: %@", endpoint);
+            operation.willRedirect = YES;
         }
         if ([operation.request valueForHTTPHeaderField:@"x-amz-server-side-encryption-customer-key"]) keyData = [self.delegate awsclientRequiresKeyData:self];
         AWSOperation* redirOp = [self requestOperationWithMethod:operation.request.HTTPMethod path:operation.request.URL.path parameters:[operation.request.URL.parameterString dictionaryFromQueryComponents] withEndpoint:endpoint];
@@ -823,7 +831,9 @@ typedef void(^AWSCompBlock)(void);
             NSMutableDictionary* queryDict = [operation.request.URL queryComponents];
             NSString* paramString = queryDict.allKeys.lastObject;
             NSLog(@"param found: %@", paramString);
-            [redirOp.request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"?%@", paramString] relativeToURL:redirOp.request.URL]];
+            NSURLComponents* urlComps = [NSURLComponents componentsWithURL:redirOp.request.URL resolvingAgainstBaseURL:YES];
+            [urlComps setQuery:paramString];
+            [redirOp.request setURL:urlComps.URL];
         }
         if (keyData) {
             [redirOp.request setValue:@"AES256" forHTTPHeaderField:@"x-amz-server-side-encryption-customer-algorithm"]; // x-amz-server-side​-encryption​-customer-algorithm
@@ -849,21 +859,28 @@ typedef void(^AWSCompBlock)(void);
 }
 
 -(AWSFailureBlock)failureBlock {
-    AWSFailureBlock block = ^(AFHTTPRequestOperation *operation, NSError *error) {
+    AWSFailureBlock block = ^(AFHTTPRequestOperation *xoperation, NSError *error) {
+        AWSOperation* operation = (AWSOperation*)xoperation;
         if (error.code != -999 && operation.response.statusCode != 301 && operation.response.statusCode != 404 && (!(operation.response.statusCode == 403) || [self.lastErrorCode isEqualToString:@"AccessDenied"])) {
             NSLog(@"error for URL %@ code: %li - %@ (%@)", operation.request.URL, operation.response.statusCode, error.localizedDescription, error.localizedRecoverySuggestion);
             if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"]) {
-                NSString* statusCode = [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Code"];
-                NSString* message = [errorMessages valueForKey:statusCode];
-                if (!message || message.length <= 0) message = [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"];
-                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: message}];
-                [self.delegate awsClient:self requestFailedWithError:awsError];
+                if (!operation.willRedirect) {
+                    NSString* statusCode = [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Code"];
+                    NSString* message = [errorMessages valueForKey:statusCode];
+                    if (!message || message.length <= 0) message = [[NSDictionary dictionaryWithXMLString:error.localizedRecoverySuggestion] valueForKey:@"Message"];
+                    NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: message}];
+                    [self.delegate awsClient:self requestFailedWithError:awsError];
+                }
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)] && operation.response.statusCode == 400) {
-                NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Bad request most possibly due to wrong encryption key.", @"wrong key message"), @"awsKey": [operation.request.URL.path urldecode], @"awsOperation": operation}];
-                [self.delegate awsClient:self requestFailedWithError:awsError];
+                if (!operation.willRedirect) {
+                    NSError* awsError = [NSError errorWithDomain:@"siaws" code:operation.response.statusCode userInfo:@{NSLocalizedDescriptionKey: NSLocalizedString(@"Bad request most possibly due to wrong encryption key.", @"wrong key message"), @"awsKey": [operation.request.URL.path urldecode], @"awsOperation": operation}];
+                    [self.delegate awsClient:self requestFailedWithError:awsError];
+                }
             } else if ([self.delegate respondsToSelector:@selector(awsClient:requestFailedWithError:)]) {
-                [self.operationQueue cancelAllOperations];
-                [self.delegate awsClient:self requestFailedWithError:error];
+                if (!operation.willRedirect) {
+                    [self.operationQueue cancelAllOperations];
+                    [self.delegate awsClient:self requestFailedWithError:error];
+                }
             }
         }
     };
@@ -874,7 +891,16 @@ typedef void(^AWSCompBlock)(void);
 
 @implementation AWSOperation
 
-@synthesize request;
+@synthesize request, isRedirected, willRedirect;
+
+-(id)init {
+    self = [super init];
+    if (self) {
+        isRedirected = NO;
+        willRedirect = NO;
+    }
+    return self;
+}
 
 /*-(void)setCompletionBlock:(void (^)(void))block {
     if (block) self.legacyCompletionBlock = [block copy];

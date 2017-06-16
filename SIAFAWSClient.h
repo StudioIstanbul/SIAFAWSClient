@@ -428,6 +428,8 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
 @interface AWSOperation : AFHTTPRequestOperation
 /** mutable request */
 @property (nonatomic, strong) NSMutableURLRequest *request;
+@property (nonatomic, assign) BOOL isRedirected;
+@property (nonatomic, assign) BOOL willRedirect;
 @end
 
 /** decribes an AWS S3 bucket and access rights to it*/
