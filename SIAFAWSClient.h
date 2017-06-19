@@ -10,6 +10,7 @@
 #import "AFHTTPClient.h"
 #import "AFHTTPRequestOperation.h"
 #import "NSArray+containsString.h"
+#import "AFHTTPRequestOperationLogger.h"
 
 /** defines a valid AWS Region, please look up valid S3 regions at http://docs.aws.amazon.com/general/latest/gr/rande.html */
 typedef NS_ENUM(NSInteger, SIAFAWSRegion) {
@@ -258,7 +259,7 @@ typedef NS_ENUM(NSInteger, SIAFAWSStorageClass) {
 
 /** The main object handling Amazon AWS S3 operations via AFNetworking. Use this class to do your operations.
 */
-@interface SIAFAWSClient : AFHTTPClient
+@interface SIAFAWSClient : AFHTTPClient <AFHTTPRequestOperationLoggerDelegate>
 /** the base URL that should be used for this client. Normally set automatically by choosing a region */
 @property (nonatomic, readwrite, retain) NSURL* baseURL;
 

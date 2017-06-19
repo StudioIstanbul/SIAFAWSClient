@@ -6,9 +6,9 @@
 //  Copyright (c) 2015 Studio Istanbul Medya Hiz. Tic. Ltd. Sti. All rights reserved.
 //
 
+#import "AFHTTPRequestOperation.h"
 #import "SIAFAWSClient.h"
 #import "NSArray+listOfKeys.h"
-#import "AFHTTPRequestOperation.h"
 #import "NSString+urlencode.h"
 #import "CryptoHelper.h"
 #import "NSData+hexConv.h"
@@ -17,6 +17,7 @@
 #import "XQueryComponents.h"
 #import "../Base64/Base64/MF_Base64Additions.h"
 #import "NSThread+Blocks.h"
+#import "AFHTTPRequestOperationLogger.h"
 
 #define SIAFAWSemptyHash @"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
 
@@ -142,7 +143,9 @@ typedef void(^AWSCompBlock)(void);
         @"UnexpectedContent": NSLocalizedString(@"This request does not support content.", @"UnexpectedContent aws error"),
         @"UnresolvableGrantByEmailAddress": NSLocalizedString(@"The email address you provided does not match any account on record.", @"UnresolvableGrantByEmailAddress aws error"),
                       @"UserKeyMustBeSpecified": NSLocalizedString(@"The bucket POST must contain the specified field name. If it is specified, check the order of the fields.", @"UserKeyMustBeSpecified aws error")};
-        
+    [[AFHTTPRequestOperationLogger sharedLogger] setDelegate:self];
+    [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
+    [[AFHTTPRequestOperationLogger sharedLogger] setLevel:AFLoggerLevelDebug];
     return self;
 }
 
@@ -885,6 +888,20 @@ typedef void(^AWSCompBlock)(void);
         }
     };
     return block;
+}
+
+#pragma mark Logging
+-(void)AFHTTPRequestOperationLoggerLog:(NSString *)logString {
+    NSError *error;
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"Authorization = \"AWS4-HMAC-SHA256 Credential=(.*/.*/.*)/s3/aws4_request,SignedHeaders=(.*),Signature=.*\"" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSRegularExpression *regex2 = [NSRegularExpression regularExpressionWithPattern:@"x-amz-server-side-encryption-customer-key = \".*\"" options:NSRegularExpressionCaseInsensitive error:&error];
+    NSString *modifiedString = [regex stringByReplacingMatchesInString:logString options:0 range:NSMakeRange(0, [logString length]) withTemplate:@"Authorization = \"AWS4-HMAC-SHA256 Credential=$1/s3/aws4_request,SignedHeaders=$2,Signature=HIDDEN\""];
+    modifiedString = [regex2 stringByReplacingMatchesInString:modifiedString options:0 range:NSMakeRange(0, modifiedString.length) withTemplate:@"x-amz-server-side-encryption-customer-key = \"HIDDEN\""];
+#ifdef AZLogger
+    [[AZLogger sharedLogger] log:modifiedString];
+#else
+    NSLog(@"%@", modifiedString);
+#endif
 }
 
 @end

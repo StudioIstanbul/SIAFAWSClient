@@ -6,3 +6,5 @@
     #import <Cocoa/Cocoa.h>
 #import <SystemConfiguration/SystemConfiguration.h>
 #endif
+
+#import "NamespacedDependencies.h"

@@ -23,6 +23,8 @@
 /* Begin PBXBuildFile section */
 		A901FCB81B766A2E001357C6 /* NSThread+Blocks.h in Headers */ = {isa = PBXBuildFile; fileRef = A901FCB61B766A2E001357C6 /* NSThread+Blocks.h */; };
 		A901FCB91B766A2E001357C6 /* NSThread+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = A901FCB71B766A2E001357C6 /* NSThread+Blocks.m */; };
+		A92BE1A61EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.h in Headers */ = {isa = PBXBuildFile; fileRef = A92BE1A41EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.h */; };
+		A92BE1A71EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.m in Sources */ = {isa = PBXBuildFile; fileRef = A92BE1A51EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.m */; };
 		A9CB066D1B70B51600331A38 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CB066C1B70B51600331A38 /* Cocoa.framework */; };
 		A9CB06771B70B51600331A38 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A9CB06751B70B51600331A38 /* InfoPlist.strings */; };
 		A9CB06891B70B53900331A38 /* SIAFAWSClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB06871B70B53900331A38 /* SIAFAWSClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -47,24 +49,24 @@
 		A9CB071C1B70B6F600331A38 /* XMLDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB071A1B70B6F600331A38 /* XMLDictionary.m */; };
 		A9CB071E1B70B71100331A38 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CB071D1B70B71100331A38 /* Security.framework */; };
 		A9CB07201B70B71900331A38 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A9CB071F1B70B71900331A38 /* SystemConfiguration.framework */; };
-		A9CB073E1B70BB4900331A38 /* AFHTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB072B1B70BB4900331A38 /* AFHTTPClient.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB073E1B70BB4900331A38 /* AFHTTPClient.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB072B1B70BB4900331A38 /* AFHTTPClient.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB073F1B70BB4900331A38 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB072C1B70BB4900331A38 /* AFHTTPClient.m */; };
-		A9CB07401B70BB4900331A38 /* AFHTTPRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB072D1B70BB4900331A38 /* AFHTTPRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB07401B70BB4900331A38 /* AFHTTPRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB072D1B70BB4900331A38 /* AFHTTPRequestOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB07411B70BB4900331A38 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB072E1B70BB4900331A38 /* AFHTTPRequestOperation.m */; };
-		A9CB07421B70BB4900331A38 /* AFImageRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB072F1B70BB4900331A38 /* AFImageRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB07421B70BB4900331A38 /* AFImageRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB072F1B70BB4900331A38 /* AFImageRequestOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB07431B70BB4900331A38 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB07301B70BB4900331A38 /* AFImageRequestOperation.m */; };
-		A9CB07441B70BB4900331A38 /* AFJSONRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07311B70BB4900331A38 /* AFJSONRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB07441B70BB4900331A38 /* AFJSONRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07311B70BB4900331A38 /* AFJSONRequestOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB07451B70BB4900331A38 /* AFJSONRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB07321B70BB4900331A38 /* AFJSONRequestOperation.m */; };
-		A9CB07461B70BB4900331A38 /* AFNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07331B70BB4900331A38 /* AFNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB07461B70BB4900331A38 /* AFNetworkActivityIndicatorManager.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07331B70BB4900331A38 /* AFNetworkActivityIndicatorManager.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB07471B70BB4900331A38 /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB07341B70BB4900331A38 /* AFNetworkActivityIndicatorManager.m */; };
-		A9CB07481B70BB4900331A38 /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07351B70BB4900331A38 /* AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		A9CB07491B70BB4900331A38 /* AFPropertyListRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07361B70BB4900331A38 /* AFPropertyListRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB07481B70BB4900331A38 /* AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07351B70BB4900331A38 /* AFNetworking.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		A9CB07491B70BB4900331A38 /* AFPropertyListRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07361B70BB4900331A38 /* AFPropertyListRequestOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB074A1B70BB4900331A38 /* AFPropertyListRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB07371B70BB4900331A38 /* AFPropertyListRequestOperation.m */; };
-		A9CB074B1B70BB4900331A38 /* AFURLConnectionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07381B70BB4900331A38 /* AFURLConnectionOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB074B1B70BB4900331A38 /* AFURLConnectionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB07381B70BB4900331A38 /* AFURLConnectionOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB074C1B70BB4900331A38 /* AFURLConnectionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB07391B70BB4900331A38 /* AFURLConnectionOperation.m */; };
-		A9CB074D1B70BB4900331A38 /* AFXMLRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB073A1B70BB4900331A38 /* AFXMLRequestOperation.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB074D1B70BB4900331A38 /* AFXMLRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB073A1B70BB4900331A38 /* AFXMLRequestOperation.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB074E1B70BB4900331A38 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB073B1B70BB4900331A38 /* AFXMLRequestOperation.m */; };
-		A9CB074F1B70BB4900331A38 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB073C1B70BB4900331A38 /* UIImageView+AFNetworking.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		A9CB074F1B70BB4900331A38 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = A9CB073C1B70BB4900331A38 /* UIImageView+AFNetworking.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		A9CB07501B70BB4900331A38 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CB073D1B70BB4900331A38 /* UIImageView+AFNetworking.m */; };
 		A9D970531B72A24A00ECAFAE /* XQueryComponents.h in Headers */ = {isa = PBXBuildFile; fileRef = A9D970511B72A24A00ECAFAE /* XQueryComponents.h */; };
 		A9D970541B72A24A00ECAFAE /* XQueryComponents.m in Sources */ = {isa = PBXBuildFile; fileRef = A9D970521B72A24A00ECAFAE /* XQueryComponents.m */; };
@@ -73,6 +75,9 @@
 /* Begin PBXFileReference section */
 		A901FCB61B766A2E001357C6 /* NSThread+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSThread+Blocks.h"; path = "HelperCategories/NSThread+Blocks.h"; sourceTree = SOURCE_ROOT; };
 		A901FCB71B766A2E001357C6 /* NSThread+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSThread+Blocks.m"; path = "HelperCategories/NSThread+Blocks.m"; sourceTree = SOURCE_ROOT; };
+		A92BE1A21EF7B64E00A3DFB9 /* NamespacedDependencies.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NamespacedDependencies.h; sourceTree = SOURCE_ROOT; };
+		A92BE1A41EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AFHTTPRequestOperationLogger.h; path = ../AFHTTPRequestOperationLogger/AFHTTPRequestOperationLogger.h; sourceTree = "<group>"; };
+		A92BE1A51EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AFHTTPRequestOperationLogger.m; path = ../AFHTTPRequestOperationLogger/AFHTTPRequestOperationLogger.m; sourceTree = "<group>"; };
 		A98849621BC7DEF80035626C /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = SOURCE_ROOT; };
 		A9CB06691B70B51600331A38 /* SIAFAWSClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SIAFAWSClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9CB066C1B70B51600331A38 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -182,6 +187,9 @@
 		A9CB06721B70B51600331A38 /* SIAFAWSClient */ = {
 			isa = PBXGroup;
 			children = (
+				A92BE1A41EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.h */,
+				A92BE1A51EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.m */,
+				A92BE1A21EF7B64E00A3DFB9 /* NamespacedDependencies.h */,
 				A9CB06871B70B53900331A38 /* SIAFAWSClient.h */,
 				A9CB06881B70B53900331A38 /* SIAFAWSClient.m */,
 				A9CB072A1B70BB4900331A38 /* AFNetworking */,
@@ -296,6 +304,7 @@
 				A9CB073E1B70BB4900331A38 /* AFHTTPClient.h in Headers */,
 				A9CB07401B70BB4900331A38 /* AFHTTPRequestOperation.h in Headers */,
 				A9CB07421B70BB4900331A38 /* AFImageRequestOperation.h in Headers */,
+				A92BE1A61EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.h in Headers */,
 				A9CB07441B70BB4900331A38 /* AFJSONRequestOperation.h in Headers */,
 				A9CB07461B70BB4900331A38 /* AFNetworkActivityIndicatorManager.h in Headers */,
 				A9CB07481B70BB4900331A38 /* AFNetworking.h in Headers */,
@@ -319,6 +328,7 @@
 				A9CB06651B70B51600331A38 /* Frameworks */,
 				A9CB06661B70B51600331A38 /* Headers */,
 				A9CB06671B70B51600331A38 /* Resources */,
+				A92BE19F1EF4616500A3DFB9 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -337,6 +347,11 @@
 			attributes = {
 				LastUpgradeCheck = 0460;
 				ORGANIZATIONNAME = "Studio Istanbul Medya Hiz. Tic. Ltd. Sti.";
+				TargetAttributes = {
+					A9CB06681B70B51600331A38 = {
+						DevelopmentTeam = 4W25LCK7PJ;
+					};
+				};
 			};
 			buildConfigurationList = A9CB06631B70B51600331A38 /* Build configuration list for PBXProject "SIAFAWSClient" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -368,6 +383,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		A92BE19F1EF4616500A3DFB9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script is a modified version of this: https://github.com/jverkoey/nimbus/blob/master/scripts/generate_namespace_header\n\nheader=$SRCROOT/NamespacedDependencies.h\nprefix=\"SIAFAWS\"\npath=\"SIAFAWSClient\"\nskipPrefix=\"SIAFAWS\"\nskipPrefix2=\"AWS\"\n\nif [ -f $header ]; then\necho \"File $FILE exists.\"\nexit 0\nelse\necho \"File $FILE does not exist.\"\nfi\n\necho \"Generating $header from $CODESIGNING_FOLDER_PATH...\"\n\necho \"// Namespaced Header\n\n#ifndef __NS_SYMBOL\n// We need to have multiple levels of macros here so that __NAMESPACE_PREFIX_ is\n// properly replaced by the time we concatenate the namespace prefix.\n#define __NS_REWRITE(ns, symbol) ns ## _rewrite_ ## symbol\n#define __NS_BRIDGE(ns, symbol) __NS_REWRITE(ns, symbol)\n#define __NS_SYMBOL(symbol) __NS_BRIDGE($prefix, symbol)\n#endif\n\n\" > $header\n\n# The following one-liner is a bit of a pain in the ass.\n# Breakdown:\n#\n# nm $CODESIGNING_FOLDER_PATH -j\n# Dump all of the symbols from the compiled library. This will include all UIKit\n# and Foundation symbols as well.\n#\n# | grep \"^_OBJC_CLASS_$_\"\n# Filter out the interfaces.\n#\n# | grep -v \"\\$_NS\"\n# Remove all Foundation classes.\n#\n# | grep -v \"\\$_UI\"\n# Remove all UIKit classes.\n#\n# | sed -e 's/_OBJC_CLASS_\\$_\\(.*\\)/#ifndef \\1\\'$'\\n''#define \\1 __NS_SYMBOL(\\1)\\'$'\\n''#endif/g'\n# I use the syntax outlined here:\n# http://stackoverflow.com/questions/6761796/bash-perl-or-sed-insert-on-new-line-after-found-phrase\n# to create newlines so that we can write the following on separate lines:\n#\n#  #ifndef ...\n#  #define ...\n#  #endif\n#\n\necho \"// Classes\" >> $header\n\nnm $CODESIGNING_FOLDER_PATH/$path -j | sort | uniq | grep \"_OBJC_CLASS_\\$_\" | grep -v \"\\$_AGSGT\" | grep -v \"\\$_CL\" | grep -v \"\\$_NS\" | grep -v \"\\$_UI\" | grep -v \"\\$_$skipPrefix\" | grep -v \"\\$_$skipPrefix2\" | sed -e 's/_OBJC_CLASS_\\$_\\(.*\\)/#ifndef \\1\\'$'\\n''#define \\1 __NS_SYMBOL(\\1)\\'$'\\n''#endif\\'$'\\n''/g' >> $header\n\necho \"// Functions\" >> $header\n\nnm $CODESIGNING_FOLDER_PATH/$path | sort | uniq | grep \" T \" | cut -d' ' -f3 | grep -v \"\\$_NS\" | grep -v \"\\$_UI\" | grep -v \"\\$_$skipPrefix\" | grep -v \"\\$_$skipPrefix2\" | sed -e 's/_\\(.*\\)/#ifndef \\1\\'$'\\n''#define \\1 __NS_SYMBOL(\\1)\\'$'\\n''#endif\\'$'\\n''/g' >> $header\n\necho \"// Externs\" >> $header\n\nnm $CODESIGNING_FOLDER_PATH/$path | sort | uniq | grep \" D \" | cut -d' ' -f3 | grep -v \"\\$_NS\" | grep -v \"\\$_UI\" | grep -v \"\\$_$skipPrefix\" | grep -v \"\\$_$skipPrefix2\" | sed -e 's/_\\(.*\\)/#ifndef \\1\\'$'\\n''#define \\1 __NS_SYMBOL(\\1)\\'$'\\n''#endif\\'$'\\n''/g' >> $header\n\nnm $CODESIGNING_FOLDER_PATH/$path | sort | uniq | grep \" S \" | cut -d' ' -f3 | grep -v \"\\$_NS\" | grep -v \".eh\" | grep -v \"\\$_UI\" | grep -v \"OBJC_\" | grep -v \"\\$_$skipPrefix\" | grep -v \"\\$_$skipPrefix2\" | sed -e 's/_\\(.*\\)/#ifndef \\1\\'$'\\n''#define \\1 __NS_SYMBOL(\\1)\\'$'\\n''#endif\\'$'\\n''/g' >> $header";
+		};
 		A988495F1BC7D4860035626C /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -390,6 +418,7 @@
 			files = (
 				A9CB068A1B70B53900331A38 /* SIAFAWSClient.m in Sources */,
 				A9CB06E61B70B6CD00331A38 /* CryptoHelper.m in Sources */,
+				A92BE1A71EF7C65C00A3DFB9 /* AFHTTPRequestOperationLogger.m in Sources */,
 				A9CB06ED1B70B6CD00331A38 /* NSArray+ArrayForKeypath.m in Sources */,
 				A9CB06EF1B70B6CD00331A38 /* NSArray+containsString.m in Sources */,
 				A9CB06F11B70B6CD00331A38 /* NSArray+listOfKeys.m in Sources */,
@@ -503,7 +532,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4W25LCK7PJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
@@ -521,7 +552,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4W25LCK7PJ;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				FRAMEWORK_VERSION = A;
