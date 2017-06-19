@@ -143,9 +143,11 @@ typedef void(^AWSCompBlock)(void);
         @"UnexpectedContent": NSLocalizedString(@"This request does not support content.", @"UnexpectedContent aws error"),
         @"UnresolvableGrantByEmailAddress": NSLocalizedString(@"The email address you provided does not match any account on record.", @"UnresolvableGrantByEmailAddress aws error"),
                       @"UserKeyMustBeSpecified": NSLocalizedString(@"The bucket POST must contain the specified field name. If it is specified, check the order of the fields.", @"UserKeyMustBeSpecified aws error")};
+#ifdef DEBUG
     [[AFHTTPRequestOperationLogger sharedLogger] setDelegate:self];
     [[AFHTTPRequestOperationLogger sharedLogger] startLogging];
     [[AFHTTPRequestOperationLogger sharedLogger] setLevel:AFLoggerLevelDebug];
+#endif
     return self;
 }
 
